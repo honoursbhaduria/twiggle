@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  backend:
+    build: ./backend
+    container_name: travista_backend
+    volumes:
+      - static_data:/app/static
+      - media_data:/app/media
+    env_file: ./backend/.env
+    expose:
+      - "8000"
+
+  nginx:
+    build: ./frontend   
+    container_name: travista_nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    volumes:
+      - static_data:/app/static
+      - media_data:/app/media
+
+volumes:
+  static_data:
+  media_data:

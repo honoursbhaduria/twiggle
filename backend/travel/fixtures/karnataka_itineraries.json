@@ -1,0 +1,122 @@
+[
+    {
+        "model": "travel.tag",
+        "pk": 1,
+        "fields": {
+            "name": "Heritage",
+            "slug": "heritage"
+        }
+    },
+    {
+        "model": "travel.tag",
+        "pk": 2,
+        "fields": {
+            "name": "Architecture",
+            "slug": "architecture"
+        }
+    },
+    {
+        "model": "travel.tag",
+        "pk": 3,
+        "fields": {
+            "name": "Nature",
+            "slug": "nature"
+        }
+    },
+    {
+        "model": "travel.tag",
+        "pk": 4,
+        "fields": {
+            "name": "Adventure",
+            "slug": "adventure"
+        }
+    },
+    {
+        "model": "travel.tag",
+        "pk": 5,
+        "fields": {
+            "name": "Spiritual",
+            "slug": "spiritual"
+        }
+    },
+    {
+        "model": "travel.destination",
+        "pk": 1,
+        "fields": {
+            "name": "Karnataka",
+            "slug": "karnataka",
+            "description": "Karnataka is a vibrant state in southern India known for its heritage sites, natural landscapes, and diverse culture.",
+            "image": "destinations/karnataka.jpg",
+            "is_trending": true
+        }
+    },
+    {
+        "model": "travel.category",
+        "pk": 1,
+        "fields": {
+            "name": "Cultural Tour",
+            "slug": "cultural-tour",
+            "icon": "",
+            "is_trending": true
+        }
+    },
+    {
+        "model": "travel.category",
+        "pk": 2,
+        "fields": {
+            "name": "Nature & Adventure",
+            "slug": "nature-adventure",
+            "icon": "",
+            "is_trending": true
+        }
+    },
+    {
+        "model": "travel.itinerary",
+        "pk": 1,
+        "fields": {
+            "destination": 1,
+            "category": 1,
+            "title": "Royal Mysore & Heritage",
+            "slug": "karnataka-royal-mysore-heritage",
+            "duration_days": 3,
+            "duration_nights": 2,
+            "total_budget": "12000.00",
+            "thumbnail": "itineraries/mysore_heritage.jpg",
+            "highlighted_places": "Mysore Palace, Chamundi Hills, Brindavan Gardens",
+            "popularity_score": 85
+        }
+    },
+    {
+        "model": "travel.dayplan",
+        "pk": 1,
+        "fields": {
+            "itinerary": 1,
+            "day_number": 1,
+            "title": "Day 1: Arrival & Mysore Palace",
+            "description": "Arrive in Mysore, visit the grand Mysore Palace and explore the local markets.",
+            "locations": "Mysore Palace, Devaraja Market"
+        }
+    },
+    {
+        "model": "travel.dayplan",
+        "pk": 2,
+        "fields": {
+            "itinerary": 1,
+            "day_number": 2,
+            "title": "Day 2: Chamundi Hills & Brindavan Gardens",
+            "description": "Morning visit to Chamundi Hills temple followed by an evening musical fountain show at Brindavan Gardens.",
+            "locations": "Chamundi Hills, Brindavan Gardens"
+        }
+    },
+    {
+        "model": "travel.dayplan",
+        "pk": 3,
+        "fields": {
+            "itinerary": 1,
+            "day_number": 3,
+            "title": "Day 3: St. Philomena\u2019s Church & Departure",
+            "description": "Visit the historic St. Philomena\u2019s Church before departure.",
+            "locations": "St. Philomena\u2019s Church"
+        }
+    }
+]

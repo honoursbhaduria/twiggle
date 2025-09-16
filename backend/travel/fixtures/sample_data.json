@@ -1,0 +1,1348 @@
+[
+  {
+    "model": "travel.destination",
+    "pk": 1,
+    "fields": {
+      "name": "Mysore",
+      "slug": "mysore",
+      "description": "Historic city known for its palace and culture.",
+      "image": "images/destinations/mysore.jpg"
+    }
+  },
+  {
+    "model": "travel.destination",
+    "pk": 2,
+    "fields": {
+      "name": "Goa",
+      "description": "Beach paradise with Portuguese heritage.",
+      "image": "images/destinations/goa.jpg"
+    }
+  },
+  {
+    "model": "travel.destination",
+    "pk": 3,
+    "fields": {
+      "name": "Jaipur",
+      "description": "The Pink City, famous for forts and palaces.",
+      "image": "images/destinations/jaipur.jpg"
+    }
+  },
+  {
+    "model": "travel.destination",
+    "pk": 4,
+    "fields": {
+      "name": "Kerala (Alleppey)",
+      "description": "Backwaters and houseboat cruises.",
+      "image": "images/destinations/kerala.jpg"
+    }
+  },
+  {
+    "model": "travel.destination",
+    "pk": 5,
+    "fields": {
+      "name": "Delhi",
+      "description": "Capital city with rich history and markets.",
+      "image": "images/destinations/delhi.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 6,
+    "fields": {
+      "destination": 1,
+      "title": "Itinerary 1",
+      "slug": "itinerary-1-1",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 16000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 7,
+    "fields": {
+      "itinerary": 6,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 8,
+    "fields": {
+      "itinerary": 6,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 9,
+    "fields": {
+      "day_plan": 8,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 10,
+    "fields": {
+      "day_plan": 8,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 11,
+    "fields": {
+      "day_plan": 8,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 12,
+    "fields": {
+      "day_plan": 8,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 13,
+    "fields": {
+      "itinerary": 6,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 14,
+    "fields": {
+      "day_plan": 13,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 15,
+    "fields": {
+      "day_plan": 13,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 16,
+    "fields": {
+      "day_plan": 13,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 17,
+    "fields": {
+      "day_plan": 13,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 18,
+    "fields": {
+      "destination": 1,
+      "title": "Itinerary 2",
+      "slug": "itinerary-1-2",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 17000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 19,
+    "fields": {
+      "itinerary": 18,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 20,
+    "fields": {
+      "itinerary": 18,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 21,
+    "fields": {
+      "day_plan": 20,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 22,
+    "fields": {
+      "day_plan": 20,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 23,
+    "fields": {
+      "day_plan": 20,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 24,
+    "fields": {
+      "day_plan": 20,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 25,
+    "fields": {
+      "itinerary": 18,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 26,
+    "fields": {
+      "day_plan": 25,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 27,
+    "fields": {
+      "day_plan": 25,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 28,
+    "fields": {
+      "day_plan": 25,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 29,
+    "fields": {
+      "day_plan": 25,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 30,
+    "fields": {
+      "destination": 2,
+      "title": "Itinerary 1",
+      "slug": "itinerary-2-1",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 16000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 31,
+    "fields": {
+      "itinerary": 30,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 32,
+    "fields": {
+      "itinerary": 30,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 33,
+    "fields": {
+      "day_plan": 32,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 34,
+    "fields": {
+      "day_plan": 32,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 35,
+    "fields": {
+      "day_plan": 32,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 36,
+    "fields": {
+      "day_plan": 32,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 37,
+    "fields": {
+      "itinerary": 30,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 38,
+    "fields": {
+      "day_plan": 37,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 39,
+    "fields": {
+      "day_plan": 37,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 40,
+    "fields": {
+      "day_plan": 37,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 41,
+    "fields": {
+      "day_plan": 37,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 42,
+    "fields": {
+      "destination": 2,
+      "title": "Itinerary 2",
+      "slug": "itinerary-2-2",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 17000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 43,
+    "fields": {
+      "itinerary": 42,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 44,
+    "fields": {
+      "itinerary": 42,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 45,
+    "fields": {
+      "day_plan": 44,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 46,
+    "fields": {
+      "day_plan": 44,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 47,
+    "fields": {
+      "day_plan": 44,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 48,
+    "fields": {
+      "day_plan": 44,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 49,
+    "fields": {
+      "itinerary": 42,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 50,
+    "fields": {
+      "day_plan": 49,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 51,
+    "fields": {
+      "day_plan": 49,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 52,
+    "fields": {
+      "day_plan": 49,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 53,
+    "fields": {
+      "day_plan": 49,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 54,
+    "fields": {
+      "destination": 3,
+      "title": "Itinerary 1",
+      "slug": "itinerary-3-1",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 16000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 55,
+    "fields": {
+      "itinerary": 54,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 56,
+    "fields": {
+      "itinerary": 54,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 57,
+    "fields": {
+      "day_plan": 56,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 58,
+    "fields": {
+      "day_plan": 56,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 59,
+    "fields": {
+      "day_plan": 56,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 60,
+    "fields": {
+      "day_plan": 56,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 61,
+    "fields": {
+      "itinerary": 54,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 62,
+    "fields": {
+      "day_plan": 61,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 63,
+    "fields": {
+      "day_plan": 61,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 64,
+    "fields": {
+      "day_plan": 61,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 65,
+    "fields": {
+      "day_plan": 61,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 66,
+    "fields": {
+      "destination": 3,
+      "title": "Itinerary 2",
+      "slug": "itinerary-3-2",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 17000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 67,
+    "fields": {
+      "itinerary": 66,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 68,
+    "fields": {
+      "itinerary": 66,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 69,
+    "fields": {
+      "day_plan": 68,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 70,
+    "fields": {
+      "day_plan": 68,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 71,
+    "fields": {
+      "day_plan": 68,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 72,
+    "fields": {
+      "day_plan": 68,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 73,
+    "fields": {
+      "itinerary": 66,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 74,
+    "fields": {
+      "day_plan": 73,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 75,
+    "fields": {
+      "day_plan": 73,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 76,
+    "fields": {
+      "day_plan": 73,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 77,
+    "fields": {
+      "day_plan": 73,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 78,
+    "fields": {
+      "destination": 4,
+      "title": "Itinerary 1",
+      "slug": "itinerary-4-1",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 16000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 79,
+    "fields": {
+      "itinerary": 78,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 80,
+    "fields": {
+      "itinerary": 78,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 81,
+    "fields": {
+      "day_plan": 80,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 82,
+    "fields": {
+      "day_plan": 80,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 83,
+    "fields": {
+      "day_plan": 80,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 84,
+    "fields": {
+      "day_plan": 80,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 85,
+    "fields": {
+      "itinerary": 78,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 86,
+    "fields": {
+      "day_plan": 85,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 87,
+    "fields": {
+      "day_plan": 85,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 88,
+    "fields": {
+      "day_plan": 85,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 89,
+    "fields": {
+      "day_plan": 85,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 90,
+    "fields": {
+      "destination": 4,
+      "title": "Itinerary 2",
+      "slug": "itinerary-4-2",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 17000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 91,
+    "fields": {
+      "itinerary": 90,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 92,
+    "fields": {
+      "itinerary": 90,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 93,
+    "fields": {
+      "day_plan": 92,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 94,
+    "fields": {
+      "day_plan": 92,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 95,
+    "fields": {
+      "day_plan": 92,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 96,
+    "fields": {
+      "day_plan": 92,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 97,
+    "fields": {
+      "itinerary": 90,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 98,
+    "fields": {
+      "day_plan": 97,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 99,
+    "fields": {
+      "day_plan": 97,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 100,
+    "fields": {
+      "day_plan": 97,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 101,
+    "fields": {
+      "day_plan": 97,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 102,
+    "fields": {
+      "destination": 5,
+      "title": "Itinerary 1",
+      "slug": "itinerary-5-1",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 16000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 103,
+    "fields": {
+      "itinerary": 102,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 104,
+    "fields": {
+      "itinerary": 102,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 105,
+    "fields": {
+      "day_plan": 104,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 106,
+    "fields": {
+      "day_plan": 104,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 107,
+    "fields": {
+      "day_plan": 104,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 108,
+    "fields": {
+      "day_plan": 104,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 109,
+    "fields": {
+      "itinerary": 102,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 110,
+    "fields": {
+      "day_plan": 109,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 111,
+    "fields": {
+      "day_plan": 109,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 112,
+    "fields": {
+      "day_plan": 109,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 113,
+    "fields": {
+      "day_plan": 109,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 114,
+    "fields": {
+      "destination": 5,
+      "title": "Itinerary 2",
+      "slug": "itinerary-5-2",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": 17000,
+      "thumbnail": "images/itineraries/sample.jpg",
+      "highlighted_places": "PLACE_ID_HERE",
+      "popularity_score": 4.5
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 115,
+    "fields": {
+      "itinerary": 114,
+      "stay": 5000,
+      "travel": 4000,
+      "food": 3000,
+      "misc": 2000
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 116,
+    "fields": {
+      "itinerary": 114,
+      "day_number": 1,
+      "title": "Day 1",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 117,
+    "fields": {
+      "day_plan": 116,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 118,
+    "fields": {
+      "day_plan": 116,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 119,
+    "fields": {
+      "day_plan": 116,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 120,
+    "fields": {
+      "day_plan": 116,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 121,
+    "fields": {
+      "itinerary": 114,
+      "day_number": 2,
+      "title": "Day 2",
+      "description": "Activities for the day.",
+      "locations": "PLACE_ID_HERE"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 122,
+    "fields": {
+      "day_plan": 121,
+      "name": "Attraction 1",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 123,
+    "fields": {
+      "day_plan": 121,
+      "name": "Attraction 2",
+      "description": "A popular sightseeing spot.",
+      "image": "images/attractions/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 124,
+    "fields": {
+      "day_plan": 121,
+      "name": "Restaurant 1",
+      "cuisine": "Indian",
+      "description": "Good food and ambiance.",
+      "image": "images/restaurants/sample.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 125,
+    "fields": {
+      "day_plan": 121,
+      "name": "Experience 1",
+      "description": "Unique local activity.",
+      "image": "images/experiences/sample.jpg"
+    }
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "model": "travel.destination",
+    "pk": 1,
+    "fields": {
+      "name": "Goa",
+      "slug": "goa",
+      "description": "Famous for beaches, nightlife, and Portuguese heritage.",
+      "image": "destinations/goa.png",
+      "is_trending": true
+    }
+  },
+  {
+    "model": "travel.category",
+    "pk": 1,
+    "fields": {
+      "name": "Beach Holiday",
+      "slug": "beach-holiday",
+      "icon": "categories/beach.png",
+      "is_trending": true
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 1,
+    "fields": {
+      "destination": 1,
+      "category": 1,
+      "title": "Goa Beach Vibes",
+      "slug": "goa-beach-vibes",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": "20000.00",
+      "thumbnail": "itineraries/goa_trip.jpg",
+      "highlighted_places": "Baga Beach, Fort Aguada, Calangute",
+      "popularity_score": 95
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 1,
+    "fields": {
+      "itinerary": 1,
+      "day_number": 1,
+      "title": "Day 1: Arrival & Beach Visit",
+      "description": "Check-in and enjoy the beach.",
+      "locations": "Baga Beach, Calangute"
+    }
+  },
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 1,
+    "fields": {
+      "itinerary": 1,
+      "stay": "8000.00",
+      "travel": "5000.00",
+      "food": "4000.00",
+      "misc": "3000.00"
+    }
+  },
+  {
+    "model": "travel.attraction",
+    "pk": 1,
+    "fields": {
+      "day_plan": 1,
+      "name": "Baga Beach Visit",
+      "description": "Relax and enjoy water sports.",
+      "image": "attractions/baga.jpg"
+    }
+  },
+  {
+    "model": "travel.restaurant",
+    "pk": 1,
+    "fields": {
+      "day_plan": 1,
+      "name": "Souza Lobo",
+      "cuisine": "Seafood",
+      "description": "Beachfront dining with Goan flavors.",
+      "image": "restaurants/souza_lobo.jpg"
+    }
+  },
+  {
+    "model": "travel.experience",
+    "pk": 1,
+    "fields": {
+      "day_plan": 1,
+      "name": "Parasailing Adventure",
+      "description": "Enjoy parasailing over the Arabian Sea.",
+      "image": "experiences/parasailing.jpg"
+    }
+  }
+]

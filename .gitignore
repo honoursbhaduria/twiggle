@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+# db.sqlite3
+.venv/
+# .env
+
+# Django
+/static/
+/media/
+/backend/static/
+/backend/media/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Docker
+*.log
+*.pid
+*.sock
+docker-compose.override.yml
+
+# IDEs
+.vscode/
+.idea/

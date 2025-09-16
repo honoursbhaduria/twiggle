@@ -1,0 +1,332 @@
+[
+  {
+    "model": "travel.destination",
+    "pk": 1,
+    "fields": {
+      "name": "Karnataka",
+      "slug": "karnataka",
+      "description": "A diverse state in southern India known for its heritage sites, lush landscapes, and vibrant culture.",
+      "image": "destinations/karnataka.jpg",
+      "is_trending": true
+    }
+  },
+  {
+    "model": "travel.category",
+    "pk": 1,
+    "fields": {
+      "name": "Heritage",
+      "slug": "heritage",
+      "icon": "categories/heritage.png",
+      "is_trending": true
+    }
+  },
+  {
+    "model": "travel.category",
+    "pk": 2,
+    "fields": {
+      "name": "Nature",
+      "slug": "nature",
+      "icon": "categories/nature.png",
+      "is_trending": true
+    }
+  },
+  {
+    "model": "travel.category",
+    "pk": 3,
+    "fields": {
+      "name": "Adventure",
+      "slug": "adventure",
+      "icon": "categories/adventure.png",
+      "is_trending": true
+    }
+  },
+  {
+    "model": "travel.category",
+    "pk": 4,
+    "fields": {
+      "name": "Food & Culture",
+      "slug": "food-culture",
+      "icon": "categories/food_culture.png",
+      "is_trending": true
+    }
+  },
+  {
+    "model": "travel.tag",
+    "pk": 1,
+    "fields": {
+      "name": "Temple",
+      "slug": "temple"
+    }
+  },
+  {
+    "model": "travel.tag",
+    "pk": 2,
+    "fields": {
+      "name": "Waterfall",
+      "slug": "waterfall"
+    }
+  },
+  {
+    "model": "travel.tag",
+    "pk": 3,
+    "fields": {
+      "name": "Trek",
+      "slug": "trek"
+    }
+  },
+  {
+    "model": "travel.tag",
+    "pk": 4,
+    "fields": {
+      "name": "Beach",
+      "slug": "beach"
+    }
+  },
+  {
+    "model": "travel.tag",
+    "pk": 5,
+    "fields": {
+      "name": "Wildlife",
+      "slug": "wildlife"
+    }
+  },
+  {
+    "model": "travel.tag",
+    "pk": 6,
+    "fields": {
+      "name": "Fort",
+      "slug": "fort"
+    }
+  },
+  {
+    "model": "travel.tag",
+    "pk": 7,
+    "fields": {
+      "name": "Palace",
+      "slug": "palace"
+    }
+  },
+  {
+    "model": "travel.tag",
+    "pk": 8,
+    "fields": {
+      "name": "Hill",
+      "slug": "hill"
+    }
+  },
+  {
+    "model": "travel.tag",
+    "pk": 9,
+    "fields": {
+      "name": "Coffee Plantation",
+      "slug": "coffee-plantation"
+    }
+  },
+
+  {
+    "model": "travel.itinerary",
+    "pk": 1,
+    "fields": {
+      "destination": 1,
+      "category": 1,
+      "title": "Bangalore – Mysore – Coorg Highlights",
+      "slug": "karnataka-bangalore-mysore-coorg-highlights",
+      "duration_days": 6,
+      "duration_nights": 5,
+      "total_budget": "30000.00",
+      "thumbnail": "itineraries/bangalore_mysore_coorg.jpg",
+      "highlighted_places": "Bangalore Palace, Mysore Palace, Abbey Falls",
+      "popularity_score": 90
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 2,
+    "fields": {
+      "destination": 1,
+      "category": 1,
+      "title": "Hampi Heritage Trail",
+      "slug": "karnataka-hampi-heritage-trail",
+      "duration_days": 4,
+      "duration_nights": 3,
+      "total_budget": "20000.00",
+      "thumbnail": "itineraries/hampi_heritage.jpg",
+      "highlighted_places": "Virupaksha Temple, Hampi Ruins",
+      "popularity_score": 85
+    }
+  },
+  {
+    "model": "travel.itinerary",
+    "pk": 3,
+    "fields": {
+      "destination": 1,
+      "category": 3,
+      "title": "Gokarna Beaches & Adventure",
+      "slug": "karnataka-gokarna-beach-adventure",
+      "duration_days": 3,
+      "duration_nights": 2,
+      "total_budget": "15000.00",
+      "thumbnail": "itineraries/gokarna_beach_adventure.jpg",
+      "highlighted_places": "Om Beach, Kudle Beach, Yana Rocks",
+      "popularity_score": 80
+    }
+  },
+
+  {
+    "model": "travel.dayplan",
+    "pk": 1,
+    "fields": {
+      "itinerary": 1,
+      "day_number": 1,
+      "title": "Arrival & Explore Bangalore",
+      "description": "Arrive in Bangalore, visit Bangalore Palace and Lalbagh Botanical Garden.",
+      "locations": "Bangalore Palace, Lalbagh Botanical Garden"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 2,
+    "fields": {
+      "itinerary": 1,
+      "day_number": 2,
+      "title": "Mysore Day Tour",
+      "description": "Drive to Mysore. Explore Mysore Palace and Chamundi Hills.",
+      "locations": "Mysore Palace, Chamundi Hills"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 3,
+    "fields": {
+      "itinerary": 1,
+      "day_number": 3,
+      "title": "Coorg – Abbey Falls & Coffee Plantation",
+      "description": "Head to Coorg, visit Abbey Falls and a local coffee plantation.",
+      "locations": "Abbey Falls, Coorg Coffee Plantation"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 4,
+    "fields": {
+      "itinerary": 1,
+      "day_number": 4,
+      "title": "Dubare & Talakaveri",
+      "description": "Visit Dubare Elephant Camp and drive to Talakaveri.",
+      "locations": "Dubare Elephant Camp, Talakaveri"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 5,
+    "fields": {
+      "itinerary": 1,
+      "day_number": 5,
+      "title": "Coorg Local & Return",
+      "description": "Explore local market in Madikeri, return towards Bangalore.",
+      "locations": "Madikeri Market"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 6,
+    "fields": {
+      "itinerary": 1,
+      "day_number": 6,
+      "title": "Departure",
+      "description": "Return journey and departure from Bangalore.",
+      "locations": "Airport / Home"
+    }
+  },
+
+  {
+    "model": "travel.dayplan",
+    "pk": 7,
+    "fields": {
+      "itinerary": 2,
+      "day_number": 1,
+      "title": "Arrive & Hampi Ruins",
+      "description": "Fly to Hampi, explore Virupaksha Temple and Hampi Bazaar.",
+      "locations": "Virupaksha Temple, Hampi Bazaar"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 8,
+    "fields": {
+      "itinerary": 2,
+      "day_number": 2,
+      "title": "Royal Enclosure & Matanga Hill",
+      "description": "Visit the Royal Enclosure and climb Matanga Hill at sunset.",
+      "locations": "Royal Enclosure, Matanga Hill"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 9,
+    "fields": {
+      "itinerary": 2,
+      "day_number": 3,
+      "title": "Lotus Mahal & Monolithic Bull",
+      "description": "Visit Lotus Mahal and the Monolithic Bull (Ugra Narasimha).",
+      "locations": "Lotus Mahal, Monolithic Bull"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 10,
+    "fields": {
+      "itinerary": 2,
+      "day_number": 4,
+      "title": "Departure",
+      "description": "Return journey from Hampi.",
+      "locations": "Airport / Home"
+    }
+  },
+
+  {
+    "model": "travel.dayplan",
+    "pk": 11,
+    "fields": {
+      "itinerary": 3,
+      "day_number": 1,
+      "title": "Gokarna Arrival & Om Beach",
+      "description": "Arrive Gokarna and relax at Om Beach.",
+      "locations": "Om Beach"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 12,
+    "fields": {
+      "itinerary": 3,
+      "day_number": 2,
+      "title": "Kudle Beach & Yana Rocks",
+      "description": "Visit Kudle Beach and go on a short trek to Yana Rocks.",
+      "locations": "Kudle Beach, Yana Rocks"
+    }
+  },
+  {
+    "model": "travel.dayplan",
+    "pk": 13,
+    "fields": {
+      "itinerary": 3,
+      "day_number": 3,
+      "title": "Departure",
+      "description": "Return from Gokarna.",
+      "locations": "Bus Stand / Home"
+    }
+  },
+
+  {
+    "model": "travel.budgetbreakdown",
+    "pk": 1,
+    "fields": {
+      "itinerary": 1,
+      "stay": "12000.00",
+      "travel": "8000.00",
+      "food": "5000.00",
+      "misc": "5000.00"
+    }
+  }
+]
