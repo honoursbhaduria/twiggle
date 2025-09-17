@@ -74,29 +74,84 @@ def trending_destinations_api(request):
     serializer = HomeDestinationSerializer(trending, many=True)
     return Response({"trending_destinations": serializer.data})
 
-@api_view(['GET'])
-def destination_detail_api(request, slug):
-    destination = get_object_or_404(Destination, slug=slug)
+# @api_view(['GET'])
+# def destination_detail_api(request, slug):
+#     destination = get_object_or_404(Destination, slug=slug)
     
-    # optional filtering
-    itineraries = destination.itineraries.all()
+#     # optional filtering
+#     itineraries = destination.itineraries.all()
+#     category_slug = request.query_params.get("category")
+#     duration_days = request.query_params.get("duration_days")
+#     budget_max = request.query_params.get("budget_max")
+
+#     if category_slug:
+#         itineraries = itineraries.filter(category__slug=category_slug)
+#     if duration_days:
+#         itineraries = itineraries.filter(duration_days=duration_days)
+#     if budget_max:
+#         itineraries = itineraries.filter(total_budget__lte=budget_max)
+
+#     serializer = DestinationWithItinerariesSerializer(destination)
+#     data = serializer.data
+#     data["itineraries"] = ItinerarySerializer(itineraries, many=True).data
+
+#     return Response(data)
+@api_view(['GET'])
+def destination_detail_api(request, slug=None):
     category_slug = request.query_params.get("category")
     duration_days = request.query_params.get("duration_days")
     budget_max = request.query_params.get("budget_max")
 
-    if category_slug:
-        itineraries = itineraries.filter(category__slug=category_slug)
-    if duration_days:
-        itineraries = itineraries.filter(duration_days=duration_days)
-    if budget_max:
-        itineraries = itineraries.filter(total_budget__lte=budget_max)
+    # -----2221----- Single destination ------1----
+    if slug:
+        destination = get_object_or_404(Destination, slug=slug)
+        itineraries = destination.itineraries.all()
 
-    serializer = DestinationWithItinerariesSerializer(destination)
-    data = serializer.data
-    data["itineraries"] = ItinerarySerializer(itineraries, many=True).data
+        if category_slug:
+            itineraries = itineraries.filter(category__slug=category_slug)
+        if duration_days:
+            itineraries = itineraries.filter(duration_days=duration_days)
+        if budget_max:
+            itineraries = itineraries.filter(total_budget__lte=budget_max)
 
-    return Response(data)
+        # paginate itineraries
+        paginator = StandardResultsSetPagination()
+        itineraries_page = paginator.paginate_queryset(itineraries, request)
 
+        destination_data = DestinationWithItinerariesSerializer(destination).data
+        destination_data["itineraries"] = ItinerarySerializer(itineraries_page, many=True).data
+
+        return paginator.get_paginated_response(destination_data)
+
+    # -1232--------- All destinations ------1----
+    destinations = Destination.objects.all().prefetch_related("itineraries")
+    dest_paginator = StandardResultsSetPagination()
+    dest_page = dest_paginator.paginate_queryset(destinations, request)
+
+    results = []
+    for destination in dest_page:
+        itineraries = destination.itineraries.all()
+        if category_slug:
+            itineraries = itineraries.filter(category__slug=category_slug)
+        if duration_days:
+            itineraries = itineraries.filter(duration_days=duration_days)
+        if budget_max:
+            itineraries = itineraries.filter(total_budget__lte=budget_max)
+
+        # paginate itineraries per destination
+        itin_paginator = StandardResultsSetPagination()
+        itin_page = itin_paginator.paginate_queryset(itineraries, request)
+
+        dest_data = DestinationWithItinerariesSerializer(destination).data
+        dest_data["itineraries"] = {
+            "count": itin_paginator.page.paginator.count,
+            "next": itin_paginator.get_next_link(),
+            "previous": itin_paginator.get_previous_link(),
+            "results": ItinerarySerializer(itin_page, many=True).data,
+        }
+        results.append(dest_data)
+
+    return dest_paginator.get_paginated_response(results)
 
 @api_view(['GET'])
 def itinerary_detail_api(request, slug):

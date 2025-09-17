@@ -8,6 +8,7 @@ urlpatterns = [
     path("api/auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/auth/logout/", views.logout_view, name="logout"),
     path("api/trending-destinations/", views.trending_destinations_api, name="trending_destinations_api"),
+    path("api/destinations/", views.destination_detail_api, name="destination_list"), 
     path("api/destinations/<slug:slug>/", views.destination_detail_api, name="destination_detail_api"),
     path("api/itineraries/<slug:slug>/", views.itinerary_detail_api, name="itinerary_detail_api"),
     path("api/categories/tag/<slug:tag_slug>/", views.itineraries_by_tag, name="itineraries_by_tag"),
