@@ -17,5 +17,13 @@ urlpatterns = [
     path("api/destination/<slug:slug>/click/", views.destination_click_api, name="destination_click_api"),
     path("api/ratings/<str:model_name>/<int:object_id>/add/", views.add_rating, name="add_rating"),
     path("api/ratings/<str:model_name>/<int:object_id>/", views.get_ratings, name="get_ratings"),
+    path("api/recommendations/destinations/", views.recommended_destinations_api, name="recommended_destinations_api"),
+    path("api/recommendations/itineraries/", views.recommended_itineraries_api, name="recommended_itineraries_api"),
+    path("api/attractions/search/", views.search_attractions, name="search_attractions"),
+    path("api/search/suggestions/", views.search_suggestions, name="search_suggestions"),
+    path("api/search/results/", views.search_results, name="search_results"),
+
+
+
 
 ]

@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Destination, Itinerary, DayPlan, Attraction, Restaurant, Experience, BudgetBreakdown, Category, DayBudget, Tag, DestinationView, Rating
+from .models import (Destination, Itinerary, DayPlan, Attraction, Restaurant, Experience, BudgetBreakdown, Category, 
+                     DayBudget, Tag, DestinationView, Rating, Location)
 from .models import User
 from .utils import get_rating_summary
 
@@ -19,7 +20,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
-
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ["id", "city", "state", "country", "slug"]
+        
 class HomeDestinationSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
 
@@ -45,9 +50,10 @@ class CategorySerializer(serializers.ModelSerializer):
         
         
 class AttractionSerializer(serializers.ModelSerializer):
+    location = LocationSerializer(read_only=True)
     class Meta:
         model = Attraction
-        fields = ["id", "name", "description", "image", "estimated_cost", "latitude", "longitude", "google_place_id", "address"]
+        fields = ["id", "name", "description", "image", "estimated_cost", "latitude", "longitude", "google_place_id", "address", "location"]
     def get_average_rating(self, obj):
         return get_rating_summary(obj)["average_rating"]
 
@@ -56,9 +62,10 @@ class AttractionSerializer(serializers.ModelSerializer):
     
 
 class RestaurantSerializer(serializers.ModelSerializer):
+    location = LocationSerializer(read_only=True)
     class Meta:
         model = Restaurant
-        fields = ["id", "name", "cuisine", "description", "image", "estimated_cost", "latitude", "longitude", "google_place_id", "address"]
+        fields = ["id", "name", "cuisine", "description", "image", "estimated_cost", "latitude", "longitude", "google_place_id", "address", "location"]
     
     def get_average_rating(self, obj):
         return get_rating_summary(obj)["average_rating"]
@@ -132,19 +139,19 @@ class ItinerarySerializer(serializers.ModelSerializer):
     
 class DestinationWithItinerariesSerializer(serializers.ModelSerializer):
     itineraries = ItinerarySerializer(many=True, read_only=True)
-
+    location = LocationSerializer(read_only=True)
     class Meta:
         model = Destination
-        fields = ["id", "name", "slug", "description", "image", "itineraries"]
+        fields = ["id", "name", "slug", "description", "image", "itineraries", "location"]
 
 
 class DestinationDetailSerializer(serializers.ModelSerializer):
     itineraries = ItinerarySerializer(many=True, read_only=True)
-
+    location = LocationSerializer(read_only=True)
     class Meta:
         model = Destination
-        fields = ["id", "name", "description", "image", "itineraries"]
-        
+        fields = ["id", "name", "description", "image", "itineraries", "location"]
+
 
 
         
