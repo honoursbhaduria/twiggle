@@ -9,9 +9,10 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 
 import { toast } from "sonner"
+import { useAuth } from "../../hooks/useTravelApi"
 
 const registerSchema = z.object({
-  name: z.string().min(3, 'Name must be 3 characters long'),
+  username: z.string().min(3, 'Name must be 3 characters long'),
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be 6 character long'),
   confirmPassword: z.string().min(6, 'Password must be 6 character long')
@@ -22,33 +23,39 @@ const registerSchema = z.object({
 
 const RegisterForm = ({ onSuccess }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const { signup } = useAuth()
 
   // initialise form
   const form = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
+      username: "",
       email: "",
       password: "",
       confirmPassword: ""
     }
   })
 
+
+
   const onRegisterSubmit = async (values) => {
     setIsLoading(true)
+    console.log(values);
+
     try {
 
-      if (error) {
-        toast.error('failed to create account. pls try again')
-        return
-      }
+      const result = await signup({
+        username: values.username,
+        email: values.email,
+        password: values.password
+      })
       toast.success('your account has been created successfully. pls sign in')
 
       if (onSuccess) {
         onSuccess()
       }
-    } catch (error) {
-      console.log(error)
+    } catch (e) {
+      console.log(e)
     } finally {
       setIsLoading(false)
     }
@@ -59,7 +66,7 @@ const RegisterForm = ({ onSuccess }) => {
       <form onSubmit={form.handleSubmit(onRegisterSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="name"
+          name="username"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-gray-500">

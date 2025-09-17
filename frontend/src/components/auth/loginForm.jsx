@@ -2,11 +2,12 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { email, z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { toast } from "sonner"
+import { useAuth } from "../../hooks/useTravelApi"
 
 
 // schema
@@ -17,6 +18,7 @@ const loginSchema = z.object({
 
 const LoginForm = () => {
     const [isLoading, setIsLoading] = useState(false)
+    const { login } = useAuth()
 
     // initialise form
     const form = useForm({
@@ -30,12 +32,10 @@ const LoginForm = () => {
     const onLoginSubmit = async (values) => {
         setIsLoading(true)
         try {
-            
-
-            if (error) {
-                toast.error('Login Failed')
-                return
-            }
+            const result=await login({
+                email : values.email,
+                password : values.password
+            })
             toast.success('Login successfully')
         } catch (error) {
             console.log(error)
