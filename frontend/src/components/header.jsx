@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Menu, X ,Search} from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,11 +9,18 @@ const Header = () => {
          
           const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = () => {
-    if (query.trim()) {
-      console.log("Searching:", query);
-      // Add navigation or API logic here
+    if (query.trim() !== "") {
+      // Navigate to destination page with search parameter
+      navigate(`/destination?search=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -70,6 +77,7 @@ const Header = () => {
             placeholder="Search..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
             className="flex-1 px-2 py-1 text-sm outline-none"
             autoFocus
           />
@@ -79,7 +87,7 @@ const Header = () => {
         <button
           onClick={() => {
             if (open && query.trim()) {
-              handleSearch();
+              handleSearch()
             }
             setOpen(!open);
           }}

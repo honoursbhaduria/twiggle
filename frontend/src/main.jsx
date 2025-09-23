@@ -12,8 +12,7 @@ import Dashboard from './components/dashboard/dashboard.jsx'
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/auth", element: <Auth /> },
-  { path: "/destination", element: <Destination /> },
-  { path: "/destination/detail", element: <Detail /> },
+  { path: "/destination/", element: <Destination /> },
   { path: "/destination/:slug", element: <Detail /> },
   {path: "/dashboard",element : <Dashboard/>}
 ])
