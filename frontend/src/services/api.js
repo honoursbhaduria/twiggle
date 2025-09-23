@@ -111,6 +111,13 @@ export const authAPI = {
 
 // Destinations API calls
 export const destinationsAPI = {
+
+  //get all destination
+  getAllDestination: async ()=>{
+    const response = await api.get('/api/destinations/');
+    return response.data;
+  },
+
   // Get trending destinations
   getTrendingDestinations: async () => {
     const response = await api.get('/api/trending-destinations/');
@@ -122,6 +129,7 @@ export const destinationsAPI = {
     const response = await api.get(`/api/destinations/${slug}/`);
     return response.data;
   },
+  
 
   // Record view
   recordView: async (slug) => {

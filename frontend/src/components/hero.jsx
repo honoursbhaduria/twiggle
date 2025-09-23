@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import SearchBar from './search';
 
 function Hero() {
   
@@ -24,10 +25,10 @@ function Hero() {
             <div className="relative flex flex-col lg:flex-row  ">
               <div className="  ">
                 <div className="relative inline-block">
-                  <div className="w-80 h-40 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full relative overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                  <div className="w-80 h-40 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full relative overflow-hidden shadow-2xl ">
                     <img 
                       src="https://plus.unsplash.com/premium_photo-1661962542692-4fe7a4ad6b54?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-400"
                     />
                   </div>
                 </div>
@@ -38,6 +39,7 @@ function Hero() {
                   explore the
                 </h1>
               </div>
+              <SearchBar/>
             </div>
 
             {/* For The Ocean Section */}
@@ -50,10 +52,10 @@ function Hero() {
               
               <div className="lg:w-1/2 order-1 lg:order-2  lg:mb-0">
                 <div className="relative">
-                  <div className="w-210 h-45 bg-gradient-to-r from-blue-600 to-cyan-500  rounded-tl-full rounded-bl-full rounded-br-full relative overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                  <div className="w-210 h-45 bg-gradient-to-r from-blue-600 to-cyan-500  rounded-tl-full rounded-bl-full rounded-br-full relative overflow-hidden shadow-2xl ">
                     <img 
                       src="https://images.unsplash.com/photo-1751566609738-e1ed580bcb33?q=80&w=1352&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-400"
                     />
                   </div>
                 </div>
@@ -63,11 +65,11 @@ function Hero() {
             {/* Ocean Section with Coral Reef */}
             <div className="relative flex flex-col lg:flex-row items-center  gap-70 ">
               <div className="lg:w-1/2 mb-8 lg:mb-0 relative">
-                <div className="w-220 h-45 bg-gradient-to-r from-teal-500 to-blue-600  rounded-tr-full rounded-bl-full rounded-br-full relative overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
+                <div className="w-220 h-45 bg-gradient-to-r from-teal-500 to-blue-600  rounded-tr-full rounded-bl-full rounded-br-full relative overflow-hidden shadow-2xl ">
                   <img 
                     src="https://images.unsplash.com/photo-1595433306946-233f47e4af3a?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     alt="Coral reef with tropical fish"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-400"
                   />
                 </div>
                 

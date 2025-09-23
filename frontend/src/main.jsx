@@ -6,19 +6,20 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import LandingPage from './components/landingPage.jsx'
 import Auth from './components/auth/auth.jsx'
 import Destination from './components/destination/destination.jsx'
-import Detail from './components/destination/detail.jsx'
+import Detail from './components/detail/detail.jsx'
+import Dashboard from './components/dashboard/dashboard.jsx'
 
 const router = createBrowserRouter([
-  {path : "/",element:<LandingPage/>},
-  {path : "/auth",element:<Auth/>},
-  {path : "/destination",element:<Destination/>},
-    {path : "/destination/detail",element:<Detail/>}
-
+  { path: "/", element: <LandingPage /> },
+  { path: "/auth", element: <Auth /> },
+  { path: "/destination", element: <Destination /> },
+  { path: "/destination/detail", element: <Detail /> },
+  { path: "/destination/:slug", element: <Detail /> },
+  {path: "/dashboard",element : <Dashboard/>}
 ])
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
   </StrictMode>,
 )

@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { Menu, X } from 'lucide-react';
+import { Menu, X ,Search} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
          const [scrolled,setScrolled]=useState(false)
          const [selected,setSelected]=useState('')
+         
+          const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      console.log("Searching:", query);
+      // Add navigation or API logic here
+    }
+  };
+
+  
 
   useEffect(()=>{
     const handleScroll=()=>{
@@ -43,6 +55,41 @@ const Header = () => {
                     <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium">
                       CONTACT
                     </a>
+                    <div>
+                       <div className="flex items-center">
+      {/* Collapsible search box */}
+      <div
+        className={`flex items-center   bg-transparent overflow-hidden transition-all duration-300 ${
+          open ? "w-64 px-2 shadow-md rounded-full " : "w-10"
+        }`}
+      >
+        {/* Search input (hidden when closed) */}
+        {open && (
+          <input
+            type="text"
+            placeholder="Search..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="flex-1 px-2 py-1 text-sm outline-none"
+            autoFocus
+          />
+        )}
+
+        {/* Search icon button */}
+        <button
+          onClick={() => {
+            if (open && query.trim()) {
+              handleSearch();
+            }
+            setOpen(!open);
+          }}
+          className="p-2 text-gray-600 font-bold hover:text-gray-900"
+        >
+          <Search size={18} />
+        </button>
+      </div>
+    </div>
+                    </div>
                   </div>
         
                   {/* Donate Button & Mobile Menu */}

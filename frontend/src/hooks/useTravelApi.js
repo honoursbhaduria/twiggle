@@ -31,7 +31,7 @@ const useApiCall = (apiFunction, dependencies = [], immediate = true) => {
 
   useEffect(() => {
     if (immediate && apiFunction) {
-      execute();
+      execute(...dependencies);
     }
   }, dependencies);
 
@@ -86,13 +86,18 @@ export const useTrendingDestinations = () => {
   return useApiCall(destinationsAPI.getTrendingDestinations, [], true);
 };
 
+export const useAllDestination=()=>{
+  return useApiCall(destinationsAPI.getAllDestination,[],true);
+}
+
 // Single destination hook
 export const useDestination = (slug) => {
   const { data, loading, error, execute } = useApiCall(
     destinationsAPI.getDestination, 
     [slug], 
-    !!slug
+    !!slug,
   );
+
 
   const recordView = () => destinationsAPI.recordView(slug);
   const recordDwell = (dwellTime) => destinationsAPI.recordDwell(slug, dwellTime);
