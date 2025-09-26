@@ -504,7 +504,7 @@ function LandingPage() {
     <div
       key={index}
       style={{ backgroundColor: item.color }}
-      className="rounded-2xl w-80 p-4 max-w-md mx-auto shadow hover:shadow-lg hover:scale-105 transition-transform duration-300"
+      className="rounded-2xl w-80 p-4 max-w-md mx-auto shadow hover:shadow-xl transition-shadow duration-300"
     >
       {/* Image */}
       <div className="flex flex-col items-center space-y-3">
