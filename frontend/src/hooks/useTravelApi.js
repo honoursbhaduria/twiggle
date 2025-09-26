@@ -45,7 +45,7 @@ export const useAuth = () => {
 
   const login = async (credentials) => {
     try {
-      const result = await authAPI.login(credentials);
+      const result = await authAPI.login(credentials);bold
       setIsAuthenticated(true);
       return result;
     } catch (error) {

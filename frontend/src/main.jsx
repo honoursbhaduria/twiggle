@@ -7,14 +7,17 @@ import LandingPage from './components/landingPage.jsx'
 import Auth from './components/auth/auth.jsx'
 import Destination from './components/destination/destination.jsx'
 import Detail from './components/detail/detail.jsx'
-import Dashboard from './components/dashboard/dashboard.jsx'
+import TravelDashboard from './components/dashboard/dashboard.jsx'
+import TravelItineraryForm from './components/detail/edit.jsx'
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/auth", element: <Auth /> },
   { path: "/destination/", element: <Destination /> },
   { path: "/destination/:slug", element: <Detail /> },
-  {path: "/dashboard",element : <Dashboard/>}
+  {path: "/dashboard",element : <TravelDashboard/>},
+  {path: "/destination/:slug/edit", element : <TravelItineraryForm/>}
+
 ])
 
 createRoot(document.getElementById('root')).render(

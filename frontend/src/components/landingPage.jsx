@@ -8,6 +8,9 @@ import { CometCard } from "@/components/ui/comet-card";
 import TravelGurus from "./travelGuru";
 import Hero from "./hero";
 import Footer from "./footer";
+import { useAuth } from "../hooks/useTravelApi";
+
+// cosnt {isauthen}=useAuth()
 
  const cards = [
   {

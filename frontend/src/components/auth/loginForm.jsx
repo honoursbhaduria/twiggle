@@ -8,6 +8,7 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { toast } from "sonner"
 import { useAuth } from "../../hooks/useTravelApi"
+import { useNavigate } from "react-router-dom"
 
 
 // schema
@@ -16,9 +17,11 @@ const loginSchema = z.object({
     password: z.string().min(6, 'password atleast 6 character long')
 })
 
+
 const LoginForm = () => {
     const [isLoading, setIsLoading] = useState(false)
     const { login } = useAuth()
+    const navigate = useNavigate()
 
     // initialise form
     const form = useForm({
@@ -37,10 +40,12 @@ const LoginForm = () => {
                 password : values.password
             })
             toast.success('Login successfully')
+           
         } catch (error) {
             console.log(error)
         } finally {
             setIsLoading(false)
+             navigate('/dashboard')
         }
     }
 
