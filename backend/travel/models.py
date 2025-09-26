@@ -1,5 +1,5 @@
 # travel/models.py
-from django.db import models
+from django.db import models, transaction
 from django.utils.text import slugify
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
@@ -7,6 +7,8 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
+from cloudinary.models import CloudinaryField
+
 class User(AbstractUser):
     class Roles(models.TextChoices):
         USER = "USER", "User"
@@ -40,28 +42,68 @@ class Location(models.Model):
 
     def __str__(self):
         return f"{self.city}, {self.state}, {self.country}".replace(" ,", "")
-    
 class Destination(models.Model):
     name = models.CharField(max_length=100, unique=True, db_index=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name="destinations")
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='destinations/')
-    is_trending = models.BooleanField(default=False)  # for homepage trending cards
+    image = CloudinaryField('image', blank=True, null=True, folder="destinations/")  # keep thumbnail
+    is_trending = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    def primary_image(self):
+        return self.images.filter(is_primary=True).first() or self.images.first()
+
     def __str__(self):
         return self.name
+    
+class DestinationImage(models.Model):
+    destination = models.ForeignKey(
+        Destination,
+        on_delete=models.CASCADE,
+        related_name="images",
+        db_index=True,
+    )
+    image = CloudinaryField('image', blank=True, null=True, folder="destinations/")
+    alt_text = models.CharField(max_length=160, blank=True)
+    is_primary = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["order", "id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["destination"],
+                condition=models.Q(is_primary=True),
+                name="unique_primary_image_per_destination",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.destination.name} | #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        # ensure only one primary image per destination
+        with transaction.atomic():
+            super().save(*args, **kwargs)
+            if self.is_primary:
+                DestinationImage.objects.filter(
+                    destination=self.destination, is_primary=True
+                ).exclude(pk=self.pk).update(is_primary=False)
+
+
+
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, blank=True)
-    icon = models.ImageField(upload_to='categories/', blank=True, null=True)
+    icon = CloudinaryField('image', blank=True, null=True, folder="categories/")
     is_trending = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
@@ -74,18 +116,39 @@ class Category(models.Model):
 
 
 class Itinerary(models.Model):
+    class AuthorTypes(models.TextChoices):
+        USER = "USER", "User"
+        GURU = "GURU", "Travel Guru"
+        ADMIN = "ADMIN", "Admin"
+        AI = "AI", "AI Generated"
     destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name="itineraries")
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    categories = models.ManyToManyField("Category", blank=True, related_name="itineraries")  
     title = models.CharField(max_length=150)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=150)
+    short_description = models.TextField(
+        blank=True,
+        help_text="A short summary of the itinerary for cards/list views (2–3 lines)."
+    )
+
     duration_days = models.IntegerField()
     duration_nights = models.IntegerField()
     total_budget = models.DecimalField(max_digits=10, decimal_places=2)
-    thumbnail = models.ImageField(upload_to='itineraries/')
+    thumbnail = CloudinaryField('image', blank=True, null=True, folder="itineraries/")
     highlighted_places = models.TextField(help_text="Comma-separated values like Beach, Fort", db_index=True)
     popularity_score = models.IntegerField(default=0)
     tags = models.ManyToManyField("Tag", blank=True, related_name="itineraries")
-
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_itineraries"
+    )
+    author_type = models.CharField(
+        max_length=10, choices=AuthorTypes.choices, default=AuthorTypes.AI
+    )
+    is_public = models.BooleanField(default=True)
+    
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(f"{self.destination.name}-{self.title}")
@@ -100,19 +163,7 @@ class Itinerary(models.Model):
     def __str__(self):
         return f"{self.title} - {self.destination.name}"
 
-def save(self, *args, **kwargs):
-    if not self.slug:
-        base_slug = slugify(f"{self.destination.name}-{self.title}")
-        slug = base_slug
-        counter = 1
-        while Itinerary.objects.filter(slug=slug).exists():
-            slug = f"{base_slug}-{counter}"
-            counter += 1
-        self.slug = slug
-    super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"{self.title} - {self.destination.name}"
 
 
 class DayPlan(models.Model):
@@ -142,7 +193,7 @@ class BudgetBreakdown(models.Model):
 
 class BudgetCategory(models.Model):
     name = models.CharField(max_length=50)  # e.g., Attractions, Transport, Food
-    icon = models.ImageField(upload_to='budget_categories/', blank=True, null=True)
+    icon = CloudinaryField('image', blank=True, null=True, folder="budget_categories/")
 
 class BudgetItem(models.Model):
     day_plan = models.ForeignKey(DayPlan, on_delete=models.CASCADE, related_name='budget_items')
@@ -161,21 +212,60 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+class AttractionImage(models.Model):
+    attraction = models.ForeignKey(
+        "Attraction",
+        on_delete=models.CASCADE,
+        related_name="images",
+        db_index=True,
+    )
+    image = CloudinaryField('image', blank=True, null=True, folder="attractions/")
+    # image = CloudinaryField('image')
+    alt_text = models.CharField(max_length=160, blank=True)
+    is_primary = models.BooleanField(default=False)
+    order = models.PositiveIntegerField(default=0, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ["order", "id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["attraction"],
+                condition=models.Q(is_primary=True),
+                name="unique_primary_image_per_attraction",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.attraction.name} | #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        # ensure only one primary per attraction
+        with transaction.atomic():
+            super().save(*args, **kwargs)
+            if self.is_primary:
+                AttractionImage.objects.filter(
+                    attraction=self.attraction, is_primary=True
+                ).exclude(pk=self.pk).update(is_primary=False)
+                
 
 class Attraction(models.Model):
-    day_plan = models.ForeignKey(DayPlan, on_delete=models.CASCADE, related_name="attractions",
-                                  blank=True, null=True)
+    day_plan = models.ForeignKey(
+        DayPlan,
+        on_delete=models.SET_NULL,   # 👈 changed from CASCADE
+        related_name="attractions",
+        blank=True,
+        null=True
+        )
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name="attractions")
     name = models.CharField(max_length=100, db_index=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='attractions/', blank=True, null=True)
-    
+    image = CloudinaryField('image', blank=True, null=True, folder="attractions/")
     latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     google_place_id = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True)
-
+    categories = models.ManyToManyField("Category", blank=True, related_name="attractions")
     estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     duration_minutes = models.PositiveIntegerField(default=0)
     start_time = models.TimeField(blank=True, null=True)
@@ -185,17 +275,24 @@ class Attraction(models.Model):
     
     
     def __str__(self):
-        return f"{self.name} (Day {self.day_plan.day_number})"
+        if self.day_plan:
+            return f"{self.name} (Day {self.day_plan.day_number})"
+        return self.name
 
 
 class Restaurant(models.Model):
-    day_plan = models.ForeignKey(DayPlan, on_delete=models.CASCADE, related_name="restaurants",
-                                  blank=True, null=True)
+    day_plan = models.ForeignKey(
+        DayPlan,
+        on_delete=models.SET_NULL,   # 👈 changed from CASCADE
+        related_name="restaurants",
+        blank=True,
+        null=True
+    )
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name="restaurants")
     name = models.CharField(max_length=100)
     cuisine = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='restaurants/', blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True, folder="restaurants/")
     latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     google_place_id = models.CharField(max_length=255, blank=True, null=True)  # for Google Maps integration
@@ -204,21 +301,29 @@ class Restaurant(models.Model):
     
     
     def __str__(self):
-        return f"{self.name} (Day {self.day_plan.day_number})"
+        if self.day_plan:
+            return f"{self.name} (Day {self.day_plan.day_number})"
+        return self.name
 
 
 class Experience(models.Model):
-    day_plan = models.ForeignKey(DayPlan, on_delete=models.CASCADE, related_name="experiences")
+    attraction = models.ForeignKey(
+        Attraction, on_delete=models.CASCADE,
+        related_name="experiences", null=True, blank=True
+    )
+    day_plan = models.ForeignKey(   # optional fallback
+        DayPlan, on_delete=models.CASCADE,
+        related_name="extra_experiences", null=True, blank=True
+    )
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='experiences/', blank=True, null=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
-    google_place_id = models.CharField(max_length=255, blank=True, null=True)  # for Google Maps integration
+    image = CloudinaryField('image', blank=True, null=True, folder="experiences/")
     address = models.CharField(max_length=255, blank=True)
     estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
     def __str__(self):
-        return f"{self.name} (Day {self.day_plan.day_number})"
+        location_info = f" at {self.attraction.name}" if self.attraction else ""
+        return f"{self.name}{location_info}"
 
 
 class DayBudget(models.Model):
@@ -281,3 +386,42 @@ class Rating(models.Model):
 
     def __str__(self):
         return f"{self.user} rated {self.rating} on {self.content_object}"
+    
+class FavoriteItinerary(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="favorite_itineraries"
+    )
+    itinerary = models.ForeignKey(
+        Itinerary,
+        on_delete=models.CASCADE,
+        related_name="favorited_by"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "itinerary")
+        
+"""API Endpoints
+POST /api/itineraries/<int:id>/favorite/ → mark as favorite
+DELETE /api/itineraries/<int:id>/favorite/ → remove favorite
+GET /api/user/favorites/ → list all favorited itineraries"""
+
+
+class UserTask(models.Model):
+    class TaskTypes(models.TextChoices):
+        CUSTOM_ITINERARY = "custom_itinerary", "Custom Itinerary"
+        REVIEW = "review", "Review"
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tasks")
+    task_type = models.CharField(max_length=50, choices=TaskTypes.choices)
+    related_itinerary = models.ForeignKey(Itinerary, on_delete=models.CASCADE, null=True, blank=True)
+    status = models.CharField(
+        max_length=20,
+        default="pending",
+        choices=[("pending", "Pending"), ("done", "Done")]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    

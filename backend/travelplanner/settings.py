@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,6 +35,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'nested_admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +46,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'cloudinary_storage',
+    'cloudinary',
     'travel',
 ]
 
@@ -55,6 +61,26 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# cloudinary.config( 
+#   cloud_name = "dpotv2nen", 
+#   api_key = "855389379754264", 
+#   api_secret = "uhZvXmpXJSBB_KkNaNZWcT0GB_s"
+# )
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dpotv2nen',
+    'API_KEY': '855389379754264',
+    'API_SECRET': 'uhZvXmpXJSBB_KkNaNZWcT0GB_s'
+}
+
+
+cloudinary.config(
+    cloud_name=CLOUDINARY_STORAGE["CLOUD_NAME"],
+    api_key=CLOUDINARY_STORAGE["API_KEY"],
+    api_secret=CLOUDINARY_STORAGE["API_SECRET"],
+    secure=True
+)
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -84,6 +110,9 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework_orjson.renderers.ORJSONRenderer",  
+    ],
 }
 
 TEMPLATES = [
@@ -104,19 +133,52 @@ TEMPLATES = [
 WSGI_APPLICATION = 'travelplanner.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+defaullt=os.getenv("ENV")
+print(defaullt)
+print("above line is env variable")
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "neondb",
+#         "USER": "neondb_owner",
+#         "PASSWORD": "npg_IhH2ROQ8UcEk",
+#         "HOST": "ep-nameless-lake-a1p5w4vi-pooler.ap-southeast-1.aws.neon.tech",
+#         "PORT": "5432",
+#         "OPTIONS": {
+#             "sslmode": "require",              
+#             "channel_binding": "require",      
+#         },
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "neondb",
+        "USER": "neondb_owner",
+        "PASSWORD": "npg_IhH2ROQ8UcEk",
+        "HOST": "ep-nameless-lake-a1p5w4vi-pooler.ap-southeast-1.aws.neon.tech",
+        "PORT": "5432",
+        "OPTIONS": {
+            "sslmode": "require",
+            "client_encoding": "UTF8",
+        },
     }
 }
 
+# ✅ disable server-side cursors (important for Neon)
+DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True  
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# ✅ persistent connections (prevents Neon from dropping idle conns too fast)
+CONN_MAX_AGE = 600
+
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -155,9 +217,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = []
 
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'  # or any prefix you choose
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
