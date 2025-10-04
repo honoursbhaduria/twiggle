@@ -47,7 +47,7 @@ export default function SidebarDemo() {
   return (
     <div
       className={cn(
-        " flex h-[100vh] w-fit   flex-1 flex-col overflow-hidden fixed  rounded-md border z-50 border-neutral-200 bg-gray-200 md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
+        " flex h-[100vh] w-fit  bg-transparent border-none   flex-1 flex-col overflow-hidden fixed  rounded-md border z-50 md:border-neutral-200 md:bg-gray-200  md:flex-row dark:border-neutral-700 dark:bg-neutral-800",
         // for your use case, use `h-screen` instead of `h-[60vh]`
         "h-screen"
       )}>
@@ -112,10 +112,3 @@ export const LogoIcon = () => {
 };
 
 
-const Dashboard = () => {
-  return (
-
-      <TravelCard/>
-  
-  );
-};

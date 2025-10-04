@@ -103,7 +103,7 @@ const Header = () => {
                   {/* Donate Button & Mobile Menu */}
                   <div className="flex items-center space-x-4">
                     <Link to={"/auth"}>
-                    <button className="bg-black text-white px-8 py-3 font-semibold hover:bg-gray-800 transition-colors duration-200">
+                    <button className="bg-black text-white px-8 py-3 font-semibold hover:bg-gray-800 transition-colors duration-200 rounded-full">
                       LOGIN
                     </button>
                     </Link>
@@ -123,10 +123,10 @@ const Header = () => {
                   <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t">
                     <div className="flex flex-col space-y-4 px-6 py-6">
                       <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium">
-                        ABOUT
+                         DESTINATION
                       </a>
                       <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium">
-                        PROJECTS
+                        
                       </a>
                       <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium">
                         RESOURCE

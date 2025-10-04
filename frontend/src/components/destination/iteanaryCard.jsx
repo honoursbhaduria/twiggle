@@ -1,31 +1,28 @@
 import { Search, Heart, MapPin, Clock, Wallet, Tag } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { useAllDestination } from "../../hooks/useTravelApi";
+import { Link, useParams } from "react-router-dom";
+import { useDestination } from "../../hooks/useTravelApi";
 import Lottie from "lottie-react";
 import animationData from "./animation.json"
+import { Sidebar } from "../ui/sidebar";
+import SidebarDemo from "./sidebar";
 
-export default function TravelCard({ initialSearchQuery = '' }) {
+
+export default function ItearnaryCard({ initialSearchQuery = '' }) {
   const [activeTab, setActiveTab] = useState('All');
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [likedItems, setLikedItems] = useState(new Set());
-  const [currentImageIndex, setCurrentImageIndex] = useState({});
-  const [hoverTimeouts, setHoverTimeouts] = useState({});
-  const { data, loading, error } = useAllDestination()
+  const {slug}=useParams()
+  console.log(slug);
+  
+  const { destination:data, loading, error } = useDestination(slug)
+  console.log("test:",data);
+  
 
   // Update search query when initialSearchQuery changes (from URL)
   useEffect(() => {
     setSearchQuery(initialSearchQuery);
   }, [initialSearchQuery]);
-
-  // Cleanup intervals on unmount
-  useEffect(() => {
-    return () => {
-      Object.values(hoverTimeouts).forEach(timeout => {
-        if (timeout) clearInterval(timeout);
-      });
-    };
-  }, [hoverTimeouts]);
 
   console.log('Data structure:', data);
   console.log('Search query:', searchQuery);
@@ -45,111 +42,58 @@ export default function TravelCard({ initialSearchQuery = '' }) {
     });
   };
 
-  // Image carousel functions
-  const handleImageClick = (destinationId, totalImages) => {
-    setCurrentImageIndex(prev => ({
-      ...prev,
-      [destinationId]: ((prev[destinationId] || 0) + 1) % totalImages
-    }));
-  };
-
-  const handleMouseEnter = (destinationId, totalImages) => {
-    if (totalImages <= 1) return;
-    
-    const interval = setInterval(() => {
-      setCurrentImageIndex(prev => ({
-        ...prev,
-        [destinationId]: ((prev[destinationId] || 0) + 1) % totalImages
-      }));
-    }, 2000);
-
-    setHoverTimeouts(prev => ({
-      ...prev,
-      [destinationId]: interval
-    }));
-  };
-
-  const handleMouseLeave = (destinationId) => {
-    if (hoverTimeouts[destinationId]) {
-      clearInterval(hoverTimeouts[destinationId]);
-      setHoverTimeouts(prev => {
-        const newTimeouts = { ...prev };
-        delete newTimeouts[destinationId];
-        return newTimeouts;
-      });
-    }
-  };
-
-  const handleDotClick = (destinationId, imageIndex, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentImageIndex(prev => ({
-      ...prev,
-      [destinationId]: imageIndex
-    }));
-  };
-
-  // Filter destinations based on search query & category tab
+  // Filter destinations based on search query
   const filteredDestinations = useMemo(() => {
     if (!data?.results || !Array.isArray(data.results)) {
       return [];
     }
 
-    const baseList = data.results;
     const query = searchQuery.toLowerCase().trim();
-    const tab = activeTab.toLowerCase();
-
-    return baseList.filter((destination) => {
-      const matchesSearch = !query || [
-        destination.name,
-        destination.description,
-        destination.short_description,
-        destination.slug
-      ].some((field) => field?.toLowerCase().includes(query));
-
-      const matchesTab = activeTab === 'All' ||
-        destination?.categories?.some((category) => category?.name?.toLowerCase() === tab || category?.slug?.toLowerCase() === tab) ||
-        destination?.tags?.some((tag) => tag?.name?.toLowerCase() === tab || tag?.toLowerCase?.() === tab);
-
-      return matchesSearch && matchesTab;
+    return data.results.filter(destination => {
+      if (!query) return true;
+      return [destination.title, destination.description, destination.slug]
+        .some((field) => field?.toLowerCase().includes(query));
     });
-  }, [data, searchQuery, activeTab]);
+  }, [data, searchQuery]);
 
-  if (loading) return   <Lottie
-                animationData={animationData}
-                loop={true}
-                className="absolute  left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
-                style={{ width: "300px", height: "500px" }}
-              />
+  if (loading) return <Lottie
+                  animationData={animationData}
+                  loop={true}
+                  className="absolute  left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
+                  style={{ width: "300px", height: "500px" }}
+                />;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white w-full">
       {/* Header */}
+      
+     <div><SidebarDemo/></div>
+
       <div className="max-w-7xl mx-auto px-4 py-10">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-blue-500">Destinations</p>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">Find your next story-worthy escape</h1>
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-blue-500">Itineraries</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">Curated journeys tailored to {data?.title || 'your travel goals'}</h1>
             <p className="text-slate-500 mt-3 max-w-2xl">
-              Browse hand-crafted itineraries with the right balance of experiences, food, and downtime. Filter, shortlist, and dive deeper into the journeys that resonate with you.
+              Scroll through the day-by-day breakdowns, signature experiences, and logistics we’ve already planned so you can focus on the memories.
             </p>
           </div>
           <div className="hidden md:flex items-center gap-2 text-sm text-slate-500 bg-white border border-slate-200 rounded-full px-4 py-2 shadow-sm">
             <span className="inline-flex h-2 w-2 rounded-full bg-green-400" />
-            {filteredDestinations.length} destination{filteredDestinations.length === 1 ? '' : 's'} curated for you
+            {filteredDestinations.length} itinerary{filteredDestinations.length === 1 ? '' : 'ies'} available
           </div>
         </div>
 
-        
+      
 
         {/* Search Bar */}
-        <div className="relative mb-8">
+        <div className="relative mb-10">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search destinations, experiences, or keywords"
+              placeholder="Search itineraries, experiences, or keywords"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all shadow-sm"
@@ -157,34 +101,17 @@ export default function TravelCard({ initialSearchQuery = '' }) {
           </div>
           {searchQuery && (
             <div className="mt-2 text-sm text-slate-500">
-              Found {filteredDestinations.length} destination(s) matching "{searchQuery}"
+              Found {filteredDestinations.length} itinerary matching "{searchQuery}"
             </div>
           )}
-        </div>
-
-        {/* Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-hide">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-full border text-sm transition-all duration-200 whitespace-nowrap ${
-                activeTab === tab
-                  ? 'bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/20'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:text-slate-900'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
         </div>
 
         {/* Featured Guides Section */}
         <div className="mb-12">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <h2 className="text-2xl font-semibold text-slate-900">Featured destinations</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">Featured itineraries</h2>
             <div className="text-sm text-slate-500">
-              {activeTab === 'All' ? 'Explore everything in our catalogue.' : `Curated picks for “${activeTab}” getaways.`}
+              Jump into the itineraries that match your vibe.
             </div>
           </div>
 
@@ -204,17 +131,13 @@ export default function TravelCard({ initialSearchQuery = '' }) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredDestinations.length > 0 ? (
                 filteredDestinations.map((destination) => (
-                  <Link to={`/destination/${destination.slug}`} key={destination.id} className="block h-full">
+                  <Link to={`/destination/iteanary/${destination.slug}`} key={destination.id} className="block h-full">
                     <article className="group flex flex-col h-full rounded-3xl border border-slate-100 bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden">
-                      <div 
-                        className="relative aspect-[4/3] bg-slate-200"
-                        onMouseEnter={() => handleMouseEnter(destination.id, destination.images?.length || 0)}
-                        onMouseLeave={() => handleMouseLeave(destination.id)}
-                      >
-                        {destination.images?.length ? (
+                      <div className="relative aspect-[4/3] bg-slate-200">
+                        {destination.thumbnail ? (
                           <img
-                            src={destination.images?.[currentImageIndex[destination.id] || 0] || destination.images?.[0]}
-                            alt={destination.name}
+                            src={destination.thumbnail}
+                            alt={destination.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                         ) : (
@@ -222,26 +145,8 @@ export default function TravelCard({ initialSearchQuery = '' }) {
                             Image coming soon
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-slate-900/10 to-transparent opacity-75 group-hover:opacity-85 transition-opacity" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-900/10 to-transparent opacity-75 group-hover:opacity-85 transition-opacity" />
 
-                        {/* Image dots indicator */}
-                        {destination.images && destination.images.length > 1 && (
-                          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                            {destination.images.map((_, index) => (
-                              <button
-                                key={index}
-                                onClick={(e) => handleDotClick(destination.id, index, e)}
-                                className={`w-2 h-2 rounded-full transition-all duration-200 border border-white/60 ${
-                                  (currentImageIndex[destination.id] || 0) === index
-                                    ? 'bg-white scale-125'
-                                    : 'bg-white/30 hover:bg-white/60'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Heart icon */}
                         <button
                           onClick={(e) => {
                             e.preventDefault();
@@ -258,20 +163,20 @@ export default function TravelCard({ initialSearchQuery = '' }) {
                           />
                         </button>
 
-                        {/* Title overlay */}
                         <div className="absolute bottom-4 left-4 right-4 text-white drop-shadow-lg">
                           <div className="flex items-center gap-2 text-xs uppercase tracking-wider mb-1">
-                            <MapPin className="w-4 h-4" />
-                            <span className="text-base">{destination.highlighted_places || destination.name}</span>
+                            <MapPin className="w-3 h-3" />
+                            <span>{destination.highlighted_places || destination.title}</span>
                           </div>
+                          <h3 className="text-lg font-semibold leading-snug">
+                            {destination.title}
+                          </h3>
                         </div>
-
                       </div>
 
-                      {/* Card Content */}
                       <div className="flex-1 flex flex-col gap-4 p-5">
                         <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
-                          {destination.short_description || destination.description || 'Discover curated experiences, local favorites, and thoughtful downtime built into this itinerary.'}
+                          {destination.short_description || destination.description || 'This itinerary balances must-see highlights with local discoveries and built-in breathing space.'}
                         </p>
 
                         <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-500">
@@ -305,7 +210,7 @@ export default function TravelCard({ initialSearchQuery = '' }) {
                 ))
               ) : (
                 <div className="col-span-full text-center py-8">
-                  <p className="text-slate-500">No destinations found matching your filters. Try another keyword or category.</p>
+                  <p className="text-slate-500">No itineraries found matching "{searchQuery}"</p>
                 </div>
               )}
             </div>

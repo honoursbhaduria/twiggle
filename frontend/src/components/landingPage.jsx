@@ -330,9 +330,9 @@ import { useAuth } from "../hooks/useTravelApi";
 function LandingPage() {
 
   return (
-    <div className=" bg-cover bg-center min-h-screen mt-10 overflow-hidden">
+    <div className="bg-cover bg-center min-h-screen mt-20 md:mt-10 overflow-hidden px-4 md:px-0">
 
-    <div className="h-screen bg-[url('/bg3.jpg')] bg-cover bg-center min-h-screen mt-10 overflow-hidden rounded-b-2xl ">
+    <div className="h-screen bg-cover bg-center min-h-screen mt-4 md:mt-10 overflow-hidden rounded-b-2xl">
   <Header />
       <Hero/>
     </div>
@@ -340,33 +340,31 @@ function LandingPage() {
      
 
       {/* 2nd comp */}
-      <div className="w-full h-screen mt-10 mb-70">
-        <div className="text-6xl font-bold font-sans text-center mb-10">
+      <div className="w-full min-h-screen mt-10 mb-10 md:mb-70 px-4 md:px-0">
+        <div className="text-3xl md:text-6xl font-bold font-sans text-center mb-6 md:mb-10">
           Trending Now
         </div>
-        <h1 className=" text-xl text-center text-gray-600">Discover what's capturing hearts across India. From serene beaches to majestic mountains.</h1>
+        <h1 className="text-base md:text-xl text-center text-gray-600 px-4 md:px-0">Discover what's capturing hearts across India. From serene beaches to majestic mountains.</h1>
 
-        <div className="mt-10">
-          <FocusCards cards={cards} />;
-
-          
+        <div className="mt-6 md:mt-10">
+          <FocusCards cards={cards} />
         </div>
       </div>
 
        {/* 3rd componet */}
-      <div className="w-full  mt-10">
-        <div className="text-6xl font-bold font-sans text-center ">
+      <div className="w-full mt-10 px-4 md:px-0">
+        <div className="text-3xl md:text-6xl font-bold font-sans text-center mb-6 md:mb-10">
           How it Works?
         </div>
 
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-0">
           {/* Left column */}
-          <div className="flex items-center justify-center">
-            <div className="max-w-md ">
-               <h1 className="text-6xl lg:text-7xl font-black text-gray-900 leading-none tracking-tight mb-4">
+          <div className="flex items-center justify-center order-2 lg:order-1">
+            <div className="max-w-md px-4 md:px-0">
+               <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-gray-900 leading-tight md:leading-none tracking-tight mb-4">
                   Handcrafted journeys
                 </h1>
-              <p className="text-xl text-gray-600">
+              <p className="text-base md:text-xl text-gray-600">
                 Premium itineraries designed by our travel experts. Each journey is
                 carefully curated for the perfect blend of adventure, culture, and
                 luxury.
@@ -375,11 +373,11 @@ function LandingPage() {
           </div>
 
           {/* Right column */}
-          <div className="flex items-center justify-center ">
-            <CometCard className="">
+          <div className="flex items-center justify-center order-1 lg:order-2">
+            <CometCard className="w-full max-w-md mx-auto">
               <button
                 type="button"
-                className="my-10 flex w-120  cursor-pointer flex-col items-stretch rounded-[16px] border-0    md:my-20 md:p-4"
+                className="my-6 md:my-10 flex w-full cursor-pointer flex-col items-stretch rounded-[16px] border-0 md:p-4"
                 aria-label="View invite F7RA"
                 style={{
                   transformStyle: "preserve-3d",
@@ -388,10 +386,10 @@ function LandingPage() {
                 }}
               >
                 <div className="mx-2 flex-1">
-                  <div className="relative mt-2 h-24 w-full">
+                  <div className="relative mt-2 h-16 md:h-24 w-full">
                     <img
                       loading="lazy"
-                      className="absolute inset-0 h-full w-full rounded-[16px]  object-cover "
+                      className="absolute inset-0 h-full w-full rounded-[16px] object-cover"
                       alt="Invite background"
                       src="/bg.jpg"
                       style={{
@@ -401,92 +399,79 @@ function LandingPage() {
                     />
                   </div>
                 </div>
-                <div className="mt-2 flex flex-shrink-0 items-center justify-between p-4 font-mono text-white">
+                <div className="mt-2 flex flex-shrink-0 items-center justify-between p-2 md:p-4 font-mono text-white">
                   <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
                     {/* Header with rating */}
-                    <div className="flex items-center justify-between p-4 pb-2 gap-1">
+                    <div className="flex items-center justify-between p-3 md:p-4 pb-2 gap-1">
                       <div className="flex items-center gap-2">
-
-                        <span className="text-lg font-semibold text-gray-800">5 Days Kerala Backwaters & Spices</span>
+                        <span className="text-sm md:text-lg font-semibold text-gray-800">5 Days Kerala Backwaters & Spices</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-medium text-black">4.8</span>
+                        <Star className="w-3 h-3 md:w-4 md:h-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-xs md:text-sm font-medium text-black">4.8</span>
                       </div>
                     </div>
 
-                    {/* Guide info */}
-                    <div className="px-4 flex items-center gap-2 text-sm text-gray-600 mb-3">
-                      <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
-                        <span className="text-xs">P</span>
-                      </div>
-                      <span>Priya Nair</span>
-                      <Users className="w-4 h-4 ml-2" />
-                      <span>94 travelers</span>
-                    </div>
+                    
 
                     {/* Location and Price */}
-                    <div className="px-4 flex items-center justify-between mb-4">
+                    <div className="px-3 md:px-4 flex items-center justify-between mb-4">
                       <div className="flex items-center gap-1 text-gray-600">
-                        <MapPin className="w-4 h-4 text-red-500" />
-                        <span className="text-sm">Alleppey, Munnar, Kochi</span>
+                        <MapPin className="w-3 h-3 md:w-4 md:h-4 text-[#3E92D1]" />
+                        <span className="text-xs md:text-sm">Alleppey, Munnar, Kochi</span>
                       </div>
-                      <div className="text-2xl font-bold text-gray-900">₹22,000</div>
+                      <div className="text-lg md:text-2xl font-bold text-gray-900">₹22,000</div>
                     </div>
 
                     {/* Trip Highlights */}
-                    <div className="px-4 mb-4">
-                      <h3 className="font-semibold text-gray-800 mb-3">Trip Highlights</h3>
+                    <div className="px-3 md:px-4 mb-4">
+                      <h3 className="font-semibold text-gray-800 mb-3 text-sm md:text-base">Trip Highlights</h3>
                       <ul className="space-y-2">
-                        <li className="flex items-start gap-2 text-sm text-gray-700">
-                          <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <li className="flex items-start gap-2 text-xs md:text-sm text-gray-700">
+                          <div className="w-2 h-2 bg-[#3E92D1] rounded-full mt-2 flex-shrink-0"></div>
                           <span>Houseboat stay in backwaters</span>
                         </li>
-                        <li className="flex items-start gap-2 text-sm text-gray-700">
-                          <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <li className="flex items-start gap-2 text-xs md:text-sm text-gray-700">
+                          <div className="w-2 h-2 bg-[#3E92D1] rounded-full mt-2 flex-shrink-0"></div>
                           <span>Tea plantation tours in Munnar</span>
                         </li>
-                        <li className="flex items-start gap-2 text-sm text-gray-700">
-                          <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <li className="flex items-start gap-2 text-xs md:text-sm text-gray-700">
+                          <div className="w-2 h-2 bg-[#3E92D1] rounded-full mt-2 flex-shrink-0"></div>
                           <span>Traditional Kathakali performances</span>
                         </li>
                       </ul>
                     </div>
 
-                   
-
                     {/* Day-by-Day Highlights */}
-                    <div className="px-4 mb-4">
+                    <div className="px-3 md:px-4 mb-4">
                       <div className="flex items-center gap-2 mb-3">
-                        <Calendar className="w-4 h-4 text-red-500" />
-                        <h3 className="font-semibold text-gray-800">Day-by-Day Highlights</h3>
+                        <Calendar className="w-3 h-3 md:w-4 md:h-4 text-[#3E92D1]" />
+                        <h3 className="font-semibold text-gray-800 text-sm md:text-base">Day-by-Day Highlights</h3>
                       </div>
                       <div className="space-y-3">
                         <div className="flex items-start gap-3">
-                          <div className="bg-red-500 text-white text-xs px-2 py-1 rounded font-medium">Day 1</div>
-                          <span className="text-sm text-gray-700">Kochi: Arrival + Chinese fishing nets</span>
+                          <div className="bg-[#3E92D1] text-white text-xs px-2 py-1 rounded font-medium">Day 1</div>
+                          <span className="text-xs md:text-sm text-gray-700">Kochi: Arrival + Chinese fishing nets</span>
                         </div>
                         <div className="flex items-start gap-3">
-                          <div className="bg-red-500 text-white text-xs px-2 py-1 rounded font-medium">Day 2</div>
-                          <span className="text-sm text-gray-700">Alleppey: Houseboat cruise</span>
+                          <div className="bg-[#3E92D1] text-white text-xs px-2 py-1 rounded font-medium">Day 2</div>
+                          <span className="text-xs md:text-sm text-gray-700">Alleppey: Houseboat cruise</span>
                         </div>
                         <div className="flex items-start gap-3">
-                          <div className="bg-red-500 text-white text-xs px-2 py-1 rounded font-medium">Day 3</div>
-                          <span className="text-sm text-gray-700">Munnar: Tea gardens + Mattupetty Dam</span>
+                          <div className="bg-[#3E92D1] text-white text-xs px-2 py-1 rounded font-medium">Day 3</div>
+                          <span className="text-xs md:text-sm text-gray-700">Munnar: Tea gardens + Mattupetty Dam</span>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-500 mt-2">+2 more days...</p>
+                      <p className="text-xs md:text-sm text-gray-500 mt-2">+2 more days...</p>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="p-4 flex gap-3">
-                      <button className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-medium text-sm transition-colors">
+                    <div className="p-3 md:p-4 flex gap-3">
+                      <button className="flex-1 bg-[#3E92D1] hover:bg-bg-[#3E92D2] text-white py-2 px-4 rounded-lg font-medium text-xs md:text-sm transition-colors">
                         View Full Itinerary
                       </button>
-                      
                     </div>
                   </div>
-
                 </div>
               </button>
             </CometCard>
@@ -495,34 +480,33 @@ function LandingPage() {
       </div>
 
       {/* 4th component */}
-      <div className="w-full h-screen mt-10 mb-70">
-        <div className="text-6xl font-bold font-sans text-center mb-10">
+      <div className="w-full min-h-screen mt-10 mb-10 md:mb-70 px-4 md:px-0">
+        <div className="text-3xl md:text-6xl font-bold font-sans text-center mb-6 md:mb-10">
           Travel Categories
-
         </div>
-        <h1 className=" text-xl text-center text-gray-600">Find the perfect itinerary type that matches your travel style and interests</h1>
+        <h1 className="text-base md:text-xl text-center text-gray-600 px-4 md:px-0">Find the perfect itinerary type that matches your travel style and interests</h1>
 
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-15  px-25">
+      <div className="mt-6 md:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto px-4">
   {category.map((item, index) => (
     <div
       key={index}
       style={{ backgroundColor: item.color }}
-      className="rounded-2xl w-80 p-4 max-w-md mx-auto shadow hover:shadow-xl transition-shadow duration-300"
+      className="rounded-2xl w-full max-w-sm p-4 mx-auto shadow hover:shadow-xl transition-shadow duration-300"
     >
       {/* Image */}
       <div className="flex flex-col items-center space-y-3">
         
            <div className="">
-                  <div className="w-30 h-25  backdrop-blur-sm rounded-xl flex items-center justify-center  ">
+                  <div className="w-20 h-16 md:w-30 md:h-25 backdrop-blur-sm rounded-xl flex items-center justify-center">
                     {item.svg}
                 </div>
         </div>
       </div>
 
       {/* Text Section */}
-      <div className="mt-6 text-center">
-        <h2 className="text-2xl font-semibold">{item.name}</h2>
-        <p className="text-gray-700 mt-2 text-sm">{item.description}</p>
+      <div className="mt-4 md:mt-6 text-center">
+        <h2 className="text-lg md:text-2xl font-semibold">{item.name}</h2>
+        <p className="text-gray-700 mt-2 text-xs md:text-sm">{item.description}</p>
 
         {/* Popular Routes */}
         <div className="mt-3 text-gray-700 text-sm space-y-1">
@@ -536,7 +520,7 @@ function LandingPage() {
 
         {/* Button */}
         <div className="mt-4 flex items-center justify-center">
-          <button className="px-5 py-2 border rounded-full bg-transparent hover:bg-gray-100 transition-colors duration-200">
+          <button className="px-3 md:px-5 py-2 border rounded-full bg-transparent hover:bg-gray-100 transition-colors duration-200 text-xs md:text-sm">
             {item.button}
           </button>
         </div>

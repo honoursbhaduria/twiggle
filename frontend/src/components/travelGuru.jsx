@@ -52,13 +52,13 @@ const TravelGurus = () => {
       {/* Header Section */}
       <div className="relative  max-w-7xl mx-auto text-center mb-16">
         <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-lg mb-6 border border-gray-100">
-          <div className="w-2 h-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-[#3E92D1] rounded-full animate-pulse"></div>
           <span className="text-sm font-medium text-gray-600">Featured Creators</span>
         </div>
         
         <h1 className="text-6xl font-bold mb-6">
           Meet Our{' '}
-          <span className="bg-gradient-to-r from-[#d63e3f] to-[#e86162] bg-clip-text text-transparent">
+          <span className="bg-[#3E92D1] bg-clip-text text-transparent">
             Travel Gurus
           </span>
         </h1>
@@ -160,7 +160,7 @@ const TravelGurus = () => {
                 Follow
               </button>
               
-              <button className={`w-full bg-gradient-to-r ${guru.gradient} text-white py-3 rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group`}>
+              <button className={`w-full bg-[#3E92D1] text-white py-3 rounded-xl font-medium hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group`}>
                 <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                 <Play className="w-4 h-4 relative z-10" />
                 <span className="relative z-10">View Content</span>
@@ -172,17 +172,7 @@ const TravelGurus = () => {
         ))}
       </div>
 
-      {/* Bottom CTA */}
-      <div className="max-w-4xl mx-auto text-center mt-20">
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50">
-          <h3 className="text-3xl font-bold text-gray-800 mb-4">Join Our Creator Community</h3>
-          <p className="text-gray-600 mb-6">Share your travel experiences and inspire millions of travelers</p>
-          <button className="bg-gradient-to-r from-[#d63e3f] to-[#e86162] text-white px-8 py-4 rounded-2xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300 inline-flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Become a Travel Guru
-          </button>
-        </div>
-      </div>
+     
     </div>
   );
 };

@@ -1,31 +1,74 @@
 import React, { useState } from 'react';
-import { Clock, MapPin, X, Plus, Route, GripVertical } from 'lucide-react';
+import {
+  Clock,
+  MapPin,
+  Utensils,
+  Camera,
+  Star,
+  Trash2,
+  Plus,
+  GripVertical,
+  Menu,
+  Calendar,
+  TrendingUp,
+  Sparkles
+} from 'lucide-react';
+
+const colorMapping = {
+  attraction: {
+    bg: 'bg-gradient-to-br from-blue-50 via-white to-blue-50',
+    text: 'text-blue-700',
+    borderAccent: 'border-blue-200',
+    badge: 'bg-blue-100 text-blue-700',
+    icon: 'bg-blue-100 text-blue-600',
+    accentBar: 'bg-gradient-to-b from-blue-500 to-blue-700'
+  },
+  restaurant: {
+    bg: 'bg-gradient-to-br from-emerald-50 via-white to-emerald-50',
+    text: 'text-emerald-700',
+    borderAccent: 'border-emerald-200',
+    badge: 'bg-emerald-100 text-emerald-700',
+    icon: 'bg-emerald-100 text-emerald-600',
+    accentBar: 'bg-gradient-to-b from-emerald-500 to-emerald-700'
+  },
+  experience: {
+    bg: 'bg-gradient-to-br from-purple-50 via-white to-purple-50',
+    text: 'text-purple-700',
+    borderAccent: 'border-purple-200',
+    badge: 'bg-purple-100 text-purple-700',
+    icon: 'bg-purple-100 text-purple-600',
+    accentBar: 'bg-gradient-to-b from-purple-500 to-purple-700'
+  }
+};
 
 const ItineraryComponent = ({ data }) => {
-  const [draggedItem, setDraggedItem] = useState(null);
   const [selectedDay, setSelectedDay] = useState('overview');
-  const [selectedItinerary, setSelectedItinerary] = useState(0);
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [showActivityModal, setShowActivityModal] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Get the current itinerary and day data
-  const currentItinerary = data?.results?.itineraries?.[selectedItinerary];
-  const currentDay = selectedDay === 'overview' ? null : currentItinerary?.days?.find(day => day.day_number === selectedDay);
+  // Get the current day data from the direct data structure
+  const currentDay = selectedDay === 'overview' ? null : data?.days?.find(day => day.day_number === selectedDay);
   const allActivities = selectedDay === 'overview' ? [] : [
-    ...(currentDay?.attractions || []),
-    ...(currentDay?.restaurants || []),
-    ...(currentDay?.experiences || [])
+    ...(currentDay?.attractions || []).map(item => ({ ...item, type: 'attraction' })),
+    ...(currentDay?.restaurants || []).map(item => ({ ...item, type: 'restaurant' })),
+    ...(currentDay?.experiences || []).map(item => ({ ...item, type: 'experience' }))
   ];
 
-  const handleDragStart = (e, index) => {
-    setDraggedItem(index);
+  const handleDragStart = (e, activity) => {
+    setDraggedItem(activity);
     e.dataTransfer.effectAllowed = 'move';
-    
-    const cardElement = e.target.closest('.activity-card');
-    if (cardElement) {
-      const rect = cardElement.getBoundingClientRect();
-      e.dataTransfer.setDragImage(cardElement, rect.width / 2, rect.height / 2);
-    }
+  };
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault();
+    if (!draggedItem) return;
+
+    const currentIndex = allActivities.findIndex(item => item.id === draggedItem.id);
+    if (currentIndex === -1 || currentIndex === targetIndex) return;
+
+    // Here you would typically update the order in your state/backend
+    console.log(`Moving ${draggedItem.name} from position ${currentIndex} to ${targetIndex}`);
   };
 
   const handleDragOver = (e) => {
@@ -33,524 +76,494 @@ const ItineraryComponent = ({ data }) => {
     e.dataTransfer.dropEffect = 'move';
   };
 
-  const handleDrop = (e, dropIndex) => {
-    e.preventDefault();
-    if (draggedItem === null) return;
-    // Handle reordering logic here
-    setDraggedItem(null);
-  };
-
-  const getItemType = (item) => {
-    if (item.cuisine) return 'restaurant';
-    if (currentDay?.experiences?.includes(item)) return 'experience';
-    return 'attraction';
-  };
-
-  const getTagColor = (tag) => {
-    const colors = {
-      restaurant: 'bg-green-100 text-green-700',
-      attraction: 'bg-blue-100 text-blue-700',
-      experience: 'bg-purple-100 text-purple-700',
-      seafood: 'bg-orange-100 text-orange-700',
-      beach: 'bg-cyan-100 text-cyan-700',
-      fort: 'bg-red-100 text-red-700',
-      cruise: 'bg-indigo-100 text-indigo-700'
-    };
-    return colors[tag] || 'bg-gray-100 text-gray-700';
-  };
-
-  const openModal = (activity) => {
+  const openActivityModal = (activity) => {
     setSelectedActivity(activity);
-    setIsModalOpen(true);
+    setShowActivityModal(true);
   };
 
-  const closeModal = () => {
-    setSelectedActivity(null);
-    setIsModalOpen(false);
-  };
-
-  if (!data?.results?.itineraries?.length) {
+  if (!data?.days?.length) {
     return (
-      <div className="max-w-4xl mx-auto p-6 bg-white">
-        <div className="text-center text-gray-500">No itinerary data available</div>
+      <div className="min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100">
+        <div className="text-center space-y-3">
+          <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-gray-200 to-gray-100 flex items-center justify-center">
+            <Calendar className="w-8 h-8 text-gray-500" />
+          </div>
+          <p className="text-lg font-semibold text-gray-600">No itinerary data available</p>
+          <p className="text-sm text-gray-400">Generate a plan to see your day-by-day schedule here</p>
+        </div>
       </div>
     );
   }
 
+  const totalAttractions = data?.days?.reduce((total, day) => total + (day.attractions?.length || 0), 0);
+  const totalRestaurants = data?.days?.reduce((total, day) => total + (day.restaurants?.length || 0), 0);
+  const totalExperiences = data?.days?.reduce((total, day) => total + (day.experiences?.length || 0), 0);
+
   return (
-    <div className="w-full  p-6 bg-white">
-      {/* Header with Itinerary Selection */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">
-          {data.results.name} - {currentItinerary?.title}
-        </h1>
-        
-        {/* Itinerary Tabs */}
-        <div className="flex space-x-4 mb-4">
-          {data.results.itineraries.map((itinerary, index) => (
-            <button
-              key={itinerary.id}
-              onClick={() => setSelectedItinerary(index)}
-              className={`p-2 text-sm ${
-                selectedItinerary === index
-                  ? 'bg-black font-medium   border rounded-lg text-white border-black'
-                  : 'text-black font-medium hover:text-gray-800'
-              }`}
-            >
-              {itinerary.title}
-            </button>
-          ))}
-        </div>
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+      <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-br from-blue-100/60 via-purple-100/40 to-transparent pointer-events-none" />
+      <div className="relative max-w-6xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
+        {/* Header with Itinerary Info */}
 
-        {/* Day Navigation */}
-        <div className="flex space-x-8">
-          <button
-            onClick={() => setSelectedDay('overview')}
-            className={`pb-1 ${
-              selectedDay === 'overview'
-                ? 'text-black font-bold  border-black'
-                : 'text-gray-900 font-normal hover:text-black'
-            }`}
-          >
-            Overview
-          </button>
-          {currentItinerary?.days?.map((day) => (
-            <button
-              key={day.day_number}
-              onClick={() => setSelectedDay(day.day_number)}
-              className={` pb-1 ${
-                selectedDay === day.day_number
-                  ? 'text-black  font-bold border-black'
-                  : 'text-gray-900 font-normal hover:text-black'
-              }`}
-            >
-              Day {day.day_number}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Day Activities Header */}
-      {selectedDay === 'overview' ? (
-        /* Overview Content */
-        <div className="space-y-6">
-          {/* Itinerary Summary */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Itinerary Summary</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <div className="text-sm text-gray-500 mb-1">Duration</div>
-                <div className="font-semibold">{currentItinerary?.days?.length || 0} Days</div>
+        <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-4">
+             <div className="flex items-center justify-between">
+                               <div>
+                                 <h2 className="text-3xl font-black text-black leading-none tracking-tight mb-1">Daily Itinerary</h2>
+                                 <p className="text-gray-600 mt-1">Detailed day-by-day activities and experiences</p>
+                               </div>
+                               {/* Trip Stats */}
+                               <div className="flex items-center space-x-6 text-sm text-gray-600">
+                                 <div className="flex items-center space-x-1">
+                                   <Calendar className="w-4 h-4" />
+                                   <span>{data?.duration_days} Days</span>
+                                 </div>
+                                 <div className="flex items-center space-x-1">
+                                   <Star className="w-4 h-4 text-yellow-500" />
+                                   <span>{((data?.popularity_score || 85) / 20).toFixed(1)}</span>
+                                 </div>
+                                 {data?.categories && data.categories.length > 0 && (
+                                   <div className="flex items-center space-x-1">
+                                     <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                                       {data.categories[0].name}
+                                     </span>
+                                   </div>
+                                 )}
+                               </div>
+                             </div>
+            <div className="inline-flex items-center space-x-3 rounded-2xl bg-white/80 backdrop-blur shadow-md px-4 py-2 text-sm font-medium text-gray-600">
+              <Sparkles className="h-4 w-4 text-purple-500" />
+              <span>Curated just for you</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg">
+                <Calendar className="h-6 w-6" />
               </div>
               <div>
-                <div className="text-sm text-gray-500 mb-1">Total Activities</div>
-                <div className="font-semibold">
-                  {currentItinerary?.days?.reduce((total, day) => 
-                    total + (day.attractions?.length || 0) + (day.restaurants?.length || 0) + (day.experiences?.length || 0), 0
-                  ) || 0}
-                </div>
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-[2.75rem]">
+                  {data?.title || 'Your Travel Itinerary'}
+                </h1>
+                <p className="mt-2 text-sm text-gray-500">Track activities, dining, and experiences across every day of your journey.</p>
               </div>
-              <div>
-                <div className="text-sm text-gray-500 mb-1">Total Budget</div>
-                <div className="font-bold text-green-600">
-                  ₹{currentItinerary?.days?.reduce((total, day) => 
-                    total + parseFloat(day.budget?.total_cost || 0), 0
-                  ).toLocaleString() || '0'}
-                </div>
+            </div>
+            <div className="flex flex-wrap gap-3 text-sm">
+              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-gray-100">
+                <Clock className="h-4 w-4 text-blue-500" />
+                <span className="font-medium text-gray-700">{data?.duration_days} days / {data?.duration_nights} nights</span>
+              </div>
+              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-gray-100">
+                <MapPin className="h-4 w-4 text-emerald-500" />
+                <span className="font-medium text-gray-700">{data?.highlighted_places}</span>
+              </div>
+              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-gray-100">
+                <TrendingUp className="h-4 w-4 text-amber-500" />
+                <span className="font-semibold text-gray-800">₹{data?.total_budget?.toLocaleString('en-IN')}</span>
               </div>
             </div>
           </div>
 
-          {/* Day-by-Day Overview */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Day-by-Day Overview</h2>
-            <div className="space-y-4">
-              {currentItinerary?.days?.map((day) => (
-                <div key={day.day_number} className="bg-white border border-gray-200 rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="font-semibold text-gray-800">
-                        Day {day.day_number}: {day.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm">{day.description}</p>
-                      <p className="text-gray-500 text-xs mt-1">Locations: {day.locations}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-semibold text-green-600">
-                        ₹{parseFloat(day.budget?.total_cost || 0).toLocaleString()}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {(day.attractions?.length || 0) + (day.restaurants?.length || 0) + (day.experiences?.length || 0)} activities
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Activity breakdown */}
-                  <div className="grid grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <div className="text-gray-500">Attractions</div>
-                      <div className="font-medium">{day.attractions?.length || 0}</div>
-                    </div>
-                    <div>
-                      <div className="text-gray-500">Restaurants</div>
-                      <div className="font-medium">{day.restaurants?.length || 0}</div>
-                    </div>
-                    <div>
-                      <div className="text-gray-500">Experiences</div>
-                      <div className="font-medium">{day.experiences?.length || 0}</div>
-                    </div>
-                  </div>
-                  
-                  <button
-                    onClick={() => setSelectedDay(day.day_number)}
-                    className="mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium"
-                  >
-                    View Details →
-                  </button>
-                </div>
-              ))}
+          <div className="grid w-full gap-4 rounded-3xl bg-white/80 backdrop-blur p-5 shadow-lg ring-1 ring-gray-100 sm:grid-cols-3 lg:w-auto lg:min-w-[420px]">
+            <div className="rounded-2xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 p-4 text-white shadow-lg">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wide text-blue-100">Attractions</span>
+                <MapPin className="h-4 w-4 text-blue-100" />
+              </div>
+              <p className="mt-3 text-3xl font-semibold">{totalAttractions}</p>
+              <p className="mt-1 text-xs text-blue-100/80">Curated highlights to explore</p>
+            </div>
+            <div className="rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-4 text-white shadow-lg">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wide text-emerald-100">Dining</span>
+                <Utensils className="h-4 w-4 text-emerald-100" />
+              </div>
+              <p className="mt-3 text-3xl font-semibold">{totalRestaurants}</p>
+              <p className="mt-1 text-xs text-emerald-100/80">Handpicked food experiences</p>
+            </div>
+            <div className="rounded-2xl bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 p-4 text-white shadow-lg">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wide text-purple-100">Experiences</span>
+                <Camera className="h-4 w-4 text-purple-100" />
+              </div>
+              <p className="mt-3 text-3xl font-semibold">{totalExperiences}</p>
+              <p className="mt-1 text-xs text-purple-100/80">Memorable moments planned</p>
             </div>
           </div>
+        </div>
 
-          {/* Budget Breakdown */}
-          {currentItinerary?.days?.some(day => day.budget) && (
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Budget Breakdown</h2>
-              <div className="space-y-3">
-                {currentItinerary.days.map((day) => (
-                  day.budget && (
-                    <div key={day.day_number} className="flex justify-between items-center py-2">
-                      <span className="font-medium">Day {day.day_number}</span>
-                      <div className="flex space-x-6 text-sm">
-                        <span>Attractions: ₹{parseFloat(day.budget.attractions_cost).toLocaleString()}</span>
-                        <span>Restaurants: ₹{parseFloat(day.budget.restaurants_cost).toLocaleString()}</span>
-                        <span>Experiences: ₹{parseFloat(day.budget.experiences_cost).toLocaleString()}</span>
-                        <span className="font-semibold text-green-600">
-                          Total: ₹{parseFloat(day.budget.total_cost).toLocaleString()}
-                        </span>
+        {/* Day Tabs */}
+        <div className="mb-10">
+          <div className="flex overflow-x-auto rounded-2xl bg-white p-2 shadow-inner shadow-gray-200/40 ring-1 ring-gray-100 backdrop-blur">
+            <button
+              onClick={() => setSelectedDay('overview')}
+              className={`mr-2 flex items-center space-x-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 ${
+                selectedDay === 'overview'
+                  ? 'bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg shadow-gray-300/40'
+                  : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+              }`}
+            >
+              <Sparkles className="h-4 w-4" />
+              <span>Overview</span>
+            </button>
+            {data?.days?.map((day) => (
+              <button
+                key={day.day_number}
+                onClick={() => setSelectedDay(day.day_number)}
+                className={`mr-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 ${
+                  selectedDay === day.day_number
+                    ? 'bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg shadow-purple-200/40'
+                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+                }`}
+              >
+                Day {day.day_number}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Content */}
+        {selectedDay === 'overview' ? (
+          <div className="space-y-12">
+            <section className="grid gap-6 md:grid-cols-3">
+              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-blue-100 opacity-40" />
+                <div className="relative">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-blue-500">Total Stops</span>
+                    <div className="rounded-xl bg-blue-50 p-2">
+                      <Calendar className="h-5 w-5 text-blue-600" />
+                    </div>
+                  </div>
+                  <p className="mt-6 text-4xl font-semibold text-gray-900">{data?.days?.length || 0}</p>
+                  <p className="mt-1 text-sm text-gray-500">Days packed with curated experiences</p>
+                </div>
+              </div>
+
+              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-emerald-100 opacity-40" />
+                <div className="relative">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-emerald-500">Average Spend / Day</span>
+                    <div className="rounded-xl bg-emerald-50 p-2">
+                      <TrendingUp className="h-5 w-5 text-emerald-600" />
+                    </div>
+                  </div>
+                  <p className="mt-6 text-4xl font-semibold text-gray-900">
+                    ₹{Math.round((data?.total_budget || 0) / (data?.days?.length || 1)).toLocaleString('en-IN')}
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">Balanced mix of activities and downtime</p>
+                </div>
+              </div>
+
+              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-purple-100 opacity-40" />
+                <div className="relative">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-purple-500">Total Experiences</span>
+                    <div className="rounded-xl bg-purple-50 p-2">
+                      <Sparkles className="h-5 w-5 text-purple-600" />
+                    </div>
+                  </div>
+                  <p className="mt-6 text-4xl font-semibold text-gray-900">{totalAttractions + totalRestaurants + totalExperiences}</p>
+                  <p className="mt-1 text-sm text-gray-500">Attractions, dining, and signature moments</p>
+                </div>
+              </div>
+            </section>
+
+            <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">Daily Highlights</h2>
+                  <p className="mt-1 text-sm text-gray-500">A quick look at what to expect each day</p>
+                </div>
+                <div className="hidden items-center space-x-2 rounded-full bg-gray-50 px-4 py-2 text-xs font-medium text-gray-500 sm:flex">
+                  <Clock className="h-3.5 w-3.5" />
+                  <span>Drag to reorder plans anytime</span>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-6">
+                {data?.days?.map((day) => (
+                  <div key={day.day_number} className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-gradient-to-br from-gray-50 via-white to-gray-50 p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-gray-900 to-gray-700 text-lg font-semibold text-white shadow-md">
+                        {day.day_number}
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">Day {day.day_number}</h3>
+                        <p className="text-sm text-gray-500">{day.theme || 'Balanced mix of activities'}</p>
                       </div>
                     </div>
-                  )
+                    <div className="grid gap-4 text-sm sm:grid-cols-3">
+                      <div className="flex items-center space-x-2 rounded-xl bg-blue-50 px-4 py-2 text-blue-700">
+                        <MapPin className="h-4 w-4" />
+                        <span>{day.attractions?.length || 0} attractions</span>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-xl bg-emerald-50 px-4 py-2 text-emerald-700">
+                        <Utensils className="h-4 w-4" />
+                        <span>{day.restaurants?.length || 0} dining spots</span>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-xl bg-purple-50 px-4 py-2 text-purple-700">
+                        <Camera className="h-4 w-4" />
+                        <span>{day.experiences?.length || 0} experiences</span>
+                      </div>
+                    </div>
+                    <div className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm ring-1 ring-gray-100">
+                      Budget ₹{(day.budget?.total_cost || 0).toLocaleString('en-IN')}
+                    </div>
+                  </div>
                 ))}
               </div>
-            </div>
-          )}
-        </div>
-      ) : currentDay && (
-        <>
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h2 className="text-xl font-bold text-gray-800">
-                Day {currentDay.day_number}: {currentDay.title}
-              </h2>
-              <p className="text-gray-600 text-sm mt-1">{currentDay.description}</p>
-              <p className="text-gray-500 text-sm">Locations: {currentDay.locations}</p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button className="bg-black text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-gray-900">
-                <Plus size={16} />
-                <span>Add Activity</span>
-              </button>
-              <button className="flex items-center space-x-2 text-gray-600 hover:text-gray-800">
-                <Route size={16} />
-                <span>Optimize Route</span>
-              </button>
-              <span className="text-gray-500">{allActivities.length} activities</span>
-            </div>
-          </div>
+            </section>
 
-          {/* Budget Summary */}
-          {currentDay.budget && (
-            <div className="bg-gray-50 p-4 rounded-lg mb-6">
-              <div className="grid grid-cols-4 gap-4 text-center">
+            <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 text-white shadow-xl">
+              <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10" />
+              <div className="absolute bottom-0 right-0 h-32 w-32 rounded-full bg-purple-500/20" />
+              <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <div className="text-sm text-gray-500">Attractions</div>
-                  <div className="font-semibold">₹{parseFloat(currentDay.budget.attractions_cost).toLocaleString()}</div>
+                  <h3 className="text-2xl font-semibold">Need to shuffle plans?</h3>
+                  <p className="mt-2 text-sm text-gray-300">Drag and drop activities within each day or tap an item to edit the details. Your changes are saved instantly.</p>
                 </div>
-                <div>
-                  <div className="text-sm text-gray-500">Restaurants</div>
-                  <div className="font-semibold">₹{parseFloat(currentDay.budget.restaurants_cost).toLocaleString()}</div>
+                <button className="inline-flex items-center space-x-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-gray-900 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+                  <GripVertical className="h-4 w-4" />
+                  <span>Manage Activities</span>
+                </button>
+              </div>
+            </section>
+          </div>
+        ) : (
+          <div className="space-y-10">
+            <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+              <div className="flex flex-col gap-4 border-b border-gray-100 pb-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-gray-900 to-gray-700 text-lg font-semibold text-white shadow-md">
+                    {selectedDay}
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-semibold text-gray-900">Day {selectedDay}</h2>
+                    <p className="text-sm text-gray-500">Fine-tune the schedule by reordering or editing activities.</p>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-sm text-gray-500">Experiences</div>
-                  <div className="font-semibold">₹{parseFloat(currentDay.budget.experiences_cost).toLocaleString()}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500">Total Budget</div>
-                  <div className="font-bold text-green-600">₹{parseFloat(currentDay.budget.total_cost).toLocaleString()}</div>
+                <div className="flex items-center space-x-3">
+                  <div className="rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-600 ring-1 ring-amber-200">
+                    Total ₹{(currentDay?.budget?.total_cost || 0).toLocaleString('en-IN')}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* Activities List */}
-          <div className="space-y-6">
-            {allActivities.map((activity, index) => {
-              const itemType = getItemType(activity);
-              
-              return (
-                <div key={`${itemType}-${activity.id}`}>
-                  {/* Activity Card */}
-                  <div
-                    className={`flex bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow activity-card ${
-                      draggedItem === index ? 'opacity-50' : ''
-                    }`}
-                    onDragOver={handleDragOver}
-                    onDrop={(e) => handleDrop(e, index)}
-                  >
-                    {/* Drag Handle */}
-                    <div 
-                      className="flex items-center mr-4 cursor-move hover:bg-gray-50 rounded-lg px-2 py-1 -ml-2"
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, index)}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <GripVertical className="text-gray-400 mr-2" size={20} />
-                      <div className="flex flex-col items-center">
-                        <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-xs font-medium">
-                          {index + 1}
-                        </div>
-                        {index < allActivities.length - 1 && (
-                          <div className="w-px h-12 bg-gray-200 mt-2"></div>
-                        )}
-                      </div>
-                    </div>
+              <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                <div className="flex items-center justify-between rounded-2xl bg-blue-50 px-4 py-3 text-sm text-blue-700 ring-1 ring-blue-200">
+                  <span className="font-medium">Attractions</span>
+                  <span>₹{(currentDay?.budget?.attractions_cost || 0).toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex items-center justify-between rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 ring-1 ring-emerald-200">
+                  <span className="font-medium">Restaurants</span>
+                  <span>₹{(currentDay?.budget?.restaurants_cost || 0).toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex items-center justify-between rounded-2xl bg-purple-50 px-4 py-3 text-sm text-purple-700 ring-1 ring-purple-200">
+                  <span className="font-medium">Experiences</span>
+                  <span>₹{(currentDay?.budget?.experiences_cost || 0).toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+            </section>
 
-                    {/* Activity Content */}
-                    <div 
-                      className="flex-1 cursor-pointer"
-                      onClick={() => openModal(activity)}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                            {activity.name}
-                          </h3>
-                          <p className="text-gray-600 text-sm mb-3">
-                            {activity.description}
-                          </p>
-                          
-                          {/* Tags */}
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            <span className={`px-2 py-1 rounded-full text-xs ${getTagColor(itemType)}`}>
-                              {itemType}
-                            </span>
-                            {activity.cuisine && (
-                              <span className={`px-2 py-1 rounded-full text-xs ${getTagColor('seafood')}`}>
-                                {activity.cuisine}
-                              </span>
-                            )}
-                            <button className="text-gray-500 text-xs flex items-center space-x-1 hover:text-gray-700">
-                              <Plus size={12} />
-                              <span>Add Tag</span>
-                            </button>
-                          </div>
-                          
-                          {/* Address info */}
-                          {activity.address && (
-                            <p className="text-gray-500 text-xs">{activity.address}</p>
-                          )}
-                        </div>
+            <section className="space-y-4">
+              <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">Activities</h3>
+                  <p className="text-sm text-gray-500">Drag an activity to reorder, or tap the menu for more options.</p>
+                </div>
+                <button className="inline-flex items-center space-x-2 rounded-xl bg-gradient-to-r from-gray-900 to-gray-700 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+                  <Plus className="h-4 w-4" />
+                  <span>Add Activity</span>
+                </button>
+              </div>
 
-                        {/* Cost and Details */}
-                        <div className="ml-6 text-right">
-                          {activity.estimated_cost && parseFloat(activity.estimated_cost) > 0 && (
-                            <div className="mb-4">
-                              <div className="text-sm text-gray-500 mb-1">Cost</div>
-                              <div className="text-lg font-semibold text-green-600">
-                                ₹{parseFloat(activity.estimated_cost).toLocaleString()}
+              {allActivities.length === 0 ? (
+                <div className="flex flex-col items-center justify-center space-y-3 rounded-3xl border-2 border-dashed border-gray-200 bg-white py-16 text-center">
+                  <div className="rounded-full bg-gray-100 p-4">
+                    <Calendar className="h-7 w-7 text-gray-400" />
+                  </div>
+                  <p className="text-base font-semibold text-gray-600">No activities planned yet</p>
+                  <p className="text-sm text-gray-400">Use the button above to curate your perfect day.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {allActivities.map((activity, index) => {
+                    const colors = colorMapping[activity.type] || colorMapping.attraction;
+                    const Icon = activity.type === 'restaurant' ? Utensils : activity.type === 'experience' ? Camera : MapPin;
+
+                    return (
+                      <div
+                        key={`${activity.type}-${activity.id || index}`}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, activity)}
+                        onDrop={(e) => handleDrop(e, index)}
+                        onDragOver={handleDragOver}
+                        className={`group relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl`}
+                      >
+                        <div className={`absolute left-0 top-0 h-full w-1.5 ${colors.accentBar}`} />
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex flex-1 items-start gap-4">
+                            <div className="flex flex-col items-center gap-3">
+                              <div className="rounded-xl bg-gray-100 p-2 text-gray-400 transition group-hover:text-gray-600">
+                                <GripVertical className="h-4 w-4" />
+                              </div>
+                              <div className={`rounded-2xl p-3 shadow-inner ${colors.icon}`}>
+                                <Icon className="h-5 w-5" />
                               </div>
                             </div>
-                          )}
-                          
-                          <div className="text-right space-y-1">
-                            <div className="text-sm text-gray-500">Location</div>
-                            {activity.latitude && activity.longitude && (
-                              <div className="flex items-center justify-end space-x-1 text-xs text-gray-500">
-                                <MapPin size={12} />
-                                <span>{parseFloat(activity.latitude).toFixed(3)}, {parseFloat(activity.longitude).toFixed(3)}</span>
+                            <div className="flex-1">
+                              <div className="flex flex-wrap items-center gap-3">
+                                <h4 className="text-lg font-semibold text-gray-900">{activity.name}</h4>
+                                <span className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ring-1 ${colors.badge}`}>
+                                  {activity.type}
+                                </span>
                               </div>
-                            )}
+                              <p className="mt-2 text-sm leading-relaxed text-gray-600">{activity.description}</p>
+                              <div className="mt-4 flex flex-wrap items-center gap-3 text-xs">
+                                {activity.rating && (
+                                  <div className="flex items-center space-x-1 rounded-full bg-yellow-50 px-3 py-1 font-semibold text-yellow-700 ring-1 ring-yellow-200">
+                                    <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
+                                    <span>{activity.rating}</span>
+                                  </div>
+                                )}
+                                {activity.estimated_cost && (
+                                  <div className="rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700 ring-1 ring-emerald-200">
+                                    ₹{activity.estimated_cost}
+                                  </div>
+                                )}
+                                {activity.duration && (
+                                  <div className="flex items-center space-x-1 rounded-full bg-blue-50 px-3 py-1 font-medium text-blue-700 ring-1 ring-blue-200">
+                                    <Clock className="h-3.5 w-3.5" />
+                                    <span>{activity.duration}</span>
+                                  </div>
+                                )}
+                                {activity.location && (
+                                  <div className="flex items-center space-x-1 rounded-full bg-purple-50 px-3 py-1 font-medium text-purple-700 ring-1 ring-purple-200">
+                                    <MapPin className="h-3.5 w-3.5" />
+                                    <span>{activity.location}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                          
-                          {/* Remove button */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              console.log(`Remove ${activity.name}`);
-                            }}
-                            className="mt-2 text-red-500 hover:text-red-700"
-                          >
-                            <X size={16} />
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => openActivityModal(activity)}
+                              className="rounded-xl p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
+                            >
+                              <Menu className="h-4 w-4" />
+                            </button>
+                            <button className="rounded-xl p-2 text-gray-300 transition hover:bg-red-50 hover:text-red-500">
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {allActivities.length === 0 && (
-            <div className="text-center text-gray-500 py-8">
-              No activities planned for this day
-            </div>
-          )}
-        </>
-      )}
-
-      {/* Activity Detail Modal */}
-      {isModalOpen && selectedActivity && (
-        <div className="fixed inset-1   flex items-center justify-center z-999" onClick={closeModal}>
-          <div 
-            className="shadow-2xl bg-white rounded-lg  h-[80vh] w-200  p-6 m-4 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-            >
-              <X size={24} />
-            </button>
-
-            {/* Modal content */}
-            <div className="pr-8">
-              {/* Header */}
-              <div className="mb-6">
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className={`px-2 py-1 rounded-full text-xs ${getTagColor(getItemType(selectedActivity))}`}>
-                    {getItemType(selectedActivity)}
-                  </span>
-                  {selectedActivity.cuisine && (
-                    <span className={`px-2 py-1 rounded-full text-xs ${getTagColor('seafood')}`}>
-                      {selectedActivity.cuisine}
-                    </span>
-                  )}
-                </div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                  {selectedActivity.name}
-                </h2>
-                <p className="text-gray-600">
-                  {selectedActivity.description}
-                </p>
-              </div>
-
-              {/* Details Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                {/* Location Info */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Location Details</h3>
-                  
-                  {selectedActivity.address && (
-                    <div>
-                      <div className="text-sm text-gray-500 mb-1">Address</div>
-                      <div className="text-gray-800">{selectedActivity.address}</div>
-                    </div>
-                  )}
-                  
-                  {selectedActivity.latitude && selectedActivity.longitude && (
-                    <div>
-                      <div className="text-sm text-gray-500 mb-1">Coordinates</div>
-                      <div className="flex items-center space-x-1 text-gray-800">
-                        <MapPin size={16} />
-                        <span>{parseFloat(selectedActivity.latitude).toFixed(6)}, {parseFloat(selectedActivity.longitude).toFixed(6)}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Cost Info */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-800">Cost Information</h3>
-                  
-                  {selectedActivity.estimated_cost && parseFloat(selectedActivity.estimated_cost) > 0 ? (
-                    <div>
-                      <div className="text-sm text-gray-500 mb-1">Estimated Cost</div>
-                      <div className="text-2xl font-bold text-green-600">
-                        ₹{parseFloat(selectedActivity.estimated_cost).toLocaleString()}
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="text-sm text-gray-500 mb-1">Estimated Cost</div>
-                      <div className="text-gray-600">Free / Not specified</div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Additional Info */}
-              {(selectedActivity.opening_hours || selectedActivity.contact || selectedActivity.website) && (
-                <div className="border-t pt-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Additional Information</h3>
-                  <div className="space-y-3">
-                    {selectedActivity.opening_hours && (
-                      <div>
-                        <div className="text-sm text-gray-500 mb-1">Opening Hours</div>
-                        <div className="text-gray-800">{selectedActivity.opening_hours}</div>
-                      </div>
-                    )}
-                    
-                    {selectedActivity.contact && (
-                      <div>
-                        <div className="text-sm text-gray-500 mb-1">Contact</div>
-                        <div className="text-gray-800">{selectedActivity.contact}</div>
-                      </div>
-                    )}
-                    
-                    {selectedActivity.website && (
-                      <div>
-                        <div className="text-sm text-gray-500 mb-1">Website</div>
-                        <a 
-                          href={selectedActivity.website} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-blue-100 hover:text-blue-800 underline"
-                        >
-                          {selectedActivity.website}
-                        </a>
-                      </div>
-                    )}
-                  </div>
+                    );
+                  })}
                 </div>
               )}
+            </section>
+          </div>
+        )}
 
-              {/* Action Buttons */}
-              <div className="flex justify-end space-x-4 mt-8">
-                <button
-                  onClick={closeModal}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                >
-                  Close
-                </button>
-                <button
-                  onClick={() => {
-                    // Handle edit action
-                    console.log('Edit activity:', selectedActivity.name);
-                  }}
-                  className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200"
-                >
-                  Edit Activity
-                </button>
-                <button
-                  onClick={() => {
-                    // Handle remove action
-                    console.log('Remove activity:', selectedActivity.name);
-                    closeModal();
-                  }}
-                  className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200"
-                >
-                  Remove
-                </button>
+        {/* Activity Modal */}
+        {showActivityModal && selectedActivity && (
+          <div className="fixed z-500 inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <div className="w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl">
+              <div className="bg-gradient-to-r from-gray-900 to-gray-700 px-6 py-5 text-white">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.2em] text-gray-300">Activity Detail</p>
+                    <h2 className="mt-2 text-2xl font-semibold">{selectedActivity.name}</h2>
+                  </div>
+                  <button
+                    onClick={() => setShowActivityModal(false)}
+                    className="rounded-xl bg-white/10 p-2 transition hover:bg-white/20"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-6 px-6 py-6">
+                <p className="text-sm leading-relaxed text-gray-600">{selectedActivity.description}</p>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {selectedActivity.rating && (
+                    <div className="rounded-2xl border border-yellow-100 bg-yellow-50 px-4 py-3">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-yellow-700">Rating</span>
+                      <div className="mt-2 flex items-center space-x-2 text-lg font-semibold text-gray-900">
+                        <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                        <span>{selectedActivity.rating}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedActivity.estimated_cost && (
+                    <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Cost</span>
+                      <p className="mt-2 text-lg font-semibold text-gray-900">₹{selectedActivity.estimated_cost}</p>
+                    </div>
+                  )}
+
+                  {selectedActivity.duration && (
+                    <div className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-blue-700">Duration</span>
+                      <p className="mt-2 flex items-center space-x-2 text-sm font-medium text-gray-800">
+                        <Clock className="h-4 w-4 text-blue-600" />
+                        <span>{selectedActivity.duration}</span>
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedActivity.location && (
+                    <div className="rounded-2xl border border-purple-100 bg-purple-50 px-4 py-3">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-purple-700">Location</span>
+                      <p className="mt-2 flex items-center space-x-2 text-sm font-medium text-gray-800">
+                        <MapPin className="h-4 w-4 text-purple-600" />
+                        <span>{selectedActivity.location}</span>
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {selectedActivity.highlights && selectedActivity.highlights.length > 0 && (
+                  <div className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-4">
+                    <div className="mb-3 flex items-center space-x-2">
+                      <Sparkles className="h-5 w-5 text-purple-500" />
+                      <span className="text-sm font-semibold text-gray-800">Highlights</span>
+                    </div>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      {selectedActivity.highlights.map((highlight, index) => (
+                        <li key={index} className="flex items-start space-x-2">
+                          <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-purple-500" />
+                          <span>{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                  <button
+                    onClick={() => setShowActivityModal(false)}
+                    className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100"
+                  >
+                    Close
+                  </button>
+                  <button className="rounded-xl bg-gradient-to-r from-gray-900 to-gray-700 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+                    Edit Activity
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-export default ItineraryComponent
+export default ItineraryComponent;
