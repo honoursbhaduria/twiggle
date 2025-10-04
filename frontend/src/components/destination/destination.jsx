@@ -17,7 +17,7 @@ const Destination = () => {
 
       {/* Main Content - With left padding to account for fixed sidebar */}
       <div className=' min-h-screen'>
-        <div className='p-6 bg-white'>
+        <div className=' bg-white'>
           <TravelCard initialSearchQuery={searchQuery} />
         </div>
       </div>

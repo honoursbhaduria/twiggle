@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Base URL configuration
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/';
 
 // Create axios instance
 const api = axios.create({
@@ -56,7 +56,7 @@ api.interceptors.response.use(
           return api(originalRequest);
         } catch (refreshError) {
           clearTokens();
-          window.location.href = '/login';
+          window.location.href = '/auth';
         }
       }
     }

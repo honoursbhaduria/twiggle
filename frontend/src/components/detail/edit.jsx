@@ -198,7 +198,7 @@ const TravelItineraryForm = () => {
             </button>
             <div>
               <h1 className="text-xl font-semibold text-gray-900">Edit Itinerary</h1>
-              <p className="text-sm text-gray-500">4 Days Rishikesh Adventure & Yoga</p>
+              <p className="text-sm text-black">{data.results.description}</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
@@ -236,10 +236,10 @@ const TravelItineraryForm = () => {
                   value={flightDetails.transportMode}
                   onChange={(e) => handleFlightChange('transportMode', e.target.value)}
                 >
-                  <option value="flight">✈️ Flight</option>
-                  <option value="train">🚆 Train</option>
-                  <option value="bus">🚌 Bus</option>
-                  <option value="car">🚗 Car</option>
+                  <option value="flight">Flight</option>
+                  <option value="train">Train</option>
+                  <option value="bus">Bus</option>
+                  <option value="car">Car</option>
                 </select>
               </div>
 
@@ -300,7 +300,7 @@ const TravelItineraryForm = () => {
                 </div>
               </div>
 
-              <button className="flex items-center px-4 py-2 text-sm text-blue-600 hover:text-blue-700 border border-blue-300 rounded-md hover:bg-blue-50">
+              <button className="flex items-center px-4 py-2 text-sm text-black border border-black rounded-md hover:bg-gray-100">
                 <Search className="w-4 h-4 mr-2" />
                 Search Flights
               </button>
@@ -314,7 +314,7 @@ const TravelItineraryForm = () => {
                 <Building2 className="w-5 h-5 mr-2 text-gray-600" />
                 <h2 className="text-lg font-medium text-gray-900">Accommodations (0 hotels)</h2>
               </div>
-              <button className="flex items-center px-4 py-2 text-sm text-blue-600 hover:text-blue-700 border border-blue-300 rounded-md hover:bg-blue-50">
+              <button className="flex items-center px-4 py-2 text-sm text-white bg-black hover:bg-gray-900 rounded-md ">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Hotel
               </button>
@@ -389,6 +389,184 @@ const TravelItineraryForm = () => {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-medium text-gray-900">Day 1 Activities</h3>
+                  <div className="flex items-center space-x-3">
+                    <button 
+                      onClick={() => setShowAddActivity(true)}
+                      className="flex items-center px-4 py-2 text-sm text-white bg-black hover:bg-gray-800 rounded-md"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Activity
+                    </button>
+                    <button className="flex items-center px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50">
+                      <Edit3 className="w-4 h-4 mr-2" />
+                      Optimize Route
+                    </button>
+                    <span className="text-sm text-gray-500">{allActivities.length} activities</span>
+                  </div>
+                </div>
+
+                {/* Add Activity Form */}
+                {showAddActivity && (
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                    <h4 className="text-md font-medium text-gray-900 mb-4">Add New Activity</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input
+                        type="text"
+                        placeholder="Activity name"
+                        value={newActivity.name}
+                        onChange={(e) => setNewActivity(prev => ({...prev, name: e.target.value}))}
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <input
+                        type="time"
+                        value={newActivity.startTime}
+                        onChange={(e) => setNewActivity(prev => ({...prev, startTime: e.target.value}))}
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Duration (e.g., 1h 30m)"
+                        value={newActivity.duration}
+                        onChange={(e) => setNewActivity(prev => ({...prev, duration: e.target.value}))}
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Cost (e.g., ₹150)"
+                        value={newActivity.cost}
+                        onChange={(e) => setNewActivity(prev => ({...prev, cost: e.target.value}))}
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                    <textarea
+                      placeholder="Description"
+                      value={newActivity.description}
+                      onChange={(e) => setNewActivity(prev => ({...prev, description: e.target.value}))}
+                      className="w-full mt-4 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      rows={2}
+                    />
+                    <div className="flex items-center space-x-2 mt-4">
+                      <input
+                        type="text"
+                        placeholder="Add tag"
+                        value={newTag}
+                        onChange={(e) => setNewTag(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        onKeyPress={(e) => e.key === 'Enter' && addNewActivityTag()}
+                      />
+                      <button
+                        onClick={addNewActivityTag}
+                        className="px-3 py-2 text-sm text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50"
+                      >
+                        Add Tag
+                      </button>
+                    </div>
+                    {(newActivity.tags || []).length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {(newActivity.tags || []).map((tag, index) => (
+                          <span key={index} className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-md">
+                            {tag}
+                            <button
+                              onClick={() => setNewActivity(prev => ({
+                                ...prev,
+                                tags: prev.tags.filter((_, i) => i !== index)
+                              }))}
+                              className="ml-1 text-purple-500 hover:text-purple-700"
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div className="flex justify-end space-x-2 mt-4">
+                      <button
+                        onClick={() => setShowAddActivity(false)}
+                        className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={addActivity}
+                        className="px-4 py-2 text-sm text-white bg-black hover:bg-gray-800 rounded-md"
+                      >
+                        Add Activity
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Activities List */}
+                <div className="space-y-4">
+                  {allActivities.map((activity, index) => (
+                    <div key={activity.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start space-x-4">
+                          <div className="flex flex-col items-center">
+                            <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-xs font-medium text-gray-600">
+                              #{index + 1}
+                            </div>
+                            <div className="w-px h-16 bg-gray-200 mt-2"></div>
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <h4 className="font-medium text-gray-900">{activity.name}</h4>
+                              <span className="text-sm text-gray-500">{activity.distance}</span>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-3">{activity.description}</p>
+                            <div className="flex flex-wrap gap-1 mb-3">
+                              {(activity.tags || []).map((tag) => (
+                                <span key={tag} className="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-md">
+                                  {tag}
+                                  <button
+                                    onClick={() => removeTag(activity.id, tag)}
+                                    className="ml-1 text-purple-500 hover:text-purple-700"
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              ))}
+                              <button
+                                onClick={() => {
+                                  const tag = prompt('Enter tag name:');
+                                  if (tag) addTag(activity.id, tag);
+                                }}
+                                className="flex items-center px-2 py-1 text-xs text-gray-500 border border-gray-300 rounded-md hover:bg-gray-50"
+                              >
+                                <Tag className="w-3 h-3 mr-1" />
+                                Add Tag
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="flex items-center text-sm text-gray-600 mb-1">
+                            <Clock className="w-4 h-4 mr-1" />
+                            {activity.startTime} AM
+                          </div>
+                          <div className="text-sm text-gray-500 mb-1">{activity.duration}</div>
+                          <div className="font-medium text-gray-900 mb-2">{activity.cost}</div>
+                          <div className="text-xs text-gray-500 mb-3">{activity.coordinates}</div>
+                          <button
+                            onClick={() => removeActivity(activity.id)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+
+            {/* Day 1 Activities */}
+            {activeTab === 'day2' && (
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-medium text-gray-900">Day 2 Activities</h3>
                   <div className="flex items-center space-x-3">
                     <button 
                       onClick={() => setShowAddActivity(true)}

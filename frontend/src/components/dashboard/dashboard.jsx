@@ -1,305 +1,350 @@
 import React, { useState } from 'react';
-import { Search, Home, Compass, Bookmark, MessageSquare, MapPin, User, Bell, Star, Calendar, Users, ChevronRight, Plus, MoreVertical } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { MapPin } from 'lucide-react';
 import SidebarDemo from '../destination/sidebar';
-import { useAllDestination } from '../../hooks/useTravelApi';
-import Lottie from "lottie-react";
-import animationData from "./animation.json"
+import Maps from '../detail/map';
+import {Button} from "../ui/button"
 
-export default function TravelDashboard() {
-  const [activeTab, setActiveTab] = useState('home');
-  const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
+const TravelDashboard = () => {
+  const [checkedItems, setCheckedItems] = useState({
+    apartment: true
+  });
 
-  const {data, error, loading} = useAllDestination()
+  const toggleCheck = (item) => {
+    setCheckedItems(prev => ({
+      ...prev,
+      [item]: !prev[item]
+    }));
+  };
 
-  console.log('Dashboard data:', data);
-
-  // Transform API data to match our component structure
-  const mostVisitedSpots = data?.results ? data.results.slice(0, 3).map(destination => {
-    const popularItinerary = destination.itineraries?.results?.[0];
-    return {
-      id: destination.id,
-      name: destination.name,
-      location: destination.description,
-      rating: popularItinerary ? (popularItinerary.popularity_score / 20).toFixed(1) : '4.5', // Convert to 5-star scale
-      image: destination.image,
-      slug: destination.slug
-    };
-  }) : [];
-
-  const recommendations = data?.results ? data.results
-    .filter(destination => 
-      searchQuery === '' || 
-      destination.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      destination.description.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .map(destination => ({
-      id: destination.id,
-      name: destination.name,
-      location: destination.description,
-      image: destination.image,
-      slug: destination.slug,
-      itineraryCount: destination.itineraries?.count || 0
-    })) : [];
-
-  // Transform recent trips from itineraries data
-  const recentTrips = data?.results ? data.results.flatMap(destination => 
-    destination.itineraries?.results?.map(itinerary => ({
-      id: itinerary.id,
-      name: itinerary.title,
-      destination: destination.name,
-      date: `${itinerary.duration_days}D ${itinerary.duration_nights}N`,
-      budget: `₹${parseFloat(itinerary.total_budget).toLocaleString()}`,
-      slug: itinerary.slug,
-      destinationSlug: destination.slug
-    })) || []
-  ).slice(0, 3) : [];
-
-  const friends = [
-    { id: 1, name: 'Fakih', status: 'available', avatar: '👨' },
-    { id: 2, name: 'Alesya', status: 'available', avatar: '👩' },
-    { id: 3, name: 'Parisya', status: 'available', avatar: '👱‍♀️' },
-    { id: 4, name: 'Maulana', status: 'busy', avatar: '👨‍💼' }
+  const calendarDays = [
+    { date: 1, day: 'Wed' },
+    { date: 2, day: 'Thu' },
+    { date: 3, day: 'Fri' },
+    { date: 4, day: 'Sat', event: 'London-Tokyo', color: 'bg-purple-400' },
+    { date: 5, day: 'Sun' },
+    { date: 6, day: 'Mon' },
+    { date: 7, day: 'Tue' },
+    { date: 8, day: 'Wed' },
+    { date: 9, day: 'Thu' },
+    { date: 10, day: 'Fri' },
+    { date: 11, day: 'Sat' },
+    { date: 12, day: 'Sun' },
+    { date: 13, day: 'Mon' },
+    { date: 14, day: 'Tue' },
+    { date: 15, day: 'Wed', event: 'Tokyo-Kyoto', color: 'bg-purple-400' },
+    { date: 16, day: 'Thu', event: 'Kyoto', marker: true },
+    { date: 17, day: 'Fri' },
+    { date: 18, day: 'Sat' },
+    { date: 19, day: 'Sun' },
+    { date: 20, day: 'Mon' },
+    { date: 21, day: 'Tue', event: 'Kyoto-Osaka', color: 'bg-purple-400' },
+    { date: 22, day: 'Wed', event: 'Osaka', marker: true },
+    { date: 23, day: 'Thu' },
+    { date: 24, day: 'Fri' },
+    { date: 25, day: 'Sat' },
+    { date: 26, day: 'Sun', event: 'Osaka...', color: 'bg-purple-400' },
+    { date: 27, day: 'Mon', event: 'Bangkok', marker: true },
+    { date: 28, day: 'Tue' },
+    { date: 29, day: 'Wed' },
+    { date: 30, day: 'Thu' },
   ];
 
-  const navItems = [
-    { icon: Home, name: 'home' },
-    { icon: Compass, name: 'explore' },
-    { icon: Bookmark, name: 'saved' },
-    { icon: MessageSquare, name: 'messages' },
-    { icon: MapPin, name: 'locations' },
-    { icon: User, name: 'profile' }
+  const upcomingPayments = [
+    { date: '15.11', name: 'Shinkansen train ticket', amount: '130$', color: 'bg-purple-400' },
+    { date: '15.11', name: 'Yasumi Hotel in Kyoto', amount: '185$', color: 'bg-purple-400' },
+    { date: '21.11', name: 'Mitsukawa Hostel in Osaka', amount: '130$', color: 'bg-purple-400' },
+    { date: '23.11', name: 'Monthly insurance charge', amount: '130$', color: 'bg-purple-400' },
+    { date: '30.11', name: 'Pay day', amount: '2600$', color: 'bg-lime-300' },
+    { date: '06.12', name: 'Apartments in Hua Hin', amount: '200$', color: 'bg-purple-400' },
   ];
-
-  // Loading state
-  if (loading) {
-    return (
-      <div className="bg-white min-h-screen">
-        <div className="max-w-full mx-auto flex gap-20">
-          <div><SidebarDemo/></div>
-          <div className='p-6 flex gap-10 w-full h-full'>
-            <div className="flex-1 space-y-6 min-h-screen">
-              <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-                <div className="animate-pulse">
-                  <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-                  <div className="grid grid-cols-3 gap-4">
-                    {[1,2,3].map(i => (
-                      <div key={i} className="h-48 bg-gray-200 rounded-2xl"></div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="bg-white min-h-screen">
-        <div className="max-w-full mx-auto flex gap-20">
-          <div><SidebarDemo/></div>
-          <div className='p-6 flex gap-10 w-full h-full'>
-            <div className="flex-1 space-y-6 min-h-screen">
-              <div className="bg-white border border-red-200 rounded-2xl p-6 shadow-sm">
-                <div className="text-center text-red-600">
-                  <h2 className="text-xl font-semibold mb-2">Error Loading Data</h2>
-                  <p>{error.message || 'Something went wrong'}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="bg-white min-h-screen ">
-      <div className="max-w-full mx-auto flex gap-20">
-        {/* Sidebar */}
-        <div><SidebarDemo/></div>
-        {/* Main Content */}
-        <div className='p-6 flex gap-10 w-full h-full'>
-          <div className="flex-1 space-y-6 min-h-screen">
-            {/* Header */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-6">
-                 <Lottie
-                animationData={animationData}
-                loop={true}
-                className="absolute bottom-0 right-10 -mb-27"
-                style={{ width: "300px", height: "500px" }}
-              />
-                <h1 className="text-2xl font-black text-black leading-none tracking-tight">Hello, Tejash!</h1>
-                <div className="flex items-center gap-4">
-                  <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                    <input
-                      type="text"
-                      placeholder="Search destination..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black bg-white text-black"
-                    />
-                  </div>
-                  <button className="px-6 py-2 bg-black text-white rounded-xl hover:bg-gray-900 transition-colors border border-black">Domestic</button>
-                  <button className="px-6 py-2 bg-white text-black rounded-xl hover:bg-gray-100 transition-colors border border-gray-300">Overseas</button>
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <SidebarDemo/>
+
+      {/* Main Content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 md:ml-10 p-4 md:p-8   gap-4 md:gap-6">
+        
+          {/* Welcome Card - Fixed */}
+        <div className=" lg:h-full ">
+          <div className="bg-white rounded-3xl p-4 md:p-8 shadow-sm mb-8">
+           <div className='flex justify-between'>
+             <h1 className="text-2xl md:text-4xl font-poppins  font-bold mb-2">Welcome, Tejash!</h1>
+              <Button className={"bg-[#479FDC] hover:bg-[#479FD4] "}>Explore Destination</Button>
+           </div>
+
+            <p className="text-sm text-gray-600 mb-6">So far you've been to</p>
+
+            <div className="flex flex-wrap justify-center md:justify-between gap-4 md:gap-0 mb-6 md:mb-6">
+              {/* Destinations Circle */}
+              <div className="relative w-20 h-20 md:w-24 md:h-24">
+                <svg className="w-20 h-20 md:w-24 md:h-24 transform -rotate-90">
+                  <circle cx="40" cy="40" r="32" stroke="#e5e7eb" strokeWidth="6" fill="none" className="md:hidden" />
+                  <circle cx="48" cy="48" r="40" stroke="#e5e7eb" strokeWidth="8" fill="none" className="hidden md:block" />
+                  <circle cx="40" cy="40" r="32" stroke="#bef264" strokeWidth="6" fill="none" className="md:hidden"
+                    strokeDasharray="201" strokeDashoffset="40" strokeLinecap="round" />
+                  <circle cx="48" cy="48" r="40" stroke="#bef264" strokeWidth="8" fill="none" className="hidden md:block"
+                    strokeDasharray="251.2" strokeDashoffset="50" strokeLinecap="round" />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <div className="text-lg md:text-2xl font-bold">125</div>
+                  <div className="text-xs text-gray-500">Attractions</div>
                 </div>
               </div>
-              {/* Most Visited Tourist Spots */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-black">Most visited tourist spot</h2>
-                  <ChevronRight className="text-gray-400" size={20} />
+
+              {/* Countries Circle */}
+              <div className="relative w-20 h-20 md:w-24 md:h-24">
+                <svg className="w-20 h-20 md:w-24 md:h-24 transform -rotate-90">
+                  <circle cx="40" cy="40" r="32" stroke="#e5e7eb" strokeWidth="6" fill="none" className="md:cx-48 md:cy-48 md:r-40 md:stroke-8" />
+                  <circle cx="40" cy="40" r="32" stroke="#c4b5fd" strokeWidth="6" fill="none" className="md:cx-48 md:cy-48 md:r-40 md:stroke-8"
+                    strokeDasharray="201" strokeDashoffset="100" strokeLinecap="round" />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <div className="text-lg md:text-2xl font-bold">21</div>
+                  <div className="text-xs text-gray-500">itinary</div>
                 </div>
-                
-                {mostVisitedSpots.length === 0 ? (
-                  <div className="text-center text-gray-500 py-8">
-                    <p>No destinations available yet</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-3 gap-4">
-                    {mostVisitedSpots.map((spot) => (
-                      <div 
-                        key={spot.id} 
-                        className="relative h-48 rounded-2xl bg-white border border-gray-200 p-4 text-black overflow-hidden group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                        onClick={() => navigate(`/destination/${spot.slug}`)}
-                      >
-                        {/* Background Image */}
-                        {spot.image && (
-                          <div 
-                            className="absolute inset-0 bg-cover bg-center"
-                            style={{ 
-                              backgroundImage: `url(http://localhost:8000${spot.image})`,
-                            }}
-                          >
-                            <div className="absolute inset-0 bg-black/40"></div>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-white/80"></div>
-                        <div className="relative z-10 h-full flex flex-col justify-between">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="text-lg font-bold">{spot.name}</h3>
-                              <p className="text-sm opacity-90 flex items-center gap-1 text-gray-600">
-                                <MapPin size={12} />
-                                {spot.location}
-                              </p>
-                            </div>
-                            <div className="bg-gray-100 px-2 py-1 rounded-lg flex items-center gap-1 border border-gray-300">
-                              <Star size={14} className="text-black" fill="black" />
-                              <span className="text-sm font-semibold">{spot.rating}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="absolute bottom-0 right-0 w-32 h-32 bg-gray-100 rounded-full transform translate-x-16 translate-y-16"></div>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
-              {/* Recommendations */}
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-black">Recommendation for you</h2>
-                  <button className="text-black text-sm hover:underline">See all</button>
-                </div>
-                <div className="space-y-3">
-                  {recommendations.map((place) => (
-                    <div 
-                      key={place.id} 
-                      className="flex items-center gap-4 p-3 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer"
-                      onClick={() => navigate(`/destination/${place.slug}`)}
-                    >
-                      <div className="w-16 h-16 bg-gray-200 rounded-xl flex items-center justify-center text-2xl text-gray-500 overflow-hidden">
-                        {place.image ? (
-                          <img 
-                            src={`http://localhost:8000${place.image}`} 
-                            alt={place.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          '🏔️'
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-black">{place.name}</h3>
-                        <p className="text-sm text-gray-500 flex items-center gap-1">
-                          <MapPin size={12} />
-                          {place.location}
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          {place.itineraryCount} itinerar{place.itineraryCount === 1 ? 'y' : 'ies'} available
-                        </p>
-                      </div>
-                      <ChevronRight className="text-gray-400" size={20} />
-                    </div>
-                  ))}
+
+              {/* Continents Circle */}
+              <div className="relative w-20 h-20 md:w-24 md:h-24">
+                <svg className="w-20 h-20 md:w-24 md:h-24 transform -rotate-90">
+                  <circle cx="40" cy="40" r="32" stroke="#e5e7eb" strokeWidth="6" fill="none" className="md:cx-48 md:cy-48 md:r-40 md:stroke-8" />
+                  <circle cx="40" cy="40" r="32" stroke="#1f2937" strokeWidth="6" fill="none" className="md:cx-48 md:cy-48 md:r-40 md:stroke-8"
+                    strokeDasharray="201" strokeDashoffset="150" strokeLinecap="round" />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <div className="text-lg md:text-2xl font-bold">4</div>
+                  <div className="text-xs text-gray-500">Destination</div>
                 </div>
               </div>
             </div>
+
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-600">Which makes your travel goal completed by</span>
+                <span className="text-sm font-bold text-lime-500">43%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="bg-lime-300 h-2 rounded-full" style={{ width: '43%' }}></div>
+              </div>
+            </div>
+
+      
           </div>
-          {/* Right Sidebar - Profile Card */}
-          <div className="w-96">
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-              <div className="text-center mb-6">
-                <h3 className="text-sm text-gray-500 mb-2">Your Profile</h3>
-                <div className="relative inline-block">
-                  <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-3 flex items-center justify-center text-gray-700 text-3xl">
-                    <User size={48} />
+
+            {/* my trips */}
+          <div className="bg-white rounded-3xl p-4 md:p-8 shadow-sm mb-6">
+            <h2 className="text-xl font-bold mb-2">My Trips</h2>
+           
+
+            <div className="relative mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs bg-purple-400 text-white px-3 py-1 rounded-full">60%</span>
+                <span className="text-sm text-gray-600">2500$</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="bg-purple-400 h-2 rounded-full" style={{ width: '60%' }}></div>
+              </div>
+              <div className="flex justify-center mt-2">
+                <span className="text-xs text-gray-500">November 2023</span>
+              </div>
+            </div>
+
+            
+          </div>
+
+            {/* To Do */}
+          <div className="bg-lime-200 rounded-3xl p-4 md:p-6 shadow-sm">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">To do</h2>
+                <button className="text-gray-600">+</button>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <input 
+                    type="checkbox" 
+                    checked={checkedItems.hotel || false}
+                    onChange={() => toggleCheck('hotel')}
+                    className="mt-1 w-4 h-4 rounded border-gray-300"
+                  />
+                  <div className="flex-1">
+                    <div className="text-sm font-medium">Book a hotel in Bangkok</div>
+                    <div className="text-xs text-gray-600">Budget limit – 25$/night</div>
+                    <div className="text-xs text-gray-600">Dates 26-30 Nov</div>
                   </div>
-                  
                 </div>
-                <h2 className="text-xl font-bold text-black">Tejash Rajput</h2>
-                <p className="text-sm text-gray-500 flex items-center justify-center gap-1">
-                  <MapPin size={12} />
-                 delhi, India
-                </p>
-                <button className="mt-4 px-6 py-2 bg-black text-white rounded-xl hover:bg-gray-900 transition-colors text-sm font-medium border border-black">
-                  Edit Your Profile
+
+                <div className="flex items-start space-x-3">
+                  <input 
+                    type="checkbox" 
+                    checked={checkedItems.train || false}
+                    onChange={() => toggleCheck('train')}
+                    className="mt-1 w-4 h-4 rounded border-gray-300"
+                  />
+                  <div className="flex-1">
+                    <div className="text-sm font-medium">Buy a train tickets to Hua Hin</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start space-x-3">
+                  <input 
+                    type="checkbox" 
+                    checked={checkedItems.apartment}
+                    onChange={() => toggleCheck('apartment')}
+                    className="mt-1 w-4 h-4 rounded border-gray-300"
+                  />
+                  <div className="flex-1 opacity-50">
+                    <div className="text-sm font-medium">Book an apartment in Hua Hin</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+       
+          {/* Scrollable Content */}
+        <div className=" lg:h-full ">
+          <div className="space-y-4 md:space-y-6">
+          {/* Calendar */}
+          <div className="bg-white rounded-3xl p-4 md:p-8 shadow-sm mb-4 md:mb-7">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">November <span className="text-gray-400">2023</span></h2>
+              <div className="flex space-x-2">
+                <button className="text-gray-400 hover:text-gray-600">&lt;</button>
+                <button className="text-gray-400 hover:text-gray-600">&gt;</button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-7 gap-1 md:gap-2 text-center text-xs mb-4">
+              <div className="text-gray-500 font-medium">Mon</div>
+              <div className="text-gray-500 font-medium">Tue</div>
+              <div className="text-gray-500 font-medium">Wed</div>
+              <div className="text-gray-500 font-medium">Thu</div>
+              <div className="text-gray-500 font-medium">Fri</div>
+              <div className="text-gray-500 font-medium">Sat</div>
+              <div className="text-gray-500 font-medium">Sun</div>
+            </div>
+
+            <div className=" grid grid-cols-7 gap-1 md:gap-2">
+              <div></div>
+              <div></div>
+              {calendarDays.map((day, index) => (
+                <div key={index} className="relative">
+                  {day.event ? (
+                    <div className={`${day.color} rounded-lg p-2 text-white text-xs`}>
+                      <div className="font-medium">{day.date}</div>
+                      <div className="text-[10px] truncate">{day.event}</div>
+                    </div>
+                  ) : day.marker ? (
+                    <div className="relative">
+                      <div className="text-sm p-2">{day.date}</div>
+                      <div className="absolute -right-1 top-2 flex items-center">
+                        <MapPin className="w-3 h-3 text-gray-700" fill="currentColor" />
+                        <span className="text-[10px] ml-1">{day.event}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-sm p-2 text-gray-700">{day.date}</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Recommendation for you */}
+          <div className="bg-white rounded-3xl p-4 md:p-6 shadow-sm">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Recommendation for you</h2>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+              <div className="relative rounded-2xl overflow-hidden">
+                <div className="aspect-square bg-gradient-to-br from-purple-400 to-purple-600"></div>
+                <button className="absolute top-2 right-2 w-6 h-6 bg-white/30 rounded-full flex items-center justify-center">
+                  <span className="text-white">♡</span>
                 </button>
+                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/50 to-transparent">
+                  <div className="text-white text-xs font-medium">Aix-en-Provence</div>
+                  <div className="text-white/80 text-[10px]">◐ France</div>
+                </div>
               </div>
-              <div className="space-y-4">
-                <h3 className="font-semibold text-black">Recent trip plan</h3>
-                {recentTrips.map((trip) => (
-                  <div 
-                    key={trip.id} 
-                    className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50"
-                    onClick={() => navigate(`/destination/${trip.destinationSlug}`)}
-                  >
-                    <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center text-xl text-gray-500">⛰️</div>
-                    <div className="flex-1">
-                      <h4 className="font-medium text-black text-sm">{trip.name}</h4>
-                      <div className="flex items-center gap-3 text-xs text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Calendar size={10} />
-                          {trip.date}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          💰 {trip.budget}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-400">{trip.destination}</p>
-                    </div>
-                    <MoreVertical className="text-gray-400" size={16} />
 
+              <div className="relative rounded-2xl overflow-hidden">
+                <div className="aspect-square bg-gradient-to-br from-indigo-900 to-purple-900"></div>
+                <button className="absolute top-2 right-2 w-6 h-6 bg-white/30 rounded-full flex items-center justify-center">
+                  <span className="text-white">♡</span>
+                </button>
+                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/50 to-transparent">
+                  <div className="text-white text-xs font-medium">Lofoten</div>
+                  <div className="text-white/80 text-[10px]">◐ Norway</div>
+                </div>
+              </div>
 
-               
-                  </div>
-                ))}
+              <div className="relative rounded-2xl overflow-hidden">
+                <div className="aspect-square bg-gradient-to-br from-teal-400 to-blue-500"></div>
+                <button className="absolute top-2 right-2 w-6 h-6 bg-white/30 rounded-full flex items-center justify-center">
+                  <span className="text-white">♡</span>
+                </button>
+                <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/50 to-transparent">
+                  <div className="text-white text-xs font-medium">Gardens</div>
+                  <div className="text-white/80 text-[10px]">◐ Singapore</div>
+                </div>
               </div>
             </div>
-
           </div>
-         
+
+        
+
+        
+
+            {/* Wishlist */}
+            <div className="bg-white rounded-3xl p-4 md:p-6 shadow-sm">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Wishlist</h2>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+                <div className="relative rounded-2xl overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-purple-400 to-purple-600"></div>
+                  <button className="absolute top-2 right-2 w-6 h-6 bg-white/30 rounded-full flex items-center justify-center">
+                    <span className="text-white">♡</span>
+                  </button>
+                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/50 to-transparent">
+                    <div className="text-white text-xs font-medium">Aix-en-Provence</div>
+                    <div className="text-white/80 text-[10px]">◐ France</div>
+                  </div>
+                </div>
+
+                <div className="relative rounded-2xl overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-indigo-900 to-purple-900"></div>
+                  <button className="absolute top-2 right-2 w-6 h-6 bg-white/30 rounded-full flex items-center justify-center">
+                    <span className="text-white">♡</span>
+                  </button>
+                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/50 to-transparent">
+                    <div className="text-white text-xs font-medium">Lofoten</div>
+                    <div className="text-white/80 text-[10px]">◐ Norway</div>
+                  </div>
+                </div>
+
+                <div className="relative rounded-2xl overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-teal-400 to-blue-500"></div>
+                  <button className="absolute top-2 right-2 w-6 h-6 bg-white/30 rounded-full flex items-center justify-center">
+                    <span className="text-white">♡</span>
+                  </button>
+                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/50 to-transparent">
+                    <div className="text-white text-xs font-medium">Gardens</div>
+                    <div className="text-white/80 text-[10px]">◐ Singapore</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         
       </div>
     </div>
   );
-}
+};
+
+export default TravelDashboard;
