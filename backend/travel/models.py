@@ -8,6 +8,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.conf import settings
 from cloudinary.models import CloudinaryField
+from django.contrib.postgres.indexes import GinIndex
+
 
 class User(AbstractUser):
     class Roles(models.TextChoices):
@@ -33,6 +35,9 @@ class Location(models.Model):
 
     class Meta:
         unique_together = ("city", "state", "country")
+        indexes = [
+            models.Index(fields=["country"]),
+        ]
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -45,10 +50,11 @@ class Location(models.Model):
 class Destination(models.Model):
     name = models.CharField(max_length=100, unique=True, db_index=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name="destinations")
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, db_index=True)
     description = models.TextField(blank=True)
     image = CloudinaryField('image', blank=True, null=True, folder="destinations/")  # keep thumbnail
-    is_trending = models.BooleanField(default=False)
+    is_trending = models.BooleanField(default=False, db_index=True)
+    trending_score = models.FloatField(default=0, db_index=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -102,7 +108,7 @@ class DestinationImage(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, db_index=True)
     icon = CloudinaryField('image', blank=True, null=True, folder="categories/")
     is_trending = models.BooleanField(default=False)
 
@@ -121,7 +127,7 @@ class Itinerary(models.Model):
         GURU = "GURU", "Travel Guru"
         ADMIN = "ADMIN", "Admin"
         AI = "AI", "AI Generated"
-    destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name="itineraries")
+    destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name="itineraries",  db_index=True)
     categories = models.ManyToManyField("Category", blank=True, related_name="itineraries")  
     title = models.CharField(max_length=150)
     slug = models.SlugField(unique=True, blank=True, max_length=150)
@@ -130,12 +136,12 @@ class Itinerary(models.Model):
         help_text="A short summary of the itinerary for cards/list views (2–3 lines)."
     )
 
-    duration_days = models.IntegerField()
+    duration_days = models.IntegerField(db_index=True)
     duration_nights = models.IntegerField()
-    total_budget = models.DecimalField(max_digits=10, decimal_places=2)
+    total_budget = models.DecimalField(max_digits=10, decimal_places=2,db_index=True)
     thumbnail = CloudinaryField('image', blank=True, null=True, folder="itineraries/")
     highlighted_places = models.TextField(help_text="Comma-separated values like Beach, Fort", db_index=True)
-    popularity_score = models.IntegerField(default=0)
+    popularity_score = models.IntegerField(default=0,db_index=True)
     tags = models.ManyToManyField("Tag", blank=True, related_name="itineraries")
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -148,7 +154,7 @@ class Itinerary(models.Model):
         max_length=10, choices=AuthorTypes.choices, default=AuthorTypes.AI
     )
     is_public = models.BooleanField(default=True)
-    
+    created_at = models.DateTimeField(auto_now_add=True)  
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(f"{self.destination.name}-{self.title}")
@@ -162,12 +168,16 @@ class Itinerary(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.destination.name}"
-
+    class Meta:
+        indexes = [
+            models.Index(fields=["destination", "id"]),  # for dest itineraries
+            models.Index(fields=["destination", "total_budget", "duration_days"]),
+        ]
 
 
 
 class DayPlan(models.Model):
-    itinerary = models.ForeignKey(Itinerary, on_delete=models.CASCADE, related_name="days")
+    itinerary = models.ForeignKey(Itinerary, on_delete=models.CASCADE, related_name="days", db_index=True)
     day_number = models.IntegerField()
     title = models.CharField(max_length=100, help_text="E.g., Day 1: Arrival & Beach Visit")
     description = models.TextField()
@@ -176,6 +186,9 @@ class DayPlan(models.Model):
     class Meta:
         unique_together = ('itinerary', 'day_number')
         ordering = ['day_number']
+        indexes = [
+            models.Index(fields=["itinerary"]),
+        ]
 
     def __str__(self):
         return f"{self.itinerary.title} - Day {self.day_number}"
@@ -257,7 +270,7 @@ class Attraction(models.Model):
         blank=True,
         null=True
         )
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name="attractions")
+    
     name = models.CharField(max_length=100, db_index=True)
     description = models.TextField(blank=True)
     image = CloudinaryField('image', blank=True, null=True, folder="attractions/")
@@ -273,12 +286,25 @@ class Attraction(models.Model):
 
     tags = models.ManyToManyField("Tag", blank=True)
     
+    city = models.CharField(max_length=100, db_index=True, blank=True)
+    state = models.CharField(max_length=100, db_index=True, blank=True)
+    country = models.CharField(max_length=100, db_index=True, blank=True)
+    
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name="attractions", db_index=True)
     
     def __str__(self):
         if self.day_plan:
             return f"{self.name} (Day {self.day_plan.day_number})"
         return self.name
-
+    class Meta:
+        indexes = [
+            models.Index(fields=["city"]),
+            models.Index(fields=["state"]),
+            models.Index(fields=["country"]),
+            models.Index(fields=["day_plan"]),
+            models.Index(fields=["location", "name"]),
+            GinIndex(name="attraction_name_trgm", fields=["name"], opclasses=["gin_trgm_ops"]),
+        ]
 
 class Restaurant(models.Model):
     day_plan = models.ForeignKey(
@@ -305,6 +331,11 @@ class Restaurant(models.Model):
             return f"{self.name} (Day {self.day_plan.day_number})"
         return self.name
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["day_plan"]),
+        ]
+
 
 class Experience(models.Model):
     attraction = models.ForeignKey(
@@ -324,6 +355,8 @@ class Experience(models.Model):
     def __str__(self):
         location_info = f" at {self.attraction.name}" if self.attraction else ""
         return f"{self.name}{location_info}"
+    
+    
 
 
 class DayBudget(models.Model):
@@ -344,6 +377,10 @@ class DayBudget(models.Model):
             self.experiences_cost
         )
         self.save()
+    class Meta:
+        indexes = [
+            models.Index(fields=["day_plan"]),
+        ]
         
 
 class DestinationView(models.Model):
@@ -361,10 +398,10 @@ class DestinationView(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)  
     session_id = models.CharField(max_length=100, blank=True, null=True)
     ip_address = models.GenericIPAddressField(blank=True, null=True)
-    action_type = models.CharField(max_length=10, choices=ACTION_CHOICES, default=VIEW)
+    action_type = models.CharField(max_length=10, choices=ACTION_CHOICES, default=VIEW, db_index=True)
     dwell_time = models.IntegerField(default=0)  # only for dwell
     click_target = models.CharField(max_length=100, blank=True, null=True)  # only for clicks
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
     class Meta:
         indexes = [
             models.Index(fields=["user", "destination", "action_type"]),
@@ -387,26 +424,6 @@ class Rating(models.Model):
     def __str__(self):
         return f"{self.user} rated {self.rating} on {self.content_object}"
     
-class FavoriteItinerary(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="favorite_itineraries"
-    )
-    itinerary = models.ForeignKey(
-        Itinerary,
-        on_delete=models.CASCADE,
-        related_name="favorited_by"
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ("user", "itinerary")
-        
-"""API Endpoints
-POST /api/itineraries/<int:id>/favorite/ → mark as favorite
-DELETE /api/itineraries/<int:id>/favorite/ → remove favorite
-GET /api/user/favorites/ → list all favorited itineraries"""
 
 
 class UserTask(models.Model):
@@ -424,4 +441,25 @@ class UserTask(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     
-    
+
+class FavoriteItinerary(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="favorite_itineraries"
+    )
+    itinerary = models.ForeignKey(
+        Itinerary,
+        on_delete=models.CASCADE,
+        related_name="favorited_by"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "itinerary")
+        indexes = [
+            models.Index(fields=["user", "itinerary"])
+        ]
+
+    def __str__(self):
+        return f"{self.user} → {self.itinerary}"
