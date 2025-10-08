@@ -1,5 +1,5 @@
-import { Search, Heart, MapPin, Clock, Wallet, Tag } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { Search, Heart, MapPin, Clock, Wallet, Tag, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAllDestination } from "../../hooks/useTravelApi";
 import Lottie from "lottie-react";
@@ -10,22 +10,13 @@ export default function TravelCard({ initialSearchQuery = '' }) {
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [likedItems, setLikedItems] = useState(new Set());
   const [currentImageIndex, setCurrentImageIndex] = useState({});
-  const [hoverTimeouts, setHoverTimeouts] = useState({});
   const { data, loading, error } = useAllDestination()
+  const hoverIntervals = useRef({});
 
   // Update search query when initialSearchQuery changes (from URL)
   useEffect(() => {
     setSearchQuery(initialSearchQuery);
   }, [initialSearchQuery]);
-
-  // Cleanup intervals on unmount
-  useEffect(() => {
-    return () => {
-      Object.values(hoverTimeouts).forEach(timeout => {
-        if (timeout) clearInterval(timeout);
-      });
-    };
-  }, [hoverTimeouts]);
 
   console.log('Data structure:', data);
   console.log('Search query:', searchQuery);
@@ -46,38 +37,30 @@ export default function TravelCard({ initialSearchQuery = '' }) {
   };
 
   // Image carousel functions
-  const handleImageClick = (destinationId, totalImages) => {
-    setCurrentImageIndex(prev => ({
-      ...prev,
-      [destinationId]: ((prev[destinationId] || 0) + 1) % totalImages
-    }));
-  };
-
-  const handleMouseEnter = (destinationId, totalImages) => {
+  const changeImage = (destinationId, totalImages, direction = 1) => {
     if (totalImages <= 1) return;
-    
-    const interval = setInterval(() => {
-      setCurrentImageIndex(prev => ({
-        ...prev,
-        [destinationId]: ((prev[destinationId] || 0) + 1) % totalImages
-      }));
-    }, 2000);
 
-    setHoverTimeouts(prev => ({
-      ...prev,
-      [destinationId]: interval
-    }));
+    setCurrentImageIndex(prev => {
+      const current = prev[destinationId] || 0;
+      const nextIndex = (current + direction + totalImages) % totalImages;
+
+      return {
+        ...prev,
+        [destinationId]: nextIndex,
+      };
+    });
   };
 
-  const handleMouseLeave = (destinationId) => {
-    if (hoverTimeouts[destinationId]) {
-      clearInterval(hoverTimeouts[destinationId]);
-      setHoverTimeouts(prev => {
-        const newTimeouts = { ...prev };
-        delete newTimeouts[destinationId];
-        return newTimeouts;
-      });
-    }
+  const handleImageClick = (destinationId, totalImages) => {
+    changeImage(destinationId, totalImages, 1);
+  };
+
+  const handleNextImage = (destinationId, totalImages) => {
+    changeImage(destinationId, totalImages, 1);
+  };
+
+  const handlePrevImage = (destinationId, totalImages) => {
+    changeImage(destinationId, totalImages, -1);
   };
 
   const handleDotClick = (destinationId, imageIndex, e) => {
@@ -114,6 +97,15 @@ export default function TravelCard({ initialSearchQuery = '' }) {
       return matchesSearch && matchesTab;
     });
   }, [data, searchQuery, activeTab]);
+
+  useEffect(() => {
+    return () => {
+      Object.values(hoverIntervals.current).forEach(intervalId => {
+        if (intervalId) clearInterval(intervalId);
+      });
+      hoverIntervals.current = {};
+    };
+  }, []);
 
   if (loading) return   <Lottie
                 animationData={animationData}
@@ -207,15 +199,38 @@ export default function TravelCard({ initialSearchQuery = '' }) {
                   <Link to={`/destination/${destination.slug}`} key={destination.id} className="block h-full">
                     <article className="group flex flex-col h-full rounded-3xl border border-slate-100 bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden">
                       <div 
-                        className="relative aspect-[4/3] bg-slate-200"
-                        onMouseEnter={() => handleMouseEnter(destination.id, destination.images?.length || 0)}
-                        onMouseLeave={() => handleMouseLeave(destination.id)}
+                        className="relative h-64 md:h-60 lg:h-56 bg-slate-200 overflow-hidden"
+                        onMouseEnter={() => {
+                          const totalImages = destination.images?.length || 0;
+                          if (totalImages <= 1) return;
+
+                          if (hoverIntervals.current[destination.id]) {
+                            clearInterval(hoverIntervals.current[destination.id]);
+                          }
+
+                          hoverIntervals.current[destination.id] = setInterval(() => {
+                            changeImage(destination.id, totalImages, 1);
+                          }, 2000);
+                        }}
+                        onMouseLeave={() => {
+                          if (hoverIntervals.current[destination.id]) {
+                            clearInterval(hoverIntervals.current[destination.id]);
+                            delete hoverIntervals.current[destination.id];
+                          }
+                        }}
                       >
                         {destination.images?.length ? (
                           <img
                             src={destination.images?.[currentImageIndex[destination.id] || 0] || destination.images?.[0]}
                             alt={destination.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              if (destination.images?.length > 1) {
+                                handleImageClick(destination.id, destination.images.length);
+                              }
+                            }}
                           />
                         ) : (
                           <div className="w-full h-full bg-gradient-to-br from-slate-200 via-slate-100 to-white flex items-center justify-center text-slate-400 text-sm font-medium">
@@ -223,6 +238,33 @@ export default function TravelCard({ initialSearchQuery = '' }) {
                           </div>
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-slate-900/10 to-transparent opacity-75 group-hover:opacity-85 transition-opacity" />
+
+                        {destination.images && destination.images.length > 1 && (
+                          <>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handlePrevImage(destination.id, destination.images.length);
+                              }}
+                              className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/30 text-white opacity-0 pointer-events-none backdrop-blur transition hover:bg-white/60 group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto"
+                              aria-label="Previous photo"
+                            >
+                              <ChevronLeft className="h-5 w-5" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleNextImage(destination.id, destination.images.length);
+                              }}
+                              className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/30 text-white opacity-0 pointer-events-none backdrop-blur transition hover:bg-white/60 group-hover:opacity-100 group-hover:pointer-events-auto focus-visible:opacity-100 focus-visible:pointer-events-auto"
+                              aria-label="Next photo"
+                            >
+                              <ChevronRight className="h-5 w-5" />
+                            </button>
+                          </>
+                        )}
 
                         {/* Image dots indicator */}
                         {destination.images && destination.images.length > 1 && (

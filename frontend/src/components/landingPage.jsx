@@ -9,6 +9,7 @@ import TravelGurus from "./travelGuru";
 import Hero from "./hero";
 import Footer from "./footer";
 import { useAuth } from "../hooks/useTravelApi";
+import AnimatedSection from "./motion/animation";
 
 // cosnt {isauthen}=useAuth()
 
@@ -332,34 +333,62 @@ function LandingPage() {
   return (
     <div className="bg-cover bg-center min-h-screen mt-20 md:mt-10 overflow-hidden px-4 md:px-0">
 
+    
     <div className="h-screen bg-cover bg-center min-h-screen mt-4 md:mt-10 overflow-hidden rounded-b-2xl">
   <Header />
-      <Hero/>
-    </div>
-    
+    <AnimatedSection> <Hero/></AnimatedSection>
+     
+    </div>    
      
 
       {/* 2nd comp */}
-      <div className="w-full min-h-screen mt-10 mb-10 md:mb-70 px-4 md:px-0">
+      <AnimatedSection>
+      <div className="w-full min-h-screen mt-10  px-4 md:px-0">
         <div className="text-3xl md:text-6xl font-bold font-sans text-center mb-6 md:mb-10">
           Trending Now
         </div>
         <h1 className="text-base md:text-xl text-center text-gray-600 px-4 md:px-0">Discover what's capturing hearts across India. From serene beaches to majestic mountains.</h1>
 
-        <div className="mt-6 md:mt-10">
+        <div className="mt-6 md:mt-10 mx-auto">
           <FocusCards cards={cards} />
         </div>
       </div>
+</AnimatedSection>
 
        {/* 3rd componet */}
-      <div className="w-full mt-10 px-4 md:px-0">
-        <div className="text-3xl md:text-6xl font-bold font-sans text-center mb-6 md:mb-10">
-          How it Works?
-        </div>
+      
+    <AnimatedSection>
+        <div className="min-h-screen py-10 md:py-16 lg:py-0 lg:h-screen grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0">
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-0">
+           {/* left column */}
+          <div className="flex items-center justify-center order-2 ml-1 md:ml-12 lg:order-1 px-4 md:px-8 lg:px-0">
+            <video autoPlay loop muted playsInline className="w-full max-w-lg lg:max-w-full rounded-lg shadow-lg">
+              <source src="/video.mp4" type="video/mp4"/>
+            </video>
+          </div>
+          {/* right column */}
+          <div className="flex items-center justify-center order-1 lg:order-2 px-4 md:px-8 lg:px-0">
+            <div className="max-w-md px-4 md:px-0">
+               <h1 className="text-3xl text-center md:text-5xl lg:text-7xl font-black text-gray-900 leading-tight md:leading-none tracking-tight mb-6 md:mb-8">
+                    How it Works?
+                </h1>
+                 <p className="text-base text-center md:text-xl text-gray-600">
+               Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae perferendis fugiat esse, blanditiis voluptate ipsam.
+              </p>
+            </div>
+          </div>
+
+         
+        </div>
+</AnimatedSection>
+
+
+  
+      {/* 4th componet */}
+<AnimatedSection>
+        <div className="h-screen grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-0">
           {/* Left column */}
-          <div className="flex items-center justify-center order-2 lg:order-1">
+          <div className="flex items-center justify-center order-1 lg:order-1">
             <div className="max-w-md px-4 md:px-0">
                <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-gray-900 leading-tight md:leading-none tracking-tight mb-4">
                   Handcrafted journeys
@@ -373,7 +402,7 @@ function LandingPage() {
           </div>
 
           {/* Right column */}
-          <div className="flex items-center justify-center order-1 lg:order-2">
+          <div className="flex items-center justify-center order-2 lg:order-2">
             <CometCard className="w-full max-w-md mx-auto">
               <button
                 type="button"
@@ -420,7 +449,7 @@ function LandingPage() {
                         <MapPin className="w-3 h-3 md:w-4 md:h-4 text-[#3E92D1]" />
                         <span className="text-xs md:text-sm">Alleppey, Munnar, Kochi</span>
                       </div>
-                      <div className="text-lg md:text-2xl font-bold text-gray-900">₹22,000</div>
+                     
                     </div>
 
                     {/* Trip Highlights */}
@@ -477,10 +506,13 @@ function LandingPage() {
             </CometCard>
           </div>
         </div>
-      </div>
 
-      {/* 4th component */}
-      <div className="w-full min-h-screen mt-10 mb-10 md:mb-70 px-4 md:px-0">
+        </AnimatedSection>
+    
+
+      {/* 5th component */}
+      <AnimatedSection>
+      <div className="w-full min-h-screen mt-10 mb-10  px-4 md:px-0">
         <div className="text-3xl md:text-6xl font-bold font-sans text-center mb-6 md:mb-10">
           Travel Categories
         </div>
@@ -497,7 +529,7 @@ function LandingPage() {
       <div className="flex flex-col items-center space-y-3">
         
            <div className="">
-                  <div className="w-20 h-16 md:w-30 md:h-25 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                  <div className="w-20 h-16 md:w-22 md:h-22 backdrop-blur-sm rounded-xl flex items-center justify-center">
                     {item.svg}
                 </div>
         </div>
@@ -530,9 +562,14 @@ function LandingPage() {
 </div>
 
       </div>
+      </AnimatedSection>
 
+      {/* 6th component */}
+<AnimatedSection>
       <TravelGurus/>
+      </AnimatedSection>
       <Footer/>
+
 
     </div>
 

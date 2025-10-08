@@ -11,6 +11,8 @@ import TravelDashboard from './components/dashboard/dashboard.jsx'
 import TravelItineraryForm from './components/detail/edit.jsx'
 import ItineraryComponent from './components/detail/Itinerary.jsx'
 import ItearnaryCard from './components/destination/iteanaryCard.jsx'
+import ItineraryForm from './components/destination/createItinary.jsx'
+import EditItineraryForm from './components/detail/edit.jsx'
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
@@ -20,6 +22,8 @@ const router = createBrowserRouter([
   {path: "/dashboard",element : <TravelDashboard/>},
   {path: "/destination/:slug/edit", element : <TravelItineraryForm/>},
   {path: "/destination/iteanary/:slug", element : <Detail/>},
+   {path: "/iteanary/create", element : <ItineraryForm/>},
+    {path: "/destination/iteanary/edit/:slug", element : <EditItineraryForm/>},
 
 ])
 

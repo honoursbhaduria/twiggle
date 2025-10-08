@@ -16,6 +16,7 @@ const Detail = () => {
   const [savedTrip, setSavedTrip] = useState(false);
   const { slug } = useParams();
   console.log(slug);
+ 
 
   const navigate=useNavigate()
 
@@ -93,7 +94,7 @@ const Detail = () => {
                 <button className="flex items-center justify-center px-6 py-3 bg-white bg-opacity-90 backdrop-blur-sm rounded-full text-gray-900 font-medium hover:bg-opacity-100 transition-all">
                   <span>Save</span>
                 </button>
-                <button onClick={()=>navigate(`/destination/${slug}/edit`)} className="flex items-center justify-center w-29 font-medium h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full text-black hover:bg-opacity-30 transition-all">
+                <button onClick={()=>navigate(`/destination/iteanary/edit/${slug}`)} className="flex items-center justify-center w-29 font-medium h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-full text-black hover:bg-opacity-30 transition-all">
                   Customize
                 </button>
               </div> :

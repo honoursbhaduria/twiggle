@@ -1,11 +1,12 @@
 import { Search, Heart, MapPin, Clock, Wallet, Tag } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
-import { useDestination } from "../../hooks/useTravelApi";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useAuth, useDestination } from "../../hooks/useTravelApi";
 import Lottie from "lottie-react";
 import animationData from "./animation.json"
 import { Sidebar } from "../ui/sidebar";
 import SidebarDemo from "./sidebar";
+import { Button } from "../ui/button";
 
 
 export default function ItearnaryCard({ initialSearchQuery = '' }) {
@@ -14,6 +15,13 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
   const [likedItems, setLikedItems] = useState(new Set());
   const {slug}=useParams()
   console.log(slug);
+
+  
+    const {isAuthenticated}=useAuth()
+    console.log(isAuthenticated);
+    
+
+  const navigate=useNavigate()
   
   const { destination:data, loading, error } = useDestination(slug)
   console.log("test:",data);
@@ -78,6 +86,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
             <p className="text-slate-500 mt-3 max-w-2xl">
               Scroll through the day-by-day breakdowns, signature experiences, and logistics we’ve already planned so you can focus on the memories.
             </p>
+          
           </div>
           <div className="hidden md:flex items-center gap-2 text-sm text-slate-500 bg-white border border-slate-200 rounded-full px-4 py-2 shadow-sm">
             <span className="inline-flex h-2 w-2 rounded-full bg-green-400" />
@@ -94,7 +103,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
             <input
               type="text"
               placeholder="Search itineraries, experiences, or keywords"
-              value={searchQuery}
+              value={searchQuery || slug}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all shadow-sm"
             />
@@ -110,9 +119,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
         <div className="mb-12">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <h2 className="text-2xl font-semibold text-slate-900">Featured itineraries</h2>
-            <div className="text-sm text-slate-500">
-              Jump into the itineraries that match your vibe.
-            </div>
+             <Button onClick={()=>navigate("/iteanary/create")} className={"bg-[#479FDC] uppercase hover:bg-[#479FD4] "}>Create your Itineraries</Button>
           </div>
 
           {loading && (
@@ -131,7 +138,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredDestinations.length > 0 ? (
                 filteredDestinations.map((destination) => (
-                  <Link to={`/destination/iteanary/${destination.slug}`} key={destination.id} className="block h-full">
+                  <Link to={isAuthenticated? `/destination/iteanary/${destination.slug}`:"/auth"} key={destination.id} className="block h-full">
                     <article className="group flex flex-col h-full rounded-3xl border border-slate-100 bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden">
                       <div className="relative aspect-[4/3] bg-slate-200">
                         {destination.thumbnail ? (
@@ -166,16 +173,14 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
                         <div className="absolute bottom-4 left-4 right-4 text-white drop-shadow-lg">
                           <div className="flex items-center gap-2 text-xs uppercase tracking-wider mb-1">
                             <MapPin className="w-3 h-3" />
-                            <span>{destination.highlighted_places || destination.title}</span>
+                            <span className="text-base">{destination.highlighted_places || destination.title}</span>
                           </div>
-                          <h3 className="text-lg font-semibold leading-snug">
-                            {destination.title}
-                          </h3>
+                         
                         </div>
                       </div>
 
                       <div className="flex-1 flex flex-col gap-4 p-5">
-                        <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
+                        <p className="text-sm text-slate-600 leading-relaxed font-sp line-clamp-3">
                           {destination.short_description || destination.description || 'This itinerary balances must-see highlights with local discoveries and built-in breathing space.'}
                         </p>
 
@@ -201,7 +206,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
                         </div>
 
                         <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-100 text-sm font-semibold">
-                          <span className="text-blue-600 group-hover:text-blue-700 transition-colors">View itinerary</span>
+                          <span className="text-blue-500 group-hover:text-blue-600 transition-colors">View itinerary</span>
                           <span className="text-slate-400 text-xs">#{destination.slug}</span>
                         </div>
                       </div>
