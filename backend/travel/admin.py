@@ -8,6 +8,28 @@ from .models import (
     DayBudget, AttractionImage, DestinationImage
 )
 
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import User
+
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    list_display = ("email", "username", "role", "is_staff", "is_active")
+    list_filter = ("role", "is_staff", "is_superuser", "is_active")
+    search_fields = ("email", "username")
+    ordering = ("email",)
+
+    fieldsets = (
+        (None, {"fields": ("email", "username", "password", "role")}),
+        ("Permissions", {"fields": ("is_staff", "is_superuser", "is_active", "groups", "user_permissions")}),
+        ("Important dates", {"fields": ("last_login", "date_joined")}),
+    )
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("email", "username", "role", "password1", "password2"),
+        }),
+    )
+
 # ---------------- DESTINATION ----------------
 class DestinationImageInline(admin.TabularInline):
     model = DestinationImage
@@ -64,8 +86,8 @@ class ItineraryAdmin(nested_admin.NestedModelAdmin):
     list_display = ("title", "destination", "duration_days", "total_budget", "popularity_score")
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ("title", "destination__name")
-    list_filter = ("destination", "categories")
-    filter_horizontal = ("categories", "tags")
+    # list_filter = ("destination", "categories")
+    # filter_horizontal = ("categories", "tags")
     inlines = [DayPlanInline, BudgetBreakdownInline]
 
 

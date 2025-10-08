@@ -16,6 +16,8 @@ from datetime import timedelta
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'cloudinary',
     'travel',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -90,9 +93,60 @@ CORS_ALLOW_ALL_ORIGINS = True
 #     "https://localhost:5173",
 #     "https://127.0.0.1:5173",
 # ]
+REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
+# REDIS_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0")
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": REDIS_URL,
+    }
+}
 
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Kolkata"
+
+
+CELERY_BEAT_SCHEDULE = {
+    "compute-trending-destinations": {
+        "task": "travel.tasks.compute_trending_destinations",
+        "schedule": crontab(minute=0, hour="*/1"),  # every 1 hour
+    },
+    "refresh-destinations-daily": {
+        "task": "travel.tasks.precompute_destination_list",
+        "schedule": crontab(hour=4, minute=0),
+    },
+     "rebuild-recommendations-every-30min": {
+        "task": "travel.tasks.rebuild_recommendations",
+        "schedule": crontab(minute="*/30"),  # every 30 minutes
+    },
+     "clear-stale-cache": {
+    "task": "travel.tasks.clear_stale_cache",
+    "schedule": crontab(hour=1, minute=0),  # run daily at 1 AM
+    },
+     "precache-user-recommendations": {
+        "task": "travel.tasks.precache_user_recommendations",
+        "schedule": crontab(hour="3", minute=0),  # daily at 3 AM
+    },
+     "precache-itineraries-by-category": {
+    "task": "travel.tasks.precache_itineraries_by_category",
+    "schedule": crontab(hour="2", minute=0),  # daily at 2 AM
+    },
+}
+
+
+# CELERY_BEAT_SCHEDULE = {
+#     "compute-trending-destinations": {
+#         "task": "travel.tasks.compute_trending_destinations",
+#         "schedule": crontab(minute="*/1"),  # every 1 minute
+#     },
+# }
 
 CORS_ALLOW_CREDENTIALS = True
+
 
 
 ROOT_URLCONF = 'travelplanner.urls'

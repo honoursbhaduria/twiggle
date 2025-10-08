@@ -6,3 +6,9 @@ def clear_destination_cache():
     keys = cache.keys("destinations:*") if hasattr(cache, "keys") else []
     if keys:
         cache.delete_many(keys)
+        
+        
+def clear_recommendations_cache():
+    keys = cache.keys("recommendations:*") if hasattr(cache, "keys") else []
+    if keys:
+        cache.delete_many(keys)
