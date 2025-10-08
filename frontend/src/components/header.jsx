@@ -45,7 +45,7 @@ const Header = () => {
                 <nav className="flex items-center justify-between">
                   {/* Logo */}
                   <div className="text-2xl font-bold text-gray-900 tracking-tight">
-                    TRIVISTA
+                    TWIGGLE
                   </div>
         
                   {/* Desktop Navigation */}

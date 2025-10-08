@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Column */}
           <div className="md:col-span-1">
-            <h2 className="text-2xl font-bold mb-4">TRIVISTA</h2>
+            <h2 className="text-2xl font-bold mb-4">TWIGLE</h2>
             <p className="text-gray-400 mb-4">
               Explore the incredible beauty of India with our premium travel experiences.
             </p>
@@ -84,7 +84,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} Trivista. All rights reserved.
+              © {new Date().getFullYear()} TWIGLE. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>

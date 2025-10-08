@@ -6,10 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar, Sparkles, TrendingUp } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useItinerary } from "../../hooks/useTravelApi";
-import Lottie from "lottie-react";
-import animationData from "../destination/animation.json"
 
 // NOTE: This component is intentionally feature-rich and mirrors the JSON structure you provided.
 // It's JavaScript (no TypeScript) and uses shadcn/ui + Tailwind utility classes.
@@ -51,7 +47,6 @@ const emptyItinerary = {
 };
 
 
-
 const cloneEmptyItinerary = () => JSON.parse(JSON.stringify(emptyItinerary));
 
 function slugify(text) {
@@ -62,54 +57,16 @@ function slugify(text) {
     .replace(/\s+/g, "-");
 }
 
-export default function EditItineraryForm() {
+export default function ItineraryForm() {
   const [form, setForm] = useState(() => cloneEmptyItinerary());
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [activeDayIndex, setActiveDayIndex] = useState(0);
 
-  const {slug}=useParams()
-  const {  data, error, loading } = useItinerary(slug)
-    const navigate=useNavigate()
-
   useEffect(() => {
-    // Load data from API when available
-    if (data) {
-      setForm({
-        id: data.id || null,
-        slug: data.slug || "",
-        title: data.title || "",
-        short_description: data.short_description || "",
-        highlighted_places: data.highlighted_places || "",
-        thumbnail: data.thumbnail || "",
-        categories: data.categories || [],
-        tags: data.tags || [],
-        total_budget: data.total_budget || 0,
-        duration_days: data.duration_days || 1,
-        duration_nights: data.duration_nights || 0,
-        popularity_score: data.popularity_score || 0,
-        days: data.days?.length > 0 ? data.days.map((day, idx) => ({
-          title: day.title || "",
-          day_number: day.day_number || idx + 1,
-          locations: day.locations || "",
-          budget: {
-            start_time: day.budget?.start_time || null,
-            end_time: day.budget?.end_time || null,
-            total_cost: day.budget?.total_cost || 0,
-            estimated_cost: day.budget?.estimated_cost || 0,
-            attractions_cost: day.budget?.attractions_cost || 0,
-            duration_minutes: day.budget?.duration_minutes || 0,
-            experiences_cost: day.budget?.experiences_cost || 0,
-            restaurants_cost: day.budget?.restaurants_cost || 0,
-          },
-          attractions: day.attractions || [],
-          experiences: day.experiences || [],
-          restaurants: day.restaurants || [],
-          description: day.description || "",
-        })) : [createBlankDay(1)],
-      });
-      setThumbnailPreview(data.thumbnail || "");
-    }
-  }, [data]);
+    // keep slug in sync with title by default
+    setForm((prev) => ({ ...prev, slug: slugify(prev.title || "") }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleTopChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -187,13 +144,10 @@ export default function EditItineraryForm() {
   };
 
   const handleSubmit = (e) => {
-
-
-
     e.preventDefault();
     // In production you'd send `form` to your API here (FormData if thumbnail is a File)
     console.log("SUBMIT ITINERARY", form);
-    // alert("Itinerary data logged to console (replace with API call)");
+    alert("Itinerary data logged to console (replace with API call)");
   };
 
   useEffect(() => {
@@ -263,32 +217,6 @@ export default function EditItineraryForm() {
     { label: "Restaurants", value: activeRestaurantCount, className: "bg-emerald-50 border border-emerald-100 text-emerald-700" },
     { label: "Experiences", value: activeExperienceCount, className: "bg-fuchsia-50 border border-fuchsia-100 text-fuchsia-700" },
   ];
-
-  if (loading) {
-    return (
-      <div className="bg-gradient-to-r from-blue-100 to-blue-50 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-         <Lottie
-                  animationData={animationData}
-                  loop={true}
-                  className="absolute  left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
-                  style={{ width: "300px", height: "500px" }}
-                />;
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-gradient-to-r from-blue-100 to-blue-50 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600">Error loading itinerary: {error}</p>
-          <Button onClick={() => window.location.reload()} className="mt-4">Retry</Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-gradient-to-r from-blue-100 to-blue-50 py-8 px-4 sm:px-6 lg:px-8 flex justify-center">
@@ -431,7 +359,7 @@ export default function EditItineraryForm() {
                     <Button type="button" onClick={addDay} className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 rounded-full shadow">
                       + Add day
                     </Button>
-                    
+                   
                   </div>
                 </div>
 
@@ -691,7 +619,7 @@ export default function EditItineraryForm() {
                   <Button type="button" variant="ghost" onClick={loadEmptyItinerary} className="text-slate-500 hover:text-slate-700">
                     Reset
                   </Button>
-                  <Button onClick={()=>navigate("/dashboard")} type="submit" className="bg-gradient-to-r from-gray-900 to-gray-700  text-white px-6 py-2 rounded-full shadow-lg">
+                  <Button type="submit" className="bg-gradient-to-r from-gray-900 to-gray-700  text-white px-6 py-2 rounded-full shadow-lg">
                     Save itinerary
                   </Button>
                 </div>

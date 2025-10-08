@@ -3,11 +3,17 @@ import { MapPin } from 'lucide-react';
 import SidebarDemo from '../destination/sidebar';
 import Maps from '../detail/map';
 import {Button} from "../ui/button"
+import { useNavigate } from 'react-router-dom';
+import { Calendar } from "@/components/ui/calendar"
 
 const TravelDashboard = () => {
+  const navigate=useNavigate()
   const [checkedItems, setCheckedItems] = useState({
     apartment: true
   });
+
+  const [date, setDate] = React.useState(new Date())
+ 
 
   const toggleCheck = (item) => {
     setCheckedItems(prev => ({
@@ -71,7 +77,10 @@ const TravelDashboard = () => {
           <div className="bg-white rounded-3xl p-4 md:p-8 shadow-sm mb-8">
            <div className='flex justify-between'>
              <h1 className="text-2xl md:text-4xl font-poppins  font-bold mb-2">Welcome, Tejash!</h1>
-              <Button className={"bg-[#479FDC] hover:bg-[#479FD4] "}>Explore Destination</Button>
+             <div className=''>
+               <Button onClick={()=>navigate("/destination")} className={"bg-gradient-to-r from-gray-900 to-gray-700 hover:bg-black  mb-2 "}>Explore Destination</Button>
+             </div>
+             
            </div>
 
             <p className="text-sm text-gray-600 mb-6">So far you've been to</p>
@@ -135,7 +144,10 @@ const TravelDashboard = () => {
 
             {/* my trips */}
           <div className="bg-white rounded-3xl p-4 md:p-8 shadow-sm mb-6">
-            <h2 className="text-xl font-bold mb-2">My Trips</h2>
+          <div className='flex justify-between mb-3'>
+              <h2 className="text-xl font-bold mb-2">My Trips</h2>
+              <Button onClick={()=>navigate("/iteanary/create")} className={"bg-[#479FDC] hover:bg-[#479FD4] "}>Create trip</Button>
+          </div>
            
 
             <div className="relative mb-6">
@@ -154,8 +166,22 @@ const TravelDashboard = () => {
             
           </div>
 
-            {/* To Do */}
-          <div className="bg-lime-200 rounded-3xl p-4 md:p-6 shadow-sm">
+           
+        </div>
+       
+          {/* Scrollable Content */}
+        <div className=" lg:h-full min-w-[650px]">
+          <div className="space-y-4 md:space-y-6">
+            <div className='flex gap-6'>
+                    <Calendar
+    mode="single"
+    selected={date}
+    onSelect={setDate}
+    className="rounded-lg border w-fit"
+  />
+
+   {/* To Do */}
+          <div className="bg-lime-200 rounded-3xl p-4 md:p-6 shadow-sm w-full">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">To do</h2>
                 <button className="text-gray-600">+</button>
@@ -201,57 +227,9 @@ const TravelDashboard = () => {
                 </div>
               </div>
             </div>
-        </div>
-       
-          {/* Scrollable Content */}
-        <div className=" lg:h-full ">
-          <div className="space-y-4 md:space-y-6">
-          {/* Calendar */}
-          <div className="bg-white rounded-3xl p-4 md:p-8 shadow-sm mb-4 md:mb-7">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold">November <span className="text-gray-400">2023</span></h2>
-              <div className="flex space-x-2">
-                <button className="text-gray-400 hover:text-gray-600">&lt;</button>
-                <button className="text-gray-400 hover:text-gray-600">&gt;</button>
-              </div>
             </div>
+    
 
-            <div className="grid grid-cols-7 gap-1 md:gap-2 text-center text-xs mb-4">
-              <div className="text-gray-500 font-medium">Mon</div>
-              <div className="text-gray-500 font-medium">Tue</div>
-              <div className="text-gray-500 font-medium">Wed</div>
-              <div className="text-gray-500 font-medium">Thu</div>
-              <div className="text-gray-500 font-medium">Fri</div>
-              <div className="text-gray-500 font-medium">Sat</div>
-              <div className="text-gray-500 font-medium">Sun</div>
-            </div>
-
-            <div className=" grid grid-cols-7 gap-1 md:gap-2">
-              <div></div>
-              <div></div>
-              {calendarDays.map((day, index) => (
-                <div key={index} className="relative">
-                  {day.event ? (
-                    <div className={`${day.color} rounded-lg p-2 text-white text-xs`}>
-                      <div className="font-medium">{day.date}</div>
-                      <div className="text-[10px] truncate">{day.event}</div>
-                    </div>
-                  ) : day.marker ? (
-                    <div className="relative">
-                      <div className="text-sm p-2">{day.date}</div>
-                      <div className="absolute -right-1 top-2 flex items-center">
-                        <MapPin className="w-3 h-3 text-gray-700" fill="currentColor" />
-                        <span className="text-[10px] ml-1">{day.event}</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-sm p-2 text-gray-700">{day.date}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-          
           {/* Recommendation for you */}
           <div className="bg-white rounded-3xl p-4 md:p-6 shadow-sm">
             <div className="flex justify-between items-center mb-4">

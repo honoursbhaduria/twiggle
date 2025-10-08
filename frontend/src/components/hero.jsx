@@ -1,11 +1,33 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { motion } from 'motion/react';
 import SearchBar from './search';
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-[calc(100vh-3rem)] md:min-h-[calc(100vh-5rem)] mx-4 md:mx-8 rounded-2xl bg-blue-100 flex items-center">
-     
+     <motion.img
+       className='absolute w-20 sm:w-24 md:w-32 lg:w-40 top-7 left-4 sm:left-8 md:left-16 lg:left-[30rem] rotate-3 lg:rotate-4'
+       src="taj.png"
+       alt="taj"
+       animate={{ y: [0, -16, 0] }}
+       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+     />
+
+     <motion.img
+       className='absolute w-20 sm:w-24 md:w-32 lg:w-40 bottom-12 sm:bottom-16 md:bottom-20 lg:bottom-4 left-20 sm:left-24 md:left-32 lg:right-10 lg:right-auto rotate-6 md:rotate-4'
+       src="camel.png"
+       alt="camel"
+       animate={{ y: [0, -16, 0] }}
+       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+     />
+
+      <motion.img
+       className='absolute w-20 sm:w-24 md:w-32 lg:w-40 top-7 sm:top-10 md:top-auto md:bottom-2 lg:bottom-4 right-7 sm:right-12 md:right-24 lg:right-[32rem] rotate-2 md:-rotate-4'
+       src="qutub.png"
+       alt="qutub"
+       animate={{ y: [0, -16, 0] }}
+       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+     />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
