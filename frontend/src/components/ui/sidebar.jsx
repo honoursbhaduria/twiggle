@@ -135,6 +135,12 @@ export const SidebarLink = ({
   return (
     <a
       href={link.href}
+      onClick={(event) => {
+        if (link.onClick) {
+          event.preventDefault();
+          link.onClick(event);
+        }
+      }}
       className={cn("flex items-center justify-start gap-2  group/sidebar py-2", className)}
       {...props}>
       {link.icon}

@@ -10,8 +10,23 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import TravelCard from "./card";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useTravelApi";
+
+
 
 export default function SidebarDemo() {
+
+  const {logout}=useAuth()
+  const navigate=useNavigate()
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      navigate("/auth");
+    }
+  };
+
   const links = [
     {
       label: "Dashboard",
@@ -37,13 +52,13 @@ export default function SidebarDemo() {
     {
       label: "Logout",
       href: "#",
+      onClick: handleLogout,
       icon: (
         <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
   ];
   const [open, setOpen] = useState(false);
-  const navigate=useNavigate()
   return (
     <div
       className={cn(

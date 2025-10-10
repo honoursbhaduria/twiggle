@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Base URL configuration
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost/';
 
 // Create axios instance
 const api = axios.create({
@@ -49,8 +49,8 @@ api.interceptors.response.use(
             refresh: refreshToken
           });
           
-          const { access } = response.data;
-          setTokens(access, refreshToken);
+          const { access, refresh: rotatedRefresh } = response.data;
+          setTokens(access, rotatedRefresh || refreshToken);
           originalRequest.headers.Authorization = `Bearer ${access}`;
           
           return api(originalRequest);
@@ -100,8 +100,8 @@ export const authAPI = {
     const response = await api.post('/api/auth/token/refresh/', {
       refresh: refreshToken
     });
-    const { access } = response.data;
-    setTokens(access, refreshToken);
+  const { access, refresh: rotatedRefresh } = response.data;
+  setTokens(access, rotatedRefresh || refreshToken);
     return response.data;
   },
 
