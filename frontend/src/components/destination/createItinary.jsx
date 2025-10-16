@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar, Sparkles, TrendingUp } from "lucide-react";
+import Modal from "./modal";
 
 // NOTE: This component is intentionally feature-rich and mirrors the JSON structure you provided.
 // It's JavaScript (no TypeScript) and uses shadcn/ui + Tailwind utility classes.
@@ -29,6 +30,8 @@ const createBlankDay = (dayNumber = 1) => ({
   restaurants: [],
   description: "",
 });
+
+
 
 const emptyItinerary = {
   id: null,
@@ -61,6 +64,7 @@ export default function ItineraryForm() {
   const [form, setForm] = useState(() => cloneEmptyItinerary());
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [activeDayIndex, setActiveDayIndex] = useState(0);
+  const [showPlanModal, setShowPlanModal] = useState(true);
 
   useEffect(() => {
     // keep slug in sync with title by default
@@ -82,13 +86,8 @@ export default function ItineraryForm() {
   };
 
   const addDay = () => {
-    const nextIndex = form.days.length;
-    setForm((prev) => {
-      const newDayNumber = prev.days.length + 1;
-      const updatedDays = [...prev.days, createBlankDay(newDayNumber)];
-      return { ...prev, days: updatedDays, duration_days: updatedDays.length };
-    });
-    setActiveDayIndex(nextIndex);
+    // Open modal to add day with places selection
+    setShowPlanModal(true);
   };
 
   const removeDay = (index) => {
@@ -167,6 +166,341 @@ export default function ItineraryForm() {
   const fieldInputClasses = "bg-white border-slate-200 focus-visible:ring-slate-500 focus-visible:ring-offset-1";
   const fieldTextareaClasses = "bg-white border-slate-200 focus-visible:ring-slate-500 focus-visible:ring-offset-1";
 
+  // Provided Goa trip data (could come from API)
+  const goaTrip = {
+    id: 14,
+    days: [
+      {
+        title: "Day 1 in Goa",
+        budget: {
+          end_time: null,
+          start_time: null,
+          total_cost: 800.0,
+          estimated_cost: 880.0,
+          attractions_cost: 800.0,
+          duration_minutes: 0,
+          experiences_cost: 0.0,
+          restaurants_cost: 0.0,
+        },
+        locations:
+          "Milsim Goa PaintBall, Colva Beach, Memorial For Goan Victims of 1918 Spanish Flu",
+        day_number: 1,
+        attractions: [
+          {
+            id: 361,
+            name: "Colva Beach",
+            image: "",
+            address: "Colva Beach, Colva, Goa, India",
+            latitude: 15.275651,
+            longitude: 73.913727,
+            description:
+              "Colva Beach is a beach in South Goa in Goa, India near Colva.",
+            estimated_cost: 250.0,
+            google_place_id: null,
+          },
+          {
+            id: 412,
+            name: "Milsim Goa PaintBall",
+            image: "",
+            address: "Milsim Goa PaintBall, Majorda, Goa, India",
+            latitude: 15.32193,
+            longitude: 73.939759,
+            description:
+              "Milsim Goa PaintBall is a place of interest in South Goa in Goa, India near Majorda.",
+            estimated_cost: 250.0,
+            google_place_id: null,
+          },
+          {
+            id: 490,
+            name: "Memorial For Goan Victims of 1918 Spanish Flu",
+            image: "",
+            address:
+              "Memorial For Goan Victims of 1918 Spanish Flu, Margao, Goa, India",
+            latitude: 15.312981,
+            longitude: 73.983962,
+            description:
+              "Memorial For Goan Victims of 1918 Spanish Flu is a place of interest in South Goa in Goa, India near Margao.",
+            estimated_cost: 300.0,
+            google_place_id: null,
+          },
+        ],
+        description: "Explore nearby attractions and restaurants",
+        experiences: [],
+        restaurants: [
+          {
+            id: 751,
+            name: "Tato",
+            image: "",
+            address: "",
+            cuisine: "",
+            latitude: 15.291411,
+            longitude: 73.953951,
+            description: "Tato in Goa.",
+            estimated_cost: 0.0,
+            google_place_id: null,
+          },
+          {
+            id: 1644,
+            name: "Karishma",
+            image: "",
+            address: "",
+            cuisine: "",
+            latitude: 15.288591,
+            longitude: 73.953454,
+            description: "Karishma in Goa.",
+            estimated_cost: 0.0,
+            google_place_id: null,
+          },
+          {
+            id: 2349,
+            name: "Cafe Zelo",
+            image: "",
+            address: "",
+            cuisine: "",
+            latitude: 15.28995,
+            longitude: 73.955077,
+            description: "Cafe Zelo in Goa.",
+            estimated_cost: 0.0,
+            google_place_id: null,
+          },
+        ],
+      },
+      {
+        title: "Day 2 in Goa",
+        budget: {
+          end_time: null,
+          start_time: null,
+          total_cost: 1000.0,
+          estimated_cost: 1100.0,
+          attractions_cost: 1000.0,
+          duration_minutes: 0,
+          experiences_cost: 0.0,
+          restaurants_cost: 0.0,
+        },
+        locations: "Mapusa Town Viewpoint, Peacock Hill, Anjuna Valley Viewpoint",
+        day_number: 2,
+        attractions: [
+          {
+            id: 511,
+            name: "Peacock Hill",
+            image: "",
+            address: "Peacock Hill, Vagator, Goa, India",
+            latitude: 15.593398,
+            longitude: 73.747287,
+            description:
+              "Peacock Hill is a place of interest in North Goa in Goa, India near Vagator.",
+            estimated_cost: 600.0,
+            google_place_id: null,
+          },
+          {
+            id: 516,
+            name: "Anjuna Valley Viewpoint",
+            image: "",
+            address: "Anjuna Valley Viewpoint, Anjuna, Goa, India",
+            latitude: 15.593475,
+            longitude: 73.747333,
+            description:
+              "Anjuna Valley Viewpoint is a scenic viewpoint in North Goa in Goa, India near Anjuna.",
+            estimated_cost: 300.0,
+            google_place_id: null,
+          },
+          {
+            id: 530,
+            name: "Mapusa Town Viewpoint",
+            image: "image/upload/v1758651651/s3ihz0tmbwizwpndz4qg.jpg",
+            address: "Mapusa Town Viewpoint, Mapusa, Goa, India",
+            latitude: 15.595717,
+            longitude: 73.798183,
+            description:
+              "Mapusa Town Viewpoint is a scenic viewpoint in North Goa in Goa, India near Mapusa.",
+            estimated_cost: 100.0,
+            google_place_id: null,
+          },
+        ],
+        description: "Explore nearby attractions and restaurants",
+        experiences: [],
+        restaurants: [
+          {
+            id: 1605,
+            name: "Morjim 100",
+            image: "",
+            address: "",
+            cuisine: "",
+            latitude: 15.566595,
+            longitude: 73.764862,
+            description: "Morjim 100 in Goa.",
+            estimated_cost: 0.0,
+            google_place_id: null,
+          },
+          {
+            id: 1927,
+            name: "Blue Flame",
+            image: "",
+            address: "",
+            cuisine: "",
+            latitude: 15.576559,
+            longitude: 73.761474,
+            description: "Blue Flame in Goa.",
+            estimated_cost: 0.0,
+            google_place_id: null,
+          },
+          {
+            id: 2188,
+            name: "Fish Deck",
+            image: "",
+            address: "",
+            cuisine: "",
+            latitude: 15.566606,
+            longitude: 73.764932,
+            description: "Fish Deck in Goa.",
+            estimated_cost: 0.0,
+            google_place_id: null,
+          },
+        ],
+      },
+      {
+        title: "Day 3 in Goa",
+        budget: {
+          end_time: null,
+          start_time: null,
+          total_cost: 800.0,
+          estimated_cost: 880.0,
+          attractions_cost: 800.0,
+          duration_minutes: 0,
+          experiences_cost: 0.0,
+          restaurants_cost: 0.0,
+        },
+        locations: "Damna hill, Banyan Tree, Cape Rama",
+        day_number: 3,
+        attractions: [
+          {
+            id: 441,
+            name: "Banyan Tree",
+            image: "",
+            address: "Banyan Tree, Galgibaga, Goa, India",
+            latitude: 14.995161,
+            longitude: 74.106444,
+            description:
+              "Banyan Tree is a place of interest in South Goa in Goa, India near Galgibaga.",
+            estimated_cost: 450.0,
+            google_place_id: null,
+          },
+          {
+            id: 472,
+            name: "Cape Rama",
+            image: "",
+            address: "Cape Rama, Cola, Goa, India",
+            latitude: 15.089368,
+            longitude: 73.923212,
+            description: "Cape Rama is a place of interest in South Goa in Goa, India near Cola.",
+            estimated_cost: 300.0,
+            google_place_id: null,
+          },
+          {
+            id: 475,
+            name: "Damna hill",
+            image: "",
+            address: "Damna hill, Galgibaga, Goa, India",
+            latitude: 15.051909,
+            longitude: 74.080957,
+            description:
+              "Damna hill is a place of interest in South Goa in Goa, India near Galgibaga.",
+            estimated_cost: 50.0,
+            google_place_id: null,
+          },
+        ],
+        description: "Explore nearby attractions and restaurants",
+        experiences: [],
+        restaurants: [
+          {
+            id: 92,
+            name: "Fernandes",
+            image: "",
+            address: "",
+            cuisine: "",
+            latitude: 15.012469,
+            longitude: 74.018703,
+            description: "Fernandes in Goa.",
+            estimated_cost: 0.0,
+            google_place_id: null,
+          },
+          {
+            id: 192,
+            name: "Banyan Tree",
+            image: "",
+            address: "",
+            cuisine: "",
+            latitude: 15.012579,
+            longitude: 74.017812,
+            description: "Banyan Tree in Goa.",
+            estimated_cost: 0.0,
+            google_place_id: null,
+          },
+          {
+            id: 203,
+            name: "Rockit Cafe",
+            image: "",
+            address: "",
+            cuisine: "",
+            latitude: 15.012618,
+            longitude: 74.017584,
+            description: "Rockit Cafe in Goa.",
+            estimated_cost: 0.0,
+            google_place_id: null,
+          },
+        ],
+      },
+    ],
+    slug: "goa-3d-2n-goa-proximity-trip-4",
+    tags: [],
+    title: "3D 2N Goa Proximity Trip",
+    thumbnail: "/media/demo.jpg",
+    categories: [
+      {
+        id: 4,
+        name: "Budget Travel",
+        slug: "budget-travel",
+      },
+    ],
+    total_budget: 2600.0,
+    duration_days: 3,
+    duration_nights: 2,
+    budget_breakdown: null,
+    popularity_score: 85,
+    short_description:
+      "Escape to the vibrant state of Goa for a thrilling 3D/2N adventure! Get ready to paintball through Milsim's adrenaline-pumping arena, soak up sun on stunning Colva Beach, and explore historic landmarks like the Memorial for Goan victims of the Spanish Flu. Discover the natural beauty of Goa with breathtaking views at Mapusa Town Viewpoint, Peacock Hill, and beyond!",
+    highlighted_places:
+      "Milsim Goa PaintBall, Colva Beach, Memorial For Goan Victims of 1918 Spanish Flu, Mapusa Town Viewpoint, Peacock Hill",
+  };
+
+  // Initialize form with Goa trip title/slug
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      title: goaTrip.title,
+      slug: slugify(goaTrip.slug),
+      duration_days: goaTrip.duration_days,
+      duration_nights: goaTrip.duration_nights,
+    }));
+  }, []);
+
+  const applyModalSelection = (selectedDays) => {
+    // Merge selection into form.days, preserving length and re-numbering
+    const merged = selectedDays.map((d, i) => ({
+      title: d.title || form.days[i]?.title || "",
+      day_number: i + 1,
+      locations: d.locations || form.days[i]?.locations || "",
+      budget: form.days[i]?.budget || { start_time: null, end_time: null, total_cost: 0, estimated_cost: 0, attractions_cost: 0, duration_minutes: 0, experiences_cost: 0, restaurants_cost: 0 },
+      attractions: d.attractions || [],
+      restaurants: d.restaurants || [],
+      experiences: d.experiences || [],
+      description: form.days[i]?.description || "",
+    }));
+    setForm((prev) => ({ ...prev, days: merged, duration_days: merged.length }));
+    setActiveDayIndex(0);
+    setShowPlanModal(false);
+  };
+
   const plannerSummaryCards = [
     {
       title: "Total stops",
@@ -219,8 +553,20 @@ export default function ItineraryForm() {
   ];
 
   return (
-    <div className="bg-gradient-to-r from-blue-100 to-blue-50 py-8 px-4 sm:px-6 lg:px-8 flex justify-center">
-    
+    <>
+      <Modal
+        open={showPlanModal}
+        initialDays={form.days.length > 0 ? form.days : goaTrip.days}
+        places={{
+          attractions: Array.from(new Map(goaTrip.days.flatMap((d)=> d.attractions || []).map((x)=>[x.id,x])).values()),
+          restaurants: Array.from(new Map(goaTrip.days.flatMap((d)=> d.restaurants || []).map((x)=>[x.id,x])).values()),
+          experiences: Array.from(new Map(goaTrip.days.flatMap((d)=> d.experiences || []).map((x)=>[x.id,x])).values()),
+        }}
+        onCancel={() => setShowPlanModal(false)}
+        onApply={applyModalSelection}
+      />
+      
+      <div className="bg-gradient-to-r from-blue-100 to-blue-50 py-8 px-4 sm:px-6 lg:px-8 flex justify-center">
         <div className=" max-w-6xl w-full shadow-xl  bg-white rounded-[32px] overflow-hidden">
           <div className="px-6 sm:px-10 bg-gradient-to-r from-gray-900 to-gray-700 space-y-10 py-4">
             <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-10">
@@ -276,7 +622,7 @@ export default function ItineraryForm() {
                     <Label htmlFor="title" className="text-sm font-medium text-slate-700">Title</Label>
                     <Input
                       id="title"
-                      value={form.title}
+                      value={""}
                       onChange={(e) => handleTopChange("title", e.target.value)}
                       placeholder="Trip title"
                       className={fieldInputClasses}
@@ -627,7 +973,7 @@ export default function ItineraryForm() {
             </form>
           </div>
         </div>
-      
-    </div>
+      </div>
+    </>
   );
 }

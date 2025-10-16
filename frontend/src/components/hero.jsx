@@ -1,70 +1,44 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import SearchBar from './search';
+import AnimatedSection from './motion/animation';
+import Comet from './cometCard';
+// 
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[calc(100vh-3rem)] md:min-h-[calc(100vh-5rem)] mx-4 md:mx-8 rounded-2xl bg-blue-100 flex items-center">
-     <motion.img
-       className='absolute w-20 sm:w-24 md:w-32 lg:w-40 top-7 left-4 sm:left-8 md:left-16 lg:left-[30rem] rotate-3 lg:rotate-4'
-       src="taj.png"
-       alt="taj"
-       animate={{ y: [0, -16, 0] }}
-       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-     />
-
-     <motion.img
-       className='absolute w-20 sm:w-24 md:w-32 lg:w-40 bottom-12 sm:bottom-16 md:bottom-20 lg:bottom-4 left-20 sm:left-24 md:left-32 lg:right-10 lg:right-auto rotate-6 md:rotate-4'
-       src="camel.png"
-       alt="camel"
-       animate={{ y: [0, -16, 0] }}
-       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-     />
-
-      <motion.img
-       className='absolute w-20 sm:w-24 md:w-32 lg:w-40 top-7 sm:top-10 md:top-auto md:bottom-2 lg:bottom-4 right-7 sm:right-12 md:right-24 lg:right-[32rem] rotate-2 md:-rotate-4'
-       src="qutub.png"
-       alt="qutub"
-       animate={{ y: [0, -16, 0] }}
-       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-     />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+    <section className="bg-[url('/bg4.jpg')]   bg-cover bg-center bg-no-repeat relative h-[90vh] mx-0 md:mx-4 lg:mx-8 rounded-none md:rounded-2xl flex items-center mt-20">
+      <img className='absolute bottom-20 left-150 w-70 rotate-20'  src="arrow.png" alt="arrow" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 md:py-0">
+     
+        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-12">
+          
           {/* Left Content */}
-          <div className="space-y-6 md:space-y-8 text-center lg:text-left">
+          <div className="space-y-6 md:space-y-8 text-center lg:text-left order-2 lg:order-1">
             <div className="space-y-4 md:space-y-6">
-              <h1 className="font-poppins text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-tight">
-                Explore Incredible{' '}
-                <span className="text-[#3E92D1] relative inline-block">
-                  India
-                  <svg className="absolute -bottom-1 md:-bottom-2 left-0 w-full h-2 md:h-3" viewBox="0 0 200 12" fill="none">
-                    <path d="M0 8C50 2 100 2 150 8C170 10 190 10 200 8" stroke="#3E92D1" strokeWidth="3" fill="none"/>
-                  </svg>
-                </span>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-poppins font-semibold text-white/90 leading-tight text-shadow-lg ">
+                Explore 
+                <div className="mt-2"> 
+                   <span className=''>Incredible</span> India
+                </div>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed px-4 lg:px-0">
-                Plan and book your perfect trip with expert advice, travel tips, destination information and inspiration from us.
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl font-normal leading-relaxed text-gray-100 tracking-widest max-w-xl mx-auto lg:mx-0">
+                Premium itineraries designed by our travel experts. Each journey is carefully curated for the perfect blend of adventure, culture, and luxury.
               </p>
             </div>
 
-           <SearchBar className=""/>
-          </div>
-
-          {/* Right Content - Decorative Space */}
-          <div className="relative order-first lg:order-last mb-8 lg:mb-0">
-            <div className="relative w-full h-48 sm:h-64 md:h-80 lg:h-96 flex items-center justify-center">
-              {/* Central globe representation */}
-             <img 
-               className='hover:scale-105 transition-transform duration-500 max-w-full h-auto object-contain' 
-               src='globe.png'
-               alt='Globe representing travel destinations'
-             />
+            <div className="w-full max-w-xl mx-auto lg:mx-0">
+              <SearchBar className=""/>
             </div>
           </div>
 
+          {/* Right Content - Globe Image */}
+          <div className="flex justify-center lg:justify-end order-1 lg:order-2 ">
+           <Comet/>
+          </div>
+
         </div>
-       
+     
       </div>
     </section>
   );

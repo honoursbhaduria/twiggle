@@ -16,6 +16,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
   const {slug}=useParams()
   console.log(slug);
 
+  const tabs = ['All', 'Itineraries','Adventure', 'Beaches', 'Cultural', 'Family', 'Romantic', 'Wildlife'];
   
     const {isAuthenticated}=useAuth()
     console.log(isAuthenticated);
@@ -36,7 +37,6 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
   console.log('Search query:', searchQuery);
   console.log('Initial search query from URL:', initialSearchQuery);
 
-  const tabs = ['All', 'Itineraries','Adventure', 'Beaches', 'Cultural', 'Family', 'Romantic', 'Wildlife'];
 
   const toggleLike = (id) => {
     setLikedItems(prev => {
@@ -113,6 +113,23 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
               Found {filteredDestinations.length} itinerary matching "{searchQuery}"
             </div>
           )}
+        </div>
+
+         {/* Tabs */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-hide">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-full border text-sm transition-all duration-200 whitespace-nowrap ${
+                activeTab === tab
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/20'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:text-slate-900'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
         {/* Featured Guides Section */}

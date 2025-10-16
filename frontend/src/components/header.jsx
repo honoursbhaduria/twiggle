@@ -50,16 +50,16 @@ const Header = () => {
         
                   {/* Desktop Navigation */}
                   <div className="hidden md:flex items-center space-x-12">
-                    <a href="/destination" onClick={()=>setSelected('destination')}  className={` hover:text-gray-900 transition-colors duration-200 font-medium ${selected=='destination'?'text-gray-950':'text-gray-700'}`}>
+                    <a href="/destination" onClick={()=>setSelected('destination')}  className={` hover:text-gray-800 transition-colors duration-200 font-medium ${selected=='destination'?'text-gray-950':'text-black'}`}>
                       DESTINATION
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium">
+                    <a href="#" className="text-black hover:text-gray-800 transition-colors duration-200 font-medium">
                       MY TRIPS
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium">
+                    <a href="#" className="text-black hover:text-gray-800 transition-colors duration-200 font-medium">
                       PREMIUM
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors duration-200 font-medium">
+                    <a href="#" className="text-black hover:text-gray-800 transition-colors duration-200 font-medium">
                       CONTACT
                     </a>
                     <div>

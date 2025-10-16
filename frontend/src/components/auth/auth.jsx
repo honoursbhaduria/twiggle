@@ -13,7 +13,7 @@ const Auth = () => {
       {/* Left side - Form content */}
       <div className="w-full md:w-1/2 flex justify-center items-center p-5 overflow-y-auto">
         <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg border">
-          <h1 className="text-5xl text-center mb-2  text-black font-normal ">TWIGLE</h1>
+          <h1 className="text-5xl text-center mb-2  text-black font-normal ">TWIGGLE</h1>
           <p className="text-center text-gray-700 mb-8">Welcome Back! Please enter your details</p>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid grid-cols-2 mb-6 w-full">

@@ -110,7 +110,7 @@ export const Logo = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="font-medium whitespace-pre text-black dark:text-white">
-        TWIGLE
+        TWIGGLE
       </motion.span>
     </a>
   );
