@@ -14,6 +14,100 @@ import {
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import { MapPin, Star, Calendar } from "lucide-react";
+import {category} from "../../data/category"
+
+// Sample data for the carousel
+const items = [
+  {
+    id: 2,
+    title: "7 Days Rajasthan Royal Heritage",
+    location: "Jaipur, Udaipur, Jodhpur",
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&h=600&fit=crop",
+    highlights: [
+      "Palace stays and royal dining",
+      "Camel safari in Thar Desert",
+      "Traditional Rajasthani folk performances"
+    ],
+    days: [
+      { day: 1, title: "Jaipur: Amber Fort + City Palace" },
+      { day: 2, title: "Jodhpur: Mehrangarh Fort exploration" },
+      { day: 3, title: "Udaipur: Lake Pichola boat ride" }
+    ]
+  },
+  {
+    id: 3,
+    title: "6 Days Himalayan Adventure",
+    location: "Manali, Dharamshala, Shimla",
+    rating: 4.7,
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+    highlights: [
+      "Paragliding in Bir Billing",
+      "Monastery visits and meditation",
+      "Trek to Triund and camping"
+    ],
+    days: [
+      { day: 1, title: "Manali: Arrival + Solang Valley" },
+      { day: 2, title: "Dharamshala: McLeod Ganj temples" },
+      { day: 3, title: "Shimla: Mall Road + Jakhu Temple" }
+    ]
+  },
+  {
+    id: 4,
+    title: "4 Days Goa Beach & Nightlife",
+    location: "North Goa, South Goa",
+    rating: 4.6,
+    image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&h=600&fit=crop",
+    highlights: [
+      "Beach hopping and water sports",
+      "Portuguese heritage exploration",
+      "Sunset cruises and beach parties"
+    ],
+    days: [
+      { day: 1, title: "North Goa: Baga & Calangute beaches" },
+      { day: 2, title: "Old Goa: Churches & Fort Aguada" },
+      { day: 3, title: "South Goa: Palolem & Agonda beaches" },
+      { day: 4, title: "Anjuna: Flea market & sunset cruise" }
+    ]
+  },
+  {
+    id: 5,
+    title: "8 Days Ladakh Mountain Expedition",
+    location: "Leh, Nubra Valley, Pangong",
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1587693266968-8f8c9c2be593?w=800&h=600&fit=crop",
+    highlights: [
+      "High-altitude desert landscapes",
+      "Monasteries and Buddhist culture",
+      "Pangong Lake camping experience"
+    ],
+    days: [
+      { day: 1, title: "Leh: Acclimatization + Local markets" },
+      { day: 2, title: "Nubra Valley: Hunder sand dunes" },
+      { day: 3, title: "Pangong Lake: Scenic drive & camping" },
+      { day: 4, title: "Monasteries: Thiksey & Hemis visit" }
+    ]
+  },
+  {
+    id: 6,
+    title: "5 Days Andaman Island Paradise",
+    location: "Port Blair, Havelock, Neil Island",
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop",
+    highlights: [
+      "Scuba diving and snorkeling",
+      "Pristine white sand beaches",
+      "Cellular Jail light & sound show"
+    ],
+    days: [
+      { day: 1, title: "Port Blair: Cellular Jail history" },
+      { day: 2, title: "Havelock: Radhanagar Beach bliss" },
+      { day: 3, title: "Neil Island: Natural rock formations" },
+      { day: 4, title: "Water sports: Diving & kayaking" }
+    ]
+  }
+];
 
 export const CarouselContext = createContext({
   onCardClose: () => {},
@@ -21,7 +115,6 @@ export const CarouselContext = createContext({
 });
 
 export const Carousel = ({
-  items,
   initialScroll = 0
 }) => {
   const carouselRef = React.useRef(null);
@@ -107,7 +200,7 @@ export const Carousel = ({
                 }}
                 key={"card" + index}
                 className="rounded-3xl last:pr-[5%] md:last:pr-[33%]">
-                {item}
+                <Card card={item} index={index} />
               </motion.div>
             ))}
           </div>
@@ -193,14 +286,45 @@ export const Card = ({
               <motion.p
                 layoutId={layout ? `category-${card.title}` : undefined}
                 className="text-base font-medium text-black dark:text-white">
-                {card.category}
-              </motion.p>
-              <motion.p
-                layoutId={layout ? `title-${card.title}` : undefined}
-                className="mt-4 text-2xl font-semibold text-neutral-700 md:text-5xl dark:text-white">
                 {card.title}
               </motion.p>
-              <div className="py-10">{card.content}</div>
+              <motion.p
+                layoutId={layout ? `location-${card.title}` : undefined}
+                className="mt-2 flex items-center gap-2 text-lg text-gray-600">
+                <MapPin className="w-5 h-5" />
+                {card.location}
+              </motion.p>
+              <div className="py-10">
+                <h3 className="text-xl font-semibold mb-4">Trip Highlights</h3>
+                <ul className="space-y-2 mb-6">
+                  {card.highlights.map((highlight, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="w-2 h-2 bg-black rounded-full mt-2"></span>
+                      <span className="text-gray-700">{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  Day-by-Day Highlights
+                </h3>
+                <div className="space-y-3">
+                  {card.days.map((dayItem, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <span className="bg-black text-white px-3 py-1 rounded text-sm font-medium whitespace-nowrap">
+                        Day {dayItem.day}
+                      </span>
+                      <span className="text-gray-700 pt-1">{dayItem.title}</span>
+                    </div>
+                  ))}
+                  {card.days.length > 3 && (
+                    <p className="text-gray-500 text-center pt-2">+{card.days.length - 3} more days...</p>
+                  )}
+                </div>
+                <button className="w-full mt-8 bg-black text-white py-4 rounded-xl font-semibold hover:bg-gray-800 transition-colors">
+                  View Full Itinerary
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
@@ -208,26 +332,76 @@ export const Card = ({
       <motion.button
         layoutId={layout ? `card-${card.title}` : undefined}
         onClick={handleOpen}
-        className="relative z-10 flex h-80 w-56 flex-col items-start justify-start overflow-hidden rounded-3xl bg-gray-100 md:h-[40rem] md:w-96 dark:bg-neutral-900">
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-gradient-to-b from-black/50 via-transparent to-transparent" />
-        <div className="relative z-40 p-8">
-          <motion.p
-            layoutId={layout ? `category-${card.category}` : undefined}
-            className="text-left font-sans text-sm font-medium text-white md:text-base">
-            {card.category}
-          </motion.p>
-          <motion.p
-            layoutId={layout ? `title-${card.title}` : undefined}
-            className="mt-2 max-w-xs text-left font-sans text-xl font-semibold [text-wrap:balance] text-white md:text-3xl">
-            {card.title}
-          </motion.p>
+        className="relative z-10 flex h-[500px] w-[340px] md:h-[600px] md:w-[420px] flex-col justify-end overflow-hidden rounded-3xl bg-white shadow-lg transition-shadow border border-gray-100">
+        {/* Image Section */}
+        <div className="absolute inset-x-0 top-0 h-[240px] md:h-[280px] p-3">
+          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-md border border-gray-200">
+            <BlurImage
+              src={card.image}
+              alt={card.title}
+              fill
+              className="absolute inset-0 z-10 object-cover" />
+          </div>
         </div>
-        <BlurImage
-          src={card.src}
-          alt={card.title}
-          fill
-          className="absolute inset-0 z-10 object-cover" />
+
+        {/* Content Section */}
+        <div className="relative z-40 bg-white p-6 md:p-8 mt-[240px] md:mt-[280px]">
+          {/* Title and Rating */}
+          <div className="mb-4">
+            <h3 className="text-xl md:text-xl font-bold text-gray-900 mb-2 leading-tight ">
+              {card.title}
+            </h3>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-gray-600">
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm">{card.location}</span>
+              </div>
+              <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <span className="text-sm font-semibold text-gray-900">{card.rating}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Trip Highlights */}
+          <div className="mb-4">
+            <h4 className="text-sm font-semibold text-gray-900 mb-2">Trip Highlights</h4>
+            <ul className="space-y-1.5">
+              {card.highlights.slice(0, 3).map((highlight, idx) => (
+                <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
+                  <span className="w-1.5 h-1.5 bg-gray-900 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="line-clamp-1">{highlight}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Day by Day */}
+          <div>
+            <h4 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              Day-by-Day Highlights
+            </h4>
+            <div className="space-y-2">
+              {card.days.slice(0, 3).map((dayItem, idx) => (
+                <div key={idx} className="flex items-start gap-2">
+                  <span className="bg-black text-white px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap">
+                    Day {dayItem.day}
+                  </span>
+                  <span className="text-xs text-gray-600 line-clamp-1 pt-0.5">{dayItem.title}</span>
+                </div>
+              ))}
+              {card.days.length > 3 && (
+                <p className="text-xs text-gray-400 text-center pt-1">+{card.days.length - 3} more days...</p>
+              )}
+            </div>
+          </div>
+
+          {/* View Button */}
+          <button className="w-full mt-4 bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition-colors text-sm">
+            View Full Itinerary
+          </button>
+        </div>
       </motion.button>
     </>
   );

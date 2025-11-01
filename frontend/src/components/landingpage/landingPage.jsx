@@ -1,15 +1,12 @@
-import { Button } from "@/components/ui/button"
 import { useEffect, useState, lazy, Suspense } from "react"
 import Header from "./header"
 import { ArrowRight, Calendar, MapPin, Star, Users } from "lucide-react"
 import { FocusCards } from "@/components/ui/focus-cards";
 
-import { CometCard } from "@/components/ui/comet-card";
 import Hero from "./hero";
-import AnimatedSection from "./motion/animation";
 import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
 import Modal from "./modal";
-import Comet from "./cometCard";
+import {category} from "../../data/category"
 
 // Lazy load heavy components
 const TravelGurus = lazy(() => import("./travelGuru"));
@@ -121,25 +118,11 @@ function LandingPage() {
     <div className="bg-cover relative bg-center min-h-screen overflow-hidden">
       <Modal/>
     
-    <div className="min-h-screen bg-cover bg-center overflow-hidden rounded-none md:rounded-b-2xl">
+    <div className="min-h-screen  bg-cover bg-center overflow-hidden rounded-none md:rounded-b-2xl">
       <Header />
       <Hero/>
     </div>   
 
-
-      
-      <div className="w-full py-10 md:py-16 px-4 md:px-8">
-        <div className="text-2xl md:text-4xl lg:text-6xl font-bold font-sans text-center mb-4 md:mb-8">
-          Travel Categories
-        </div>
-        <h1 className="text-sm md:text-lg lg:text-xl text-center text-gray-600 mb-8 md:mb-12 max-w-3xl mx-auto">
-          Find the perfect itinerary type that matches your travel style and interests
-        </h1>
-
-        <div className="w-full">
-          <Carousel items={datas} />
-        </div>
-      </div> 
      
 
       {/* 3rd comp */}
@@ -157,10 +140,91 @@ function LandingPage() {
           </div>
         </div>
 
+   
 
-       {/* 3rd componet */}
+    <div className="w-full py-10 md:py-16 px-4 md:px-8">
+        <div className="text-2xl md:text-4xl lg:text-6xl font-bold font-sans text-center mb-4 md:mb-8">
+          Travel Categories
+        </div>
+        <h1 className="text-sm md:text-lg lg:text-xl text-center text-gray-600 mb-8 md:mb-12 max-w-3xl mx-auto">
+          Find the perfect itinerary type that matches your travel style and interests
+        </h1>
+
+      <div className="mt-6 md:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto px-4">
+  {category.map((item, index) => (
+    <div
+      key={index}
+      className="rounded-2xl w-full max-w-sm mx-auto shadow hover:shadow-xl transition-shadow duration-300"
+    >
+      <div className="relative w-full h-[340px] md:h-[380px] rounded-2xl overflow-hidden shadow-lg flex flex-col justify-end">
+        {/* Background image (replace with a real image if available) */}
+        <img
+          src={item.src}
+          alt={item.name}
+          className="absolute inset-0 w-full h-full object-cover z-0 hover:scale-105 transition-transform duration-300"
+        />
+       
+        {/* Bottom blur overlay for text */}
+        <div className="absolute bottom-0 left-0 w-full h-[46%] z-10" style={{backdropFilter: 'blur(1px)'}}>
+          <div className="absolute inset-0 bg-black/40 rounded-b-2xl" />
+        </div>
+        {/* Title, subtitle, routes, button - all inside blur */}
+       <div
+  className="w-full z-20 flex flex-col items-center justify-center px-4"
+  style={{ height: '46%', paddingBottom: '1.25rem' }}
+>
+  <div className="relative bg-center rounded-2xl flex flex-col items-center justify-center text-white">
+    <h2 className="text-white text-[1.3rem] md:text-[1.6rem] font-normal drop-shadow-lg text-center leading-tight">
+      {item.name}
+    </h2>
+
+    <p className="text-gray-100 font-light text-center mt-1">{item.description}</p>
+
+    <button
+      className="bg-gray-100/80 text-black font-normal rounded-full px-6 py-2 shadow-lg mb-2 text-[1.05rem] md:text-[1.1rem] hover:bg-gray-200 transition-all mt-4"
+      style={{ boxShadow: '0 2px 12px 0 rgba(0,0,0,0.10)' }}
+    >
+      View Experiences
+    </button>
+  </div>
+</div>
+
+      </div>
+    </div>
+  ))}
+</div>
+         
       
+      </div> 
 
+
+      
+      <div className="w-full py-10 md:py-16 px-4 md:px-8">
+
+       <div className="grid grid-cols-1 md:grid-cols-3 gap-25">
+          <div className="flex items-center justify-center md:items-center mx-auto ml-10">
+            <div className="max-w-md text-center lg:text-left">
+               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-6xl  text-gray-900 font-poppins font-semibold  tracking-tight mb-4 md:mb-6">
+                  Handcrafted journeys
+                </h1>
+              <p className="text-sm md:text-base lg:text-lg xl:text-lg text-gray-600 leading-relaxed">
+                Premium itineraries designed by our travel experts. Each journey is
+                carefully curated for the perfect blend of adventure, culture, and
+                luxury.
+              </p>
+            </div>
+          </div>
+
+
+  <div className="col-span-2">
+            <Carousel className=""/>
+        </div>
+       </div>
+         
+      
+      </div> 
+      
+{/* kkdsfj */}
         <div className="py-10 md:py-16 lg:min-h-screen grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 px-4 md:px-8">
 
            {/* left column */}
@@ -188,27 +252,6 @@ function LandingPage() {
 
   
     
-        <div className="py-10 md:py-16 lg:min-h-screen grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 px-4 md:px-8">
-          {/* Left column */}
-          <div className="flex items-center justify-center order-1 lg:order-1">
-            <div className="max-w-md text-center lg:text-left">
-               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-7xl  text-gray-900 font-poppins font-semibold  tracking-tight mb-4 md:mb-6">
-                  Handcrafted journeys
-                </h1>
-              <p className="text-sm md:text-base lg:text-lg xl:text-xl text-gray-600 leading-relaxed">
-                Premium itineraries designed by our travel experts. Each journey is
-                carefully curated for the perfect blend of adventure, culture, and
-                luxury.
-              </p>
-            </div>
-          </div>
-
-          {/* Right column */}
-
-          <div className="flex items-center justify-center order-2 lg:order-2">
-            <Comet/>
-          </div>
-        </div>
     
     
 

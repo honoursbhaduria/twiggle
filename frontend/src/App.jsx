@@ -1,6 +1,6 @@
 import React from 'react'
-import LandingPage from './components/landingPage'
-import Hero from './components/hero'
+import Hero from './components/landingpage/hero'
+import LandingPage from './components/landingpage/landingPage'
 
 const App = () => {
   return (

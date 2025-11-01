@@ -1,7 +1,7 @@
 import { Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PlaceholdersAndVanishInput } from "./ui/placeholders-and-vanish-input";
+import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
 
 export default function SearchBar() {
     const placeholders = [

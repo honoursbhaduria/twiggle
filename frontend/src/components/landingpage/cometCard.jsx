@@ -1,5 +1,5 @@
 import React from 'react'
-import { CometCard } from './ui/comet-card'
+import { CometCard } from '../ui/comet-card'
 import { Calendar, MapPin, Star } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 

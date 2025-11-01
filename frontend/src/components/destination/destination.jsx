@@ -2,7 +2,7 @@ import { Sidebar } from 'lucide-react'
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { SidebarProvider } from "@/components/ui/sidebar"
-import Header from '../header'
+
 import TravelCard from './card'
 import SidebarDemo from './sidebar'
 
