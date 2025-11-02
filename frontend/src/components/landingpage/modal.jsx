@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { ArrowRight, Check, Sparkles, X } from 'lucide-react';
 
 const travelerTypes = [
   {
@@ -55,6 +55,7 @@ const travelerTypes = [
 const Modal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
+  const [isConfirming, setIsConfirming] = useState(false);
 
   useEffect(() => {
     // Check if user has already selected a traveler type
@@ -65,91 +66,148 @@ const Modal = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      const originalStyle = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalStyle;
+      };
+    }
+    return undefined;
+  }, [isOpen]);
+
   const handleSelectType = (type) => {
-    setSelectedType(type.id);
-    localStorage.setItem('travelerType', JSON.stringify(type));
-    // Close modal after a short delay to show selection
-    setTimeout(() => setIsOpen(false), 300);
+    setSelectedType(type);
+    setIsConfirming(false);
+  };
+
+  const handleConfirm = () => {
+    if (!selectedType || isConfirming) return;
+    setIsConfirming(true);
+    localStorage.setItem('travelerType', JSON.stringify(selectedType));
+    setTimeout(() => {
+      setIsConfirming(false);
+      setIsOpen(false);
+      setSelectedType(null);
+    }, 200);
   };
 
   const handleSkip = () => {
     localStorage.setItem('travelerType', JSON.stringify({ skipped: true }));
     setIsOpen(false);
+    setIsConfirming(false);
+    setSelectedType(null);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-5xl w-full max-h-[80vh] overflow-y-auto">
-        {/* Close button */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300 scrollbar-hide">
+  <div className="relative mx-4 mt-3 w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl max-h-[80vh]">
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,140,255,0.15),transparent_60%)] scrollbar-hide" />
+
         <button
           onClick={handleSkip}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors z-10"
+          className="absolute right-5 top-5 z-20 rounded-full border border-slate-200 bg-white/80 p-2 text-slate-500 transition-all hover:border-slate-300 hover:text-slate-700"
           aria-label="Close"
         >
-          <X className="w-6 h-6 text-gray-600" />
+          <X className="h-5 w-5" />
         </button>
 
-        {/* Header */}
-        <div className="text-center pt-8 pb-6 px-6 border-b border-gray-100">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            What Kind of Traveler Are You?
-          </h2>
-          
-        </div>
+        <div className="relative flex max-h-[85vh] flex-col divide-y divide-slate-100 overflow-y-auto">
+          <header className="space-y-4 px-8 pt-14 md:pt-16 pb-8 text-center">
+            <div className="mx-auto flex w-max items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">
+              <Sparkles className="h-3 w-3" /> Match experience
+            </div>
+            <h2 className="text-3xl font-semibold text-slate-900 md:text-4xl">
+              What kind of traveler fits you best?
+            </h2>
+            {/* <p className="mx-auto max-w-3xl text-sm text-slate-600 md:text-base">
+              Select the profile that resonates with your style and we’ll personalize destination ideas, itineraries, and insider tips that feel tailor-made.
+            </p> */}
+          </header>
 
-        {/* Traveler Types Grid */}
-        <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {travelerTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => handleSelectType(type)}
-                className={`relative group p-6 rounded-2xl  transition-all duration-300 text-left
-                  ${selectedType === type.id 
-                    ? ' bg-blue-50 scale-105 shadow-lg' 
-                    : 'border-gray-200  hover:shadow-md hover:scale-105'
-                  }`}
-              >
-                {/* Gradient Background on Hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`}></div>
-                
-                <div className="relative">
-                  {/* Emoji */}
-                  <img className='w-30 items-center justify-center flex mx-auto ' src={type.src} alt={type.title} />
-                  
-                  {/* Title */}
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 text-center">
-                    {type.title}
-                  </h3>
-                
-                  {/* <p className="text-sm text-gray-600 leading-relaxed">
-                    {type.description}
-                  </p> */}
+          <section className="relative px-6 pb-8 pt-4 md:px-8">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 scrollbar-hide">
+              {travelerTypes.map((type) => {
+                const isSelected = selectedType?.id === type.id;
 
-                  {/* Selected Indicator */}
-                  {selectedType === type.id && (
-                    <div className="absolute -top-2 -right-2 bg-[#3E92D1] text-white rounded-full p-1">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
+                return (
+                  <button
+                    key={type.id}
+                    onClick={() => handleSelectType(type)}
+                    className={`group relative overflow-hidden rounded-3xl border transition-all duration-300 text-left shadow-sm hover:-translate-y-1 hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 ${
+                      isSelected ? 'border-transparent shadow-xl ring-2 ring-sky-300/70' : 'border-slate-100'
+                    }`}
+                  >
+                    <div className={`absolute inset-0 bg-linear-to-br ${type.color} opacity-0 transition-opacity duration-300 group-hover:opacity-20 ${
+                      isSelected ? 'opacity-20' : ''
+                    }`} />
+                    <div className="relative flex h-full flex-col gap-4 p-6">
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                          #{type.id.toString().padStart(2, '0')}
+                        </span>
+                        {isSelected ? (
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white shadow-lg">
+                            <Check className="h-4 w-4" />
+                          </span>
+                        ) : (
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-slate-400 transition-colors group-hover:border-slate-300 group-hover:text-slate-600">
+                            <ArrowRight className="h-4 w-4" />
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-1 flex-col gap-4">
+                        <div className="flex justify-center">
+                          <img
+                            src={type.src}
+                            alt={type.title}
+                            className="h-28 w-auto drop-shadow-xl transition-transform duration-300 group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="space-y-2 text-center">
+                          <h3 className="text-lg font-semibold text-slate-900">
+                            {type.title}
+                          </h3>
+                          <p className="text-sm leading-relaxed text-slate-600">
+                            {type.description}
+                          </p>
+                        </div>
+                        <div className="mt-auto flex items-center justify-between rounded-2xl border border-slate-100 bg-white/70 px-4 py-2 text-xs font-medium text-slate-500">
+                          <span>Tap to personalise</span>
+                          <span className="font-semibold text-sky-500">View matches</span>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
 
-        {/* Footer */}
-        <div className="border-t border-gray-100 p-6 bg-gray-50 rounded-b-3xl">
-          <button
-            onClick={handleSkip}
-            className="w-full text-center text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors"
-          >
-            Skip for now
-          </button>
+          <footer className="flex flex-col gap-3 bg-slate-50/90 px-6 py-6 md:flex-row md:items-center md:justify-between md:px-8">
+            <div className="text-sm text-slate-500">
+              Prefer to explore on your own pace?
+              <button onClick={handleSkip} className="ml-2 font-semibold text-slate-700 underline-offset-2 hover:underline">
+                Skip for now
+              </button>
+            </div>
+
+            <button
+              onClick={handleConfirm}
+              disabled={!selectedType}
+              className={`inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all md:w-auto ${
+                selectedType
+                  ? 'bg-linear-to-r from-sky-500 to-blue-600 text-white shadow-lg hover:from-sky-600 hover:to-blue-700'
+                  : 'bg-slate-200 text-slate-500 cursor-not-allowed'
+              }`}
+            >
+              {isConfirming ? 'Saving preference…' : selectedType ? `Continue as ${selectedType.title}` : 'Choose a traveler type'}
+            </button>
+          </footer>
         </div>
       </div>
     </div>

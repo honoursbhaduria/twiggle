@@ -27,12 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-yz8j-=zb)%ooi5y(hk6&8f8&(jl7)9)#91vkzh-&wg2=nyv=6d'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-yz8j-=zb)%ooi5y(hk6&8f8&(jl7)9)#91vkzh-&wg2=nyv=6d')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 
 # Application definition
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -212,20 +213,34 @@ print("above line is env variable")
 #         },
 #     }
 # }
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "neondb",
-        "USER": "neondb_owner",
-        "PASSWORD": "npg_IhH2ROQ8UcEk",
-        "HOST": "ep-nameless-lake-a1p5w4vi-pooler.ap-southeast-1.aws.neon.tech",
-        "PORT": "5432",
-        "OPTIONS": {
-            "sslmode": "require",
-            "client_encoding": "UTF8",
-        },
+import dj_database_url
+
+# Database configuration with environment variable support
+DATABASE_URL = os.environ.get('DATABASE_URL', None)
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("DB_NAME", "neondb"),
+            "USER": os.environ.get("DB_USER", "neondb_owner"),
+            "PASSWORD": os.environ.get("DB_PASSWORD", "npg_IhH2ROQ8UcEk"),
+            "HOST": os.environ.get("DB_HOST", "ep-nameless-lake-a1p5w4vi-pooler.ap-southeast-1.aws.neon.tech"),
+            "PORT": os.environ.get("DB_PORT", "5432"),
+            "OPTIONS": {
+                "sslmode": "require",
+                "client_encoding": "UTF8",
+            },
+        }
+    }
 
 # ✅ disable server-side cursors (important for Neon)
 DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True  
@@ -267,9 +282,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_ROOT = os.path.join(BASE_DIR, "static") 
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles") 
 STATICFILES_DIRS = []
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # MEDIA_URL = '/media/'

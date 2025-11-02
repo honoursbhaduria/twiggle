@@ -10,7 +10,7 @@ const HeroSection = () => {
       className="bg-cover bg-center bg-no-repeat h-[105vh]  mx-0 lg:mx-8 rounded-b-2xl lg:rounded-2xl flex items-center min-h-screen lg:mt-20 p-4 "
       style={{ backgroundImage: "url('/bg4.jpg')" }}
     >
-      <img className='absolute hidden lg:block bottom-20 left-150 w-70 rotate-20' src="/arrow.png" alt="arrow" />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 md:py-0">
      
         <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-0 lg:gap-12">
