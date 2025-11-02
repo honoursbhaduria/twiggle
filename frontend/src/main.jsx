@@ -1,7 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Auth from './components/auth/auth.jsx'
 import Destination from './components/destination/destination.jsx'
@@ -13,9 +12,9 @@ import ItearnaryCard from './components/destination/iteanaryCard.jsx'
 import ItineraryForm from './components/destination/createItinary.jsx'
 import EditItineraryForm from './components/detail/edit.jsx'
 import TravelGuruProfile from './components/travel-guru/travelGuruProfile.jsx'
-import TravelGuruPage from './components/travel-guru/travelGuru.jsx'
+import TravelGuruPage from './components/travel-guru/travelguru.jsx'
 import LandingPage from './components/landingpage/landingPage.jsx'
-import TravelGuruDashboard from './components/travel-guru/travelguruDashboard'
+import TravelGuruDashboard from './components/travel-guru/travelguruDashboard.jsx'
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
