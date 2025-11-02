@@ -340,7 +340,7 @@ export const Card = ({
               src={card.image}
               alt={card.title}
               fill
-              className="absolute inset-0 z-10 object-cover" />
+              className="absolute inset-0 z-10 object-cover hover:scale-105 transition-transform duration-300" />
           </div>
         </div>
 

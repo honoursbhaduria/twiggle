@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import TravelCard from "./card";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useTravelApi";
+import { User } from "lucide-react";
 
 
 
@@ -41,6 +42,20 @@ export default function SidebarDemo() {
       icon: (
         <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
+    },
+    {
+      label: "Travel Guru",
+      href : "/travelguru",
+      icon: (
+        <User className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      )
+    },
+      {
+      label: "Travel Guru Dashboard",
+      href : "/travelguru/dashboard",
+      icon: (
+        <User className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      )
     },
     {
       label: "Profile",

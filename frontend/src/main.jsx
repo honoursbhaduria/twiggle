@@ -15,6 +15,7 @@ import EditItineraryForm from './components/detail/edit.jsx'
 import TravelGuruProfile from './components/travel-guru/travelGuruProfile.jsx'
 import TravelGuruPage from './components/travel-guru/travelGuru.jsx'
 import LandingPage from './components/landingpage/landingPage.jsx'
+import TravelGuruDashboard from './components/travel-guru/travelguruDashboard'
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
@@ -27,7 +28,8 @@ const router = createBrowserRouter([
    {path: "/iteanary/create", element : <ItineraryForm/>},
     {path: "/destination/iteanary/edit/:slug", element : <EditItineraryForm/>},
     {path: "/travelguru/:slug", element: <TravelGuruProfile/>},
-    {path: "/travelguru", element: <TravelGuruPage/>}
+    {path: "/travelguru", element: <TravelGuruPage/>},
+    {path: "/travelguru/dashboard", element: <TravelGuruDashboard/>}
 
 ])
 

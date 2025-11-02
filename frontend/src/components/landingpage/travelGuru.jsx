@@ -48,14 +48,14 @@ const TravelGurus = () => {
           <span className="text-sm font-medium text-gray-600">Featured Creators</span>
         </div>
         
-        <h1 className="text-6xl font-semibold mb-6">
+        <h1 className="text-6xl font-poppins font-semibold mb-6">
           Meet Our{' '}
           <span className="bg-black font-bold text-shadow-2xs bg-clip-text text-transparent">
             Travel Gurus
           </span>
         </h1>
         
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-xl text-[#3c3c3c] font-inter tracking-widest  max-w-3xl mx-auto leading-relaxed">
           Learn from India's top travel creators and influencers who have contributed their 
           expertise to make <span className="font-semibold text-gray-800">TravelCo</span> the ultimate travel companion
         </p>

@@ -8,6 +8,7 @@ import {
   Instagram,
   MapPin,
   Sparkles,
+  Upload,
   Users,
   Youtube,
 } from "lucide-react";
@@ -102,17 +103,23 @@ const spotlightCards = [
   },
 ];
 
-const TravelGuruProfile = () => {
+const TravelGuruDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItinerary, setSelectedItinerary] = useState(null);
 
-  const handleCardClick = (item) => {
-    setSelectedItinerary(item);
+  const openModal = () => {
     setModalOpen(true);
   };
 
   const closeModal = () => {
     setModalOpen(false);
+  };
+
+  const openItineraryDetail = (itinerary) => {
+    setSelectedItinerary(itinerary);
+  };
+
+  const closeItineraryDetail = () => {
     setSelectedItinerary(null);
   };
 
@@ -285,8 +292,11 @@ const TravelGuruProfile = () => {
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Signature itineraries</p>
               <h2 className="mt-1 text-2xl font-semibold text-slate-900">Curated for premium explorers</h2>
             </div>
-            <button className="rounded-full border border-slate-200 px-6 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">
-              Share new itinerary
+            <button 
+              onClick={openModal}
+              className="rounded-xl bg-gradient-to-r from-gray-900 to-black px-6 py-2 text-sm font-semibold text-white flex gap-4 hover:from-gray-800 hover:to-gray-900 transition-all"
+            >
+             <Upload className="w-4"/> Upload Itinerary
             </button>
           </div>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -297,7 +307,7 @@ const TravelGuruProfile = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + index * 0.05, duration: 0.4 }}
                 className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-md transition-shadow hover:shadow-xl cursor-pointer"
-                onClick={() => handleCardClick(item)}
+                onClick={() => openItineraryDetail(item)}
               >
                 <div className="relative h-52 overflow-hidden">
                   <img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -334,40 +344,216 @@ const TravelGuruProfile = () => {
         </motion.section>
       </div>
 
-      {modalOpen && selectedItinerary && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl">
+      {/* Upload Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl"
+          >
             <button
-              className="absolute right-4 top-4 text-2xl text-slate-400 hover:text-slate-600"
+              className="absolute right-4 top-4 text-2xl text-slate-400 hover:text-slate-600 transition-colors"
               onClick={closeModal}
               aria-label="Close"
             >
               ×
             </button>
-            <div className="px-6 pt-8 pb-6">
-              <h2 className="text-xl font-semibold text-slate-900 text-center">{selectedItinerary.title}</h2>
-              <div className="relative mt-4 h-44 overflow-hidden rounded-xl border border-slate-100">
-                <img src={selectedItinerary.image} alt={selectedItinerary.title} className="h-full w-full object-cover blur-sm scale-105" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="rounded-lg bg-slate-900/70 px-4 py-2 text-sm font-semibold text-white">Premium Content</span>
-                </div>
+            
+            <div className="px-6 pt-6 pb-6">
+              <h2 className="text-lg font-semibold text-slate-900">Upload New Itinerary</h2>
+              
+              {/* Tabs */}
+              <div className="mt-4 flex gap-2 border-b border-slate-200">
+                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-900 border-b-2 border-slate-900">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                  Link
+                </button>
+                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Excel File
+                </button>
               </div>
-              <div className="mt-4 text-center text-sm text-slate-600">
-                {selectedItinerary.destination}
+
+              {/* Form Content */}
+              <div className="mt-6">
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Itinerary Link
+                </label>
+                <input
+                  type="text"
+                  placeholder="https://example.com/itinerary"
+                  className="w-full px-4 py-3 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+                />
               </div>
-              <div className="mt-1 text-center text-xs text-slate-500">
-                Duration: {selectedItinerary.duration}
-              </div>
-              <p className="mt-4 text-center text-xs text-slate-500 leading-relaxed">
-                Unlock the full itinerary with day-wise plans, partner offers, and downloadable content by subscribing to the premium creator tier.
-              </p>
-              <button
-                className="mt-5 w-full rounded-full bg-sky-500 py-3 text-sm font-semibold text-white hover:bg-sky-400"
-                onClick={closeModal}
-              >
-                Go Premium
+
+              {/* Upload Button */}
+              <button className="mt-6 w-full flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 rounded-lg transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                Upload Link
               </button>
             </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Itinerary Detail Modal */}
+      {selectedItinerary && (
+        <div className="fixed scrollbar-hide inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm">
+          <div className="min-h-screen px-4 py-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="relative mx-auto max-w-3xl rounded-3xl bg-white shadow-2xl overflow-hidden"
+            >
+              <button
+                className="absolute right-4 top-4 z-10 rounded-full bg-white/90 p-2 text-slate-600 hover:bg-white hover:text-slate-900 transition-colors shadow-lg"
+                onClick={closeItineraryDetail}
+                aria-label="Close"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* Hero Image */}
+              <div className="relative h-64 overflow-hidden">
+                <img src={selectedItinerary.image} alt={selectedItinerary.title} className="h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <h1 className="text-3xl font-bold mb-2">{selectedItinerary.title}</h1>
+                  <div className="flex flex-wrap items-center gap-4 text-sm">
+                    <span className="flex items-center gap-1">
+                      <MapPin className="h-4 w-4" />
+                      {selectedItinerary.destination}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      {selectedItinerary.duration}
+                    </span>
+                    <span className="rounded-full bg-white/20 backdrop-blur-sm px-3 py-1 font-semibold">
+                      {selectedItinerary.price}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                {/* Description */}
+                <section className="mb-6">
+                  <h2 className="text-xl font-semibold text-slate-900 mb-3">Description</h2>
+                  <p className="text-slate-600 leading-relaxed">
+                    Experience the breathtaking beauty of {selectedItinerary.destination.split(',')[0]} with guided treks and camping.
+                  </p>
+                </section>
+
+                {/* Tags */}
+                <section className="mb-6">
+                  <div className="flex flex-wrap gap-2">
+                    {selectedItinerary.tags.map((tag) => (
+                      <span key={tag} className="rounded-full bg-blue-50 border border-blue-100 px-4 py-1.5 text-sm text-blue-600">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Day-by-Day Itinerary */}
+                <section>
+                  <h2 className="text-xl font-semibold text-slate-900 mb-4">Day-by-Day Itinerary</h2>
+                  <div className="space-y-4">
+                    {/* Day 1 */}
+                    <div className="rounded border border-slate-200 p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="flex items-center justify-center w-14 h-10 rounded-2xl bg-sky-500 text-white text-sm font-semibold">
+                          Day 1
+                        </span>
+                        <h3 className="font-semibold text-slate-900">Arrival and Acclimatization</h3>
+                      </div>
+                      <div className="ml-12 space-y-2 text-sm text-slate-600">
+                        <p className="font-semibold text-slate-700">Activities:</p>
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>Arrival at {selectedItinerary.destination.split(',')[0]}</li>
+                          <li>Check-in to hotel</li>
+                          <li>Evening walk at Mall Road</li>
+                          <li>Welcome dinner and briefing</li>
+                        </ul>
+                        <p className="pt-2"><span className="font-semibold text-slate-700">Accommodation:</span> Mountain View Resort</p>
+                        <p><span className="font-semibold text-slate-700">Meals:</span> Dinner</p>
+                      </div>
+                    </div>
+
+                    {/* Day 2 */}
+                    <div className="rounded-2xl border border-slate-200 p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="flex items-center justify-center w-14 h-10 rounded-2xl bg-sky-500 text-white text-sm font-semibold">
+                          Day 2
+                        </span>
+                        <h3 className="font-semibold text-slate-900">Exploration Day</h3>
+                      </div>
+                      <div className="ml-12 space-y-2 text-sm text-slate-600">
+                        <p className="font-semibold text-slate-700">Activities:</p>
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>Early morning breakfast</li>
+                          <li>Trek to scenic viewpoint (4-5 hours)</li>
+                          <li>Adventure activities - {selectedItinerary.tags[0]?.toLowerCase()}</li>
+                          <li>Camping setup and bonfire</li>
+                        </ul>
+                        <p className="pt-2"><span className="font-semibold text-slate-700">Accommodation:</span> Campsite</p>
+                        <p><span className="font-semibold text-slate-700">Meals:</span> Breakfast, Lunch, Dinner</p>
+                      </div>
+                    </div>
+
+                    {/* Day 3 */}
+                    <div className="rounded-2xl border border-slate-200 p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="flex items-center justify-center w-14 h-10 rounded-2xl bg-sky-500 text-white text-sm font-semibold">
+                          Day 3
+                        </span>
+                        <h3 className="font-semibold text-slate-900">Peak Expedition</h3>
+                      </div>
+                      <div className="ml-12 space-y-2 text-sm text-slate-600">
+                        <p className="font-semibold text-slate-700">Activities:</p>
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>Summit attempt to nearby peak</li>
+                          <li>Photography session</li>
+                          <li>Return to base camp</li>
+                          <li>Cultural evening with locals</li>
+                        </ul>
+                        <p className="pt-2"><span className="font-semibold text-slate-700">Accommodation:</span> Mountain Lodge</p>
+                        <p><span className="font-semibold text-slate-700">Meals:</span> Breakfast, Lunch, Dinner</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Stats */}
+                <div className="mt-6 flex items-center justify-between pt-6 border-t border-slate-200">
+                  <div className="flex items-center gap-6 text-sm text-slate-600">
+                    <span className="flex items-center gap-2">
+                      <Heart className="h-5 w-5 text-rose-500" />
+                      <span className="font-semibold text-slate-900">{selectedItinerary.likes.toLocaleString()}</span> likes
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <Bookmark className="h-5 w-5 text-sky-500" />
+                      <span className="font-semibold text-slate-900">{selectedItinerary.saves.toLocaleString()}</span> saves
+                    </span>
+                  </div>
+                  
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       )}
@@ -375,4 +561,4 @@ const TravelGuruProfile = () => {
   );
 };
 
-export default TravelGuruProfile;
+export default TravelGuruDashboard

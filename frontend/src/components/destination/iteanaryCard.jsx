@@ -16,7 +16,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
   const {slug}=useParams()
   console.log(slug);
 
-  const tabs = ['All', 'Itineraries','Adventure', 'Beaches', 'Cultural', 'Family', 'Romantic', 'Wildlife'];
+  const tabs = ['All', 'Popular Destinations' ,'Proximity' , 'Hidden gems','Luxury Travel', 'Adventure Seekers', 'Budget Travel', 'Solo Traveler', 'Offbeat Adventures', 'Photography Tours','Relaxing Getaways'];
   
     const {isAuthenticated}=useAuth()
     console.log(isAuthenticated);
@@ -50,19 +50,50 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
     });
   };
 
-  // Filter destinations based on search query
+  // Filter destinations based on search query and active tab
   const filteredDestinations = useMemo(() => {
     if (!data?.results || !Array.isArray(data.results)) {
       return [];
     }
 
+    let filtered = data.results;
+
+    // Filter by active tab
+    if (activeTab !== 'All') {
+      filtered = filtered.filter(destination => {
+        // Check if the destination has tags that match the active tab
+        const tags = destination.tags || [];
+        const title = destination.title || '';
+        const description = destination.description || '';
+        
+        const tabLower = activeTab.toLowerCase();
+        
+        // Check tags array
+        const hasMatchingTag = tags.some(tag => {
+          const tagName = typeof tag === 'string' ? tag : tag?.name || '';
+          return tagName.toLowerCase().includes(tabLower) || 
+                 tabLower.includes(tagName.toLowerCase());
+        });
+        
+        // Also check title and description for tab keywords
+        const matchesContent = title.toLowerCase().includes(tabLower) || 
+                              description.toLowerCase().includes(tabLower);
+        
+        return hasMatchingTag || matchesContent;
+      });
+    }
+
+    // Filter by search query
     const query = searchQuery.toLowerCase().trim();
-    return data.results.filter(destination => {
-      if (!query) return true;
-      return [destination.title, destination.description, destination.slug]
-        .some((field) => field?.toLowerCase().includes(query));
-    });
-  }, [data, searchQuery]);
+    if (query) {
+      filtered = filtered.filter(destination => {
+        return [destination.title, destination.description, destination.slug]
+          .some((field) => field?.toLowerCase().includes(query));
+      });
+    }
+
+    return filtered;
+  }, [data, searchQuery, activeTab]);
 
   if (loading) return <Lottie
                   animationData={animationData}
@@ -81,7 +112,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
       <div className="max-w-7xl mx-auto px-4 py-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-blue-500">Itineraries</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-blue-500">Itineraries - {slug}</p>
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">Curated journeys tailored to {data?.title || 'your travel goals'}</h1>
             <p className="text-slate-500 mt-3 max-w-2xl">
               Scroll through the day-by-day breakdowns, signature experiences, and logistics we’ve already planned so you can focus on the memories.
@@ -103,7 +134,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
             <input
               type="text"
               placeholder="Search itineraries, experiences, or keywords"
-              value={searchQuery || slug}
+              value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all shadow-sm"
             />
@@ -117,26 +148,65 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
 
          {/* Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-hide">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-full border text-sm transition-all duration-200 whitespace-nowrap ${
-                activeTab === tab
-                  ? 'bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/20'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:text-slate-900'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+          {tabs.map((tab) => {
+            // Count items for each tab
+            const tabCount = tab === 'All' 
+              ? data?.results?.length || 0
+              : (data?.results || []).filter(destination => {
+                  const tags = destination.tags || [];
+                  const title = destination.title || '';
+                  const description = destination.description || '';
+                  const tabLower = tab.toLowerCase();
+                  
+                  const hasMatchingTag = tags.some(t => {
+                    const tagName = typeof t === 'string' ? t : t?.name || '';
+                    return tagName.toLowerCase().includes(tabLower) || 
+                           tabLower.includes(tagName.toLowerCase());
+                  });
+                  
+                  const matchesContent = title.toLowerCase().includes(tabLower) || 
+                                        description.toLowerCase().includes(tabLower);
+                  
+                  return hasMatchingTag || matchesContent;
+                }).length;
+            
+            return (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 rounded-full border text-sm transition-all duration-200 whitespace-nowrap  ${
+                  activeTab === tab
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/20'
+                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:text-slate-900'
+                }`}
+              >
+                {tab}
+                {tabCount > 0 && (
+                  <span className={`ml-2 text-xs ${
+                    activeTab === tab ? 'text-slate-300' : 'text-slate-400'
+                  }`}>
+                    ({tabCount})
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Featured Guides Section */}
         <div className="mb-12">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <h2 className="text-2xl font-semibold text-slate-900">Featured itineraries</h2>
-             <Button onClick={()=>navigate("/iteanary/create")} className={"bg-[#479FDC] uppercase hover:bg-[#479FD4] "}>Create your Itineraries</Button>
+            <div>
+              <h2 className="text-2xl font-semibold text-slate-900">
+                {activeTab === 'All' ? 'Featured itineraries' : `${activeTab} itineraries`}
+              </h2>
+              {activeTab !== 'All' && (
+                <p className="text-sm text-slate-500 mt-1">
+                  Showing {filteredDestinations.length} {filteredDestinations.length === 1 ? 'itinerary' : 'itineraries'}
+                </p>
+              )}
+            </div>
+            <Button onClick={()=>navigate("/iteanary/create")} className={"bg-[#479FDC] uppercase hover:bg-[#479FD4] "}>Create your Itineraries</Button>
           </div>
 
           {loading && (
@@ -231,8 +301,33 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
                   </Link>
                 ))
               ) : (
-                <div className="col-span-full text-center py-8">
-                  <p className="text-slate-500">No itineraries found matching "{searchQuery}"</p>
+                <div className="col-span-full text-center py-12">
+                  <div className="max-w-md mx-auto">
+                    <div className="text-5xl mb-4">🔍</div>
+                    {searchQuery ? (
+                      <>
+                        <p className="text-slate-700 font-semibold mb-2">No itineraries found</p>
+                        <p className="text-slate-500 text-sm">
+                          No matches for "{searchQuery}" in {activeTab === 'All' ? 'any category' : activeTab}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-slate-700 font-semibold mb-2">No itineraries available</p>
+                        <p className="text-slate-500 text-sm">
+                          There are no itineraries in the {activeTab} category yet.
+                        </p>
+                      </>
+                    )}
+                    {activeTab !== 'All' && (
+                      <button
+                        onClick={() => setActiveTab('All')}
+                        className="mt-4 px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                      >
+                        View all itineraries
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

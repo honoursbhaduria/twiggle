@@ -115,7 +115,7 @@ const data = [
 function LandingPage() {
 
   return (
-    <div className="bg-cover relative bg-center min-h-screen overflow-hidden">
+    <div className="bg-cover bg-gradient-to-br from-white via-sky-50 to-blue-50 relative bg-center min-h-screen overflow-hidden">
       <Modal/>
     
     <div className="min-h-screen  bg-cover bg-center overflow-hidden rounded-none md:rounded-b-2xl">
@@ -128,10 +128,10 @@ function LandingPage() {
       {/* 3rd comp */}
 
         <div className="w-full py-10 md:py-16 px-4 md:px-8">
-          <div className="text-2xl md:text-4xl lg:text-6xl font-bold font-sans text-center mb-4 md:mb-8">
+          <div className="text-2xl md:text-4xl lg:text-6xl font-bold font-sans text-center mb-4 md:mb-8 tracking-noraml ">
             Trending Now
           </div>
-          <h1 className="text-sm md:text-lg lg:text-xl text-center text-gray-600 mb-8 md:mb-12 max-w-3xl mx-auto">
+          <h1 className="text-sm md:text-lg  lg:text-xl text-center text-[#3c3c3c] mb-8 md:mb-12 max-w-3xl mx-auto font-inter tracking-widest">
             Discover what's capturing hearts across India. From serene beaches to majestic mountains.
           </h1>
 
@@ -146,7 +146,7 @@ function LandingPage() {
         <div className="text-2xl md:text-4xl lg:text-6xl font-bold font-sans text-center mb-4 md:mb-8">
           Travel Categories
         </div>
-        <h1 className="text-sm md:text-lg lg:text-xl text-center text-gray-600 mb-8 md:mb-12 max-w-3xl mx-auto">
+        <h1 className="text-sm md:text-lg lg:text-xl text-center text-[#3c3c3c] mb-8 md:mb-12 max-w-3xl mx-auto tracking-widest">
           Find the perfect itinerary type that matches your travel style and interests
         </h1>
 
@@ -173,12 +173,12 @@ function LandingPage() {
   className="w-full z-20 flex flex-col items-center justify-center px-4"
   style={{ height: '46%', paddingBottom: '1.25rem' }}
 >
-  <div className="relative bg-center rounded-2xl flex flex-col items-center justify-center text-white">
-    <h2 className="text-white text-[1.3rem] md:text-[1.6rem] font-normal drop-shadow-lg text-center leading-tight">
+  <div className="relative bg-center rounded-2xl flex flex-col items-center justify-center text-[#fffdf7]">
+    <h2 className="text-[#fffdf7] text-[1.3rem] md:text-[1.6rem] font-normal drop-shadow-lg text-center leading-tight">
       {item.name}
     </h2>
 
-    <p className="text-gray-100 font-light text-center mt-1">{item.description}</p>
+    <p className="text-[#fffdf7] font-light text-center mt-1 tracking-widest ">{item.description}</p>
 
     <button
       className="bg-gray-100/80 text-black font-normal rounded-full px-6 py-2 shadow-lg mb-2 text-[1.05rem] md:text-[1.1rem] hover:bg-gray-200 transition-all mt-4"
@@ -204,10 +204,10 @@ function LandingPage() {
        <div className="grid grid-cols-1 md:grid-cols-3 gap-25">
           <div className="flex items-center justify-center md:items-center mx-auto ml-10">
             <div className="max-w-md text-center lg:text-left">
-               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-6xl  text-gray-900 font-poppins font-semibold  tracking-tight mb-4 md:mb-6">
+               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-6xl  text-gray-900 font-poppins font-bold  tracking-tight mb-4 md:mb-6">
                   Handcrafted journeys
                 </h1>
-              <p className="text-sm md:text-base lg:text-lg xl:text-lg text-gray-600 leading-relaxed">
+              <p className="text-sm md:text-base lg:text-lg xl:text-lg text-[#3c3c3c] tracking-widest leading-relaxed">
                 Premium itineraries designed by our travel experts. Each journey is
                 carefully curated for the perfect blend of adventure, culture, and
                 luxury.
@@ -236,10 +236,10 @@ function LandingPage() {
           {/* right column */}
           <div className="flex items-center justify-center order-1 lg:order-2 col-span-2">
             <div className="max-w-md text-center lg:text-left">
-               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-7xl  font-poppins font-semibold text-gray-900 leading-tight tracking-tight mb-4 md:mb-6">
+               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-6xl  font-poppins font-bold text-gray-900 leading-tight tracking-tight mb-4 md:mb-6">
                     How it Works?
                 </h1>
-                 <p className="text-sm md:text-base lg:text-lg xl:text-xl text-gray-600 leading-relaxed">
+                 <p className="text-sm md:text-base lg:text-lg xl:text-xl tracking-widest text-[#3c3c3c] leading-relaxed">
                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae perferendis fugiat esse, blanditiis voluptate ipsam.
               </p>
             </div>

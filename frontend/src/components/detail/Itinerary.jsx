@@ -163,7 +163,7 @@ const ItineraryComponent = ({ data }) => {
           </div>
 
           <div className="grid w-full gap-4 rounded-3xl bg-white/80 backdrop-blur p-5 shadow-lg ring-1 ring-gray-100 sm:grid-cols-3 lg:w-auto lg:min-w-[420px]">
-            <div className="rounded-2xl bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 p-4 text-white shadow-lg">
+            <div className="rounded-2xl bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 p-4 text-white shadow-lg">
               <div className="flex items-center justify-between">
                 <span className="text-xs uppercase tracking-wide text-blue-100">Attractions</span>
                 <MapPin className="h-4 w-4 text-blue-100" />
@@ -401,7 +401,7 @@ const ItineraryComponent = ({ data }) => {
                         onDragOver={handleDragOver}
                         className={`group relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl`}
                       >
-                        <div className={`absolute left-0 top-0 h-full w-1.5 ${colors.accentBar}`} />
+                        <div className={`absolute left-0 top-0 h-full w-1.5`} />
                         <div className="flex items-start justify-between gap-4">
                           <div className="flex flex-1 items-start gap-4">
                             <div className="flex flex-col items-center gap-3">
