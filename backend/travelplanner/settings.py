@@ -95,14 +95,23 @@ CORS_ALLOW_ALL_ORIGINS = True
 #     "https://localhost:5173",
 #     "https://127.0.0.1:5173",
 # ]
-REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
-# REDIS_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0")
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": REDIS_URL,
+REDIS_URL = os.getenv("REDIS_URL", None)
+
+# Use Redis cache if REDIS_URL is provided, otherwise use dummy cache
+if REDIS_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": REDIS_URL,
+        }
     }
-}
+else:
+
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
 
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
