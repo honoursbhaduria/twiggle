@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Base URL configuration
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost/';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://traveller-2-y1y5.onrender.com/';
 
 // Create axios instance
 const api = axios.create({
