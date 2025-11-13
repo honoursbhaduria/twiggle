@@ -141,7 +141,7 @@ export default function TravelGuruPage() {
       <SidebarDemo/>
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-12">
-          <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">TRAVEL-GURUS</p>
+          <p className="text-sm font-semibold text-[#fe6d3c] uppercase tracking-wider mb-3">TRAVEL-GURUS</p>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Meet Our Travel Gurus
           </h1>
@@ -158,43 +158,11 @@ export default function TravelGuruPage() {
             <input
               type="text"
               placeholder="search..."
-             
-              
-              className="w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all shadow-sm"
+              className="w-full pl-12 pr-4 py-4 bg-white/80 backdrop-blur border border-[#fe6d3c]/25 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-[#fe6d3c]/30 focus:border-[#fe6d3c] transition-all"
             />
           </div>
 
-        {/* Stories Section */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Featured Travel Gurus</h2>
-            <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
-              Explore everything in our catalogue.
-            </button>
-          </div>
-          <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-            {travelGurus.map((guru) => (
-              <div
-                key={guru.id}
-                onClick={() => openStory(guru)}
-                className={`flex-shrink-0 cursor-pointer transition-transform hover:scale-105 ${
-                  guru.hasStory ? '' : 'opacity-50 cursor-not-allowed'
-                }`}
-              >
-                <div className={`w-24 h-24 rounded-full p-1 ${
-                  guru.hasStory ? 'bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600' : 'bg-gray-300'
-                }`}>
-                  <img
-                    src={guru.avatar}
-                    alt={guru.name}
-                    className="w-full h-full rounded-full border-4 border-white object-cover"
-                  />
-                </div>
-                <p className="text-sm text-center mt-2 text-gray-700 w-24 truncate font-medium">{guru.name.split(' ')[0]}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+      
 
         {/* Gurus Grid */}
         <Link to={"/travelguru/sarah"}>
@@ -204,19 +172,19 @@ export default function TravelGuruPage() {
             {travelGurus.map((guru) => (
               <div
                 key={guru.id}
-                className="group bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                className="group bg-white rounded-3xl border border-[#fe6d3c]/20 hover:shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                 onClick={() => setSelectedGuru(guru)}
               >
                 <div className="relative h-48 bg-gray-200 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
                   <img
                     src={guru.avatar}
                     alt={guru.name}
-                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white object-cover shadow-lg"
+                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-20 h-20 rounded-full border-4 border-white object-cover"
                   />
                   {guru.hasStory && (
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                      <span className="text-xs font-semibold text-blue-500">Verified</span>
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full border border-[#fe6d3c]/40">
+                      <span className="text-xs font-semibold text-[#fe6d3c]">Verified</span>
                     </div>
                   )}
                 </div>
@@ -224,7 +192,7 @@ export default function TravelGuruPage() {
                   <h3 className="text-lg font-bold text-gray-900 mb-1">{guru.name}</h3>
                   <p className="text-sm text-gray-500 mb-3">{guru.username}</p>
                   <p className="text-sm text-gray-600 mb-4 line-clamp-2 min-h-[40px]">{guru.bio}</p>
-                  <div className="flex justify-center gap-8 mb-4 py-3 border-t border-b border-gray-100">
+                  <div className="flex justify-center gap-8 mb-4 py-3 border-t border-b border-[#fe6d3c]/20">
                     <div>
                       <p className="text-xl font-bold text-gray-900">{guru.followers}</p>
                       <p className="text-xs text-gray-500">Followers</p>
@@ -234,9 +202,7 @@ export default function TravelGuruPage() {
                       <p className="text-xs text-gray-500">Places</p>
                     </div>
                   </div>
-                  <button className="w-full bg-red-500 text-white py-2.5 rounded-xl font-semibold hover:bg-red-600 transition-colors">
-                    Follow
-                  </button>
+                
                 </div>
               </div>
             ))}
@@ -322,3 +288,7 @@ export default function TravelGuruPage() {
     </div>
   );
 }
+
+
+
+

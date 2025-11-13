@@ -293,7 +293,7 @@ export default function EditItineraryForm() {
   return (
     <div className="bg-gradient-to-r from-blue-100 to-blue-50 py-8 px-4 sm:px-6 lg:px-8 flex justify-center">
     
-        <div className=" max-w-6xl w-full shadow-xl  bg-white rounded-[32px] overflow-hidden">
+        <div className=" max-w-6xl w-full  bg-white rounded-[32px] overflow-hidden">
           <div className="px-6 sm:px-10 bg-gradient-to-r from-gray-900 to-gray-700 space-y-10 py-4">
             <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-10">
               <div className="flex-1 space-y-6">
@@ -315,7 +315,7 @@ export default function EditItineraryForm() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                
               {/* {plannerSummaryCards.map((card) => (
-                <div key={card.title} className={`rounded-3xl relative px-5 py-6 border shadow-sm ${card.accent}`}>
+                <div key={card.title} className={`rounded-3xl relative px-5 py-6 border ${card.accent}`}>
                   <p className="text-xs uppercase tracking-[0.25em] text-current/70">{card.title}</p>
                    
                   <p className="mt-4 text-2xl font-semibold text-current">{card.value}</p>
@@ -324,7 +324,7 @@ export default function EditItineraryForm() {
               ))} */}
 
                 {highlightTiles.map((tile) => (
-                  <div key={tile.label} className={`rounded-3xl px-5 py-6 shadow-sm ${tile.className}`}>
+                  <div key={tile.label} className={`rounded-3xl px-5 py-6 ${tile.className}`}>
                     <p className="text-xs uppercase tracking-[0.3em] opacity-70">{tile.label}</p>
                     
                     <p className="text-3xl font-semibold mt-4">{tile.value}</p>
@@ -335,7 +335,7 @@ export default function EditItineraryForm() {
           </div>
           <div className="px-6 sm:px-10 pt-8 pb-4 space-y-6 bg-gray-100 ">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <section className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8 space-y-6">
+              <section className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
                   <div>
                     <h2 className="text-xl font-semibold text-slate-900">Itinerary overview</h2>
@@ -373,7 +373,7 @@ export default function EditItineraryForm() {
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-slate-700">Thumbnail</Label>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 p-4">
-                      <label className="relative inline-flex items-center justify-center px-5 py-2 rounded-full bg-white text-slate-700 text-sm font-semibold shadow-sm cursor-pointer hover:bg-slate-100">
+                      <label className="relative inline-flex items-center justify-center px-5 py-2 rounded-full bg-white text-slate-700 text-sm font-semibold cursor-pointer hover:bg-slate-100">
                         <span>Upload image</span>
                         <input type="file" accept="image/*" onChange={handleThumbnail} className="absolute inset-0 opacity-0 cursor-pointer" />
                       </label>
@@ -393,7 +393,7 @@ export default function EditItineraryForm() {
                 </div>
               </section>
 
-              <section className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8 space-y-6">
+              <section className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
                     <h2 className="text-xl font-semibold text-slate-900">Budget & logistics</h2>
@@ -421,7 +421,7 @@ export default function EditItineraryForm() {
                 </div>
               </section>
 
-              <section className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8 space-y-6">
+              <section className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-6">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                   <div>
                     <h2 className="text-xl font-semibold text-slate-900">Day-by-day blueprint</h2>
@@ -459,7 +459,7 @@ export default function EditItineraryForm() {
                   </div>
 
                   {activeDay ? (
-                    <div className="rounded-3xl border border-slate-200 bg-white shadow-inner p-6 sm:p-8 space-y-6">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 space-y-6">
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                           <h3 className="text-lg font-semibold text-slate-900">{`Day ${activeDay.day_number}: ${activeDay.title || "Untitled"}`}</h3>
@@ -679,7 +679,7 @@ export default function EditItineraryForm() {
                 </div>
               </section>
 
-              <div className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                 <label className="flex items-start gap-4">
                   <Checkbox checked={false} onCheckedChange={() => {}} className="mt-1" />
                   <div>
@@ -691,7 +691,7 @@ export default function EditItineraryForm() {
                   <Button type="button" variant="ghost" onClick={loadEmptyItinerary} className="text-slate-500 hover:text-slate-700">
                     Reset
                   </Button>
-                  <Button onClick={()=>navigate("/dashboard")} type="submit" className="bg-gradient-to-r from-gray-900 to-gray-700  text-white px-6 py-2 rounded-full shadow-lg">
+                  <Button onClick={()=>navigate("/dashboard")} type="submit" className="bg-gradient-to-r from-gray-900 to-gray-700  text-white px-6 py-2 rounded-full">
                     Save itinerary
                   </Button>
                 </div>
@@ -703,3 +703,8 @@ export default function EditItineraryForm() {
     </div>
   );
 }
+
+
+
+
+

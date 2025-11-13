@@ -8,6 +8,7 @@ Contract:
   - places: { attractions: Place[], restaurants: Place[], experiences: Place[] }
   - onCancel: () => void
   - onApply: (days: DaySelection[]) => void
+  - onNavigateBack: () => void -> optional callback to navigate back to destination page
 
 Types:
   type Place = { id: string|number, name: string, address?: string, estimated_cost?: number, description?: string };
@@ -21,7 +22,7 @@ Types:
   };
 */
 
-const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCancel, onApply }) => {
+const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCancel, onApply, onNavigateBack }) => {
   const [days, setDays] = useState(() => {
     const list = initialDays?.length ? initialDays : [{ day_number: 1 }];
     return list.map((d, i) => ({
@@ -70,6 +71,26 @@ const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCanc
     setActiveDayIndex((prev) => prev + 1);
   };
 
+  const removeDay = (indexToRemove) => {
+    if (days.length <= 1) {
+      alert("You must have at least one day in your itinerary.");
+      return;
+    }
+    
+    const updatedDays = days
+      .filter((_, i) => i !== indexToRemove)
+      .map((d, i) => ({ ...d, day_number: i + 1 }));
+    
+    setDays(updatedDays);
+    
+    // Adjust active index if needed
+    if (activeDayIndex === indexToRemove) {
+      setActiveDayIndex(Math.max(0, indexToRemove - 1));
+    } else if (activeDayIndex > indexToRemove) {
+      setActiveDayIndex(activeDayIndex - 1);
+    }
+  };
+
   const toggleSelect = (key, item, e) => {
     if (e) {
       e.preventDefault();
@@ -94,6 +115,18 @@ const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCanc
   };
 
   const handleApply = () => {
+    // Validate that Day 1 has at least some data
+    const day1 = days[0];
+    const day1HasData = 
+      (day1?.attractions?.length > 0) || 
+      (day1?.restaurants?.length > 0) || 
+      (day1?.experiences?.length > 0);
+    
+    if (!day1HasData) {
+      alert("Please add at least one attraction, restaurant, or experience to Day 1 before continuing.");
+      return;
+    }
+    
     // Normalize and send back
     const normalized = days.map((d, i) => ({
       day_number: i + 1,
@@ -105,6 +138,33 @@ const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCanc
     }));
     onApply?.(normalized);
   };
+
+  const handleCancel = () => {
+    // Validate that Day 1 has at least some data before allowing close
+    const day1 = days[0];
+    const day1HasData = 
+      (day1?.attractions?.length > 0) || 
+      (day1?.restaurants?.length > 0) || 
+      (day1?.experiences?.length > 0);
+    
+    if (!day1HasData) {
+      // If no data, navigate back to destination/itinerary page
+      if (onNavigateBack) {
+        onNavigateBack();
+      } else {
+        onCancel?.();
+      }
+      return;
+    }
+    
+    onCancel?.();
+  };
+
+  // Check if Day 1 has any data to determine Cancel button visibility
+  const day1HasData = 
+    (days[0]?.attractions?.length > 0) || 
+    (days[0]?.restaurants?.length > 0) || 
+    (days[0]?.experiences?.length > 0);
 
   const mapPlaceForDay = (p) => ({
     id: p.id ?? Date.now(),
@@ -119,23 +179,23 @@ const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCanc
   });
 
   const sections = useMemo(() => ([
-    { key: "attractions", title: "Attractions", badge: "bg-indigo-100 text-indigo-700", itemBg: "bg-indigo-50", btn: "text-indigo-600" },
-    { key: "restaurants", title: "Restaurants", badge: "bg-emerald-100 text-emerald-700", itemBg: "bg-emerald-50", btn: "text-emerald-600" },
-    { key: "experiences", title: "Experiences", badge: "bg-fuchsia-100 text-fuchsia-700", itemBg: "bg-fuchsia-50", btn: "text-fuchsia-600" },
+    { key: "attractions", title: "Attractions", badge: "bg-orange-100 text-orange-700", itemBg: "bg-orange-50", btn: "text-orange-600" },
+    { key: "restaurants", title: "Restaurants", badge: "bg-amber-100 text-amber-700", itemBg: "bg-amber-50", btn: "text-amber-600" },
+    { key: "experiences", title: "Experiences", badge: "bg-rose-100 text-rose-700", itemBg: "bg-rose-50", btn: "text-rose-600" },
   ]), []);
 
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs animate-in fade-in duration-300">
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-6xl w-full min-h-[80vh] overflow-hidden">
+      <div className="relative bg-white rounded-3xl max-w-6xl w-full min-h-[80vh] overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 border-b bg-[#fe6d3c]">
           <div>
-            <h3 className="text-xl font-semibold text-slate-900">Plan your days</h3>
-            <p className="text-sm text-slate-500">Start with Day 1, add more days, and pick places for each day. Click Done to apply.</p>
+            <h3 className="text-xl font-semibold text-white">Plan your days</h3>
+            <p className="text-sm text-white/90">Start with Day 1, add more days, and pick places for each day. Click Done to apply.</p>
           </div>
-          <button type="button" onClick={onCancel} className="px-3 py-1.5 rounded-full text-sm bg-slate-100 hover:bg-slate-200">Close</button>
+          <button type="button" onClick={handleCancel} className="px-3 py-1.5 rounded-full text-sm bg-white/20 hover:bg-white/30 text-white">Close</button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-0">
@@ -143,42 +203,36 @@ const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCanc
           <div className="lg:col-span-1 border-r p-4 space-y-3">
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-slate-700">Days</p>
-              <button type="button" onClick={addDay} className="text-xs px-3 py-1 rounded-full bg-slate-900 text-white hover:bg-slate-800">+ Add day</button>
+              <button type="button" onClick={addDay} className="text-xs px-3 py-1 rounded-full bg-[#fe6d3c] hover:bg-[#e55a2a] text-white">+ Add day</button>
             </div>
             <div className="flex flex-wrap gap-2">
               {days.map((d, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveDayIndex(idx)}
-                  type="button"
-                  className={`px-4 py-2 rounded-xl text-sm font-medium border ${idx === activeDayIndex ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"}`}
-                >
-                  Day {d.day_number}
-                </button>
+                <div key={idx} className="relative">
+                  <button
+                    onClick={() => setActiveDayIndex(idx)}
+                    type="button"
+                    className={`px-4 py-2 rounded-xl text-sm font-medium border ${idx === activeDayIndex ? "bg-[#fe6d3c] text-white border-[#fe6d3c]" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"}`}
+                  >
+                    Day {d.day_number}
+                  </button>
+                  {days.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeDay(idx);
+                      }}
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#fe6d3c] hover:bg-[#e55a2a] text-white flex items-center justify-center text-xs font-bold shadow-md transition-all duration-200"
+                      title="Remove this day"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
               ))}
             </div>
 
            
-            {activeDay && (
-              <div className="mt-4 space-y-3">
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Day title</label>
-                <input 
-                  type="text"
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-                  placeholder="e.g., Exploring Old City"
-                  value={activeDay.title}
-                  onChange={(e) => setDays((prev)=>{ const c=[...prev]; c[activeDayIndex] = { ...c[activeDayIndex], title: e.target.value }; return c; })}
-                />
-                <label className="block text-xs font-semibold text-slate-600 mb-1 mt-3">Locations (comma separated)</label>
-                <input 
-                  type="text"
-                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-                  placeholder="e.g., Jaipur, Amber Fort"
-                  value={activeDay.locations}
-                  onChange={(e) => setDays((prev)=>{ const c=[...prev]; c[activeDayIndex] = { ...c[activeDayIndex], locations: e.target.value }; return c; })}
-                />
-              </div>
-            )}
           </div>
 
           {/* Places content */}
@@ -201,9 +255,9 @@ const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCanc
                         tabIndex={0}
                         onClick={(e) => toggleSelect(sec.key, item, e)}
                         onKeyDown={(e)=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleSelect(sec.key, item, e); } }}
-                        className={`text-left rounded-2xl p-4 border cursor-pointer transition-all duration-200 ${selected ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white hover:bg-slate-50"}`}
+                        className={`text-left rounded-2xl p-4 border cursor-pointer transition-all duration-200 ${selected ? "bg-[#fe6d3c] text-white shadow-md" : "border-slate-200 bg-white hover:bg-slate-50"}`}
                       >
-                        <p className="font-semibold text-sm">{item.name} {selected && '✓'}</p>
+                        <p className="font-semibold text-sm">{item.name} {selected}</p>
                         {item.address && <p className="text-xs opacity-70 mt-1">{item.address}</p>}
                         {(item.estimated_cost || item.description) && (
                           <p className="text-xs opacity-70 mt-1">{item.estimated_cost ? `~₹${item.estimated_cost}` : item.description}</p>
@@ -219,8 +273,10 @@ const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCanc
 
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 border-t px-6 py-4 bg-white">
-          <button type="button" onClick={onCancel} className="px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100">Cancel</button>
-          <button type="button" onClick={handleApply} className="px-5 py-2 rounded-full bg-gradient-to-r from-gray-900 to-gray-700 text-white">Done</button>
+          {!day1HasData && (
+            <button type="button" onClick={handleCancel} className="px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100">Cancel</button>
+          )}
+          <button type="button" onClick={handleApply} className="px-5 py-2 rounded-full bg-[#fe6d3c] hover:bg-[#e55a2a] text-white shadow-lg">Done</button>
         </div>
       </div>
     </div>
@@ -228,3 +284,7 @@ const Modal = ({ open = false, initialDays = [{ day_number: 1 }], places, onCanc
 };
 
 export default Modal;
+
+
+
+

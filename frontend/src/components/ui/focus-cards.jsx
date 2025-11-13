@@ -13,7 +13,7 @@ export const Card = React.memo(({
     onMouseEnter={() => setHovered(index)}
     onMouseLeave={() => setHovered(null)}
     className={cn(
-      "rounded-2xl relative bg-gray-100 dark:bg-neutral-900 overflow-hidden h-60 md:h-80 w-full transition-all duration-300 ease-out shadow-md hover:shadow-xl",
+      "rounded-2xl relative bg-gray-100 dark:bg-neutral-900 overflow-hidden h-60 md:h-80 w-full transition-all duration-300 ease-out hover:shadow-xl",
       hovered !== null && hovered !== index && "scale-[0.98]"
     )}>
      
@@ -28,12 +28,10 @@ export const Card = React.memo(({
 
      {/* Always visible top-right icons */}
     <div className="absolute top-3 right-3 flex gap-2">
-      <button className="bg-white/90 p-2 rounded-full text-gray-800 hover:bg-white hover:scale-110 transition-all shadow-md">
+      <button className="bg-white/90 p-2 rounded-full text-gray-800 hover:bg-white hover:scale-110 transition-all">
         <Heart className="w-4 h-4 md:w-5 md:h-5" />
       </button>
-      <button className="bg-white/90 p-2 rounded-full text-gray-800 hover:bg-white hover:scale-110 transition-all shadow-md">
-        <Bookmark className="w-4 h-4 md:w-5 md:h-5" />
-      </button>
+     
     </div>
     
      <div className={cn(
@@ -41,7 +39,7 @@ export const Card = React.memo(({
         hovered === index ? "opacity-0" : "opacity-100"
       )}>
       <div>
-        <h3 className="text-sm md:text-base font-medium bg-white/20 p-2 px-3 rounded-xl shadow-sm">{card.location}</h3>
+        <h3 className="text-sm md:text-base font-medium bg-white/20 p-2 px-3 rounded-xl">{card.location}</h3>
       </div>
     </div>
     <div
@@ -57,12 +55,7 @@ export const Card = React.memo(({
           <div className="text-xs md:text-sm text-white/90">{card.location}</div>
      
           <div className="flex items-center gap-2 md:gap-3">
-            <span className="flex items-center gap-1 text-xs md:text-sm text-white">
-              <Heart className="w-3 h-3 md:w-4 md:h-4 text-red-500 fill-red-500" /> {card.likes}
-            </span>
-            <span className="bg-white/20 px-2 py-1 rounded-lg text-xs text-white font-medium">
-              {card.days} days
-            </span>
+           
           </div>
         </div>
       </div>
@@ -91,3 +84,8 @@ export function FocusCards({
     </div>
   );
 }
+
+
+
+
+

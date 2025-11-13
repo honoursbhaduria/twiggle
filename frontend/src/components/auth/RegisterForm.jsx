@@ -69,11 +69,15 @@ const RegisterForm = ({ onSuccess }) => {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-500">
+              <FormLabel className="text-[#fe6d3c] font-medium">
                 Name
               </FormLabel>
               <FormControl>
-                <Input placeholder="Enter your name" {...field} />
+                <Input
+                  placeholder="Enter your name"
+                  className="border-[#fe6d3c]/40 focus-visible:border-[#fe6d3c] focus-visible:ring-[#fe6d3c]/40"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -84,11 +88,15 @@ const RegisterForm = ({ onSuccess }) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-500">
+              <FormLabel className="text-[#fe6d3c] font-medium">
                 Email
               </FormLabel>
               <FormControl>
-                <Input placeholder="Enter your Email" {...field} />
+                <Input
+                  placeholder="Enter your Email"
+                  className="border-[#fe6d3c]/40 focus-visible:border-[#fe6d3c] focus-visible:ring-[#fe6d3c]/40"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -99,11 +107,16 @@ const RegisterForm = ({ onSuccess }) => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-500">
+              <FormLabel className="text-[#fe6d3c] font-medium">
                 Passoword
               </FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Enter your Password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="Enter your Password"
+                  className="border-[#fe6d3c]/40 focus-visible:border-[#fe6d3c] focus-visible:ring-[#fe6d3c]/40"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,17 +127,26 @@ const RegisterForm = ({ onSuccess }) => {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-500">
+              <FormLabel className="text-[#fe6d3c] font-medium">
                 Confirm Password
               </FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Enter your Password again" {...field} />
+                <Input
+                  type="password"
+                  placeholder="Enter your Password again"
+                  className="border-[#fe6d3c]/40 focus-visible:border-[#fe6d3c] focus-visible:ring-[#fe6d3c]/40"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full dark:bg-gray-400" disabled={isLoading}>
+        <Button
+          type="submit"
+          className="w-full bg-[#fe6d3c] text-white font-semibold hover:bg-[#fe6d3c]"
+          disabled={isLoading}
+        >
           {isLoading ? 'Creating Account..' : 'Create Account'}
         </Button>
       </form>
@@ -133,3 +155,7 @@ const RegisterForm = ({ onSuccess }) => {
 }
 
 export default RegisterForm
+
+
+
+

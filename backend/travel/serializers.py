@@ -51,9 +51,31 @@ class CategorySerializer(serializers.ModelSerializer):
 
         
 class ExperienceSerializer(serializers.ModelSerializer):
+    latitude = serializers.SerializerMethodField()
+    longitude = serializers.SerializerMethodField()
+    address = serializers.SerializerMethodField()
+    
     class Meta:
         model = Experience
-        fields = ["id", "name", "description", "image", "estimated_cost"]
+        fields = ["id", "name", "description", "image", "estimated_cost", "latitude", "longitude", "address"]
+    
+    def get_latitude(self, obj):
+        # Get latitude from linked attraction if available
+        if obj.attraction:
+            return obj.attraction.latitude
+        return None
+    
+    def get_longitude(self, obj):
+        # Get longitude from linked attraction if available
+        if obj.attraction:
+            return obj.attraction.longitude
+        return None
+    
+    def get_address(self, obj):
+        # Get address from linked attraction if available, or use experience's own address
+        if obj.attraction:
+            return obj.attraction.address
+        return obj.address
         
         
 class AttractionImageSerializer(serializers.ModelSerializer):

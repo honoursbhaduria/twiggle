@@ -104,7 +104,7 @@ const Modal = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300 scrollbar-hide">
-  <div className="relative mx-4 mt-3 w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl max-h-[80vh]">
+  <div className="relative mx-4 mt-3 w-full max-w-5xl overflow-hidden rounded-3xl bg-white max-h-[80vh]">
   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,140,255,0.15),transparent_60%)] scrollbar-hide" />
 
         <button
@@ -137,8 +137,8 @@ const Modal = () => {
                   <button
                     key={type.id}
                     onClick={() => handleSelectType(type)}
-                    className={`group relative overflow-hidden rounded-3xl border transition-all duration-300 text-left shadow-sm hover:-translate-y-1 hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 ${
-                      isSelected ? 'border-transparent shadow-xl ring-2 ring-sky-300/70' : 'border-slate-100'
+                    className={`group relative overflow-hidden rounded-3xl border transition-all duration-300 text-left hover:-translate-y-1 hover:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-[#fe6d3c]/35 ${
+                      isSelected ? 'border-transparent ring-2 ring-[#fe6d3c]/60' : 'border-slate-100'
                     }`}
                   >
                     <div className={`absolute inset-0 bg-linear-to-br ${type.color} opacity-0 transition-opacity duration-300 group-hover:opacity-20 ${
@@ -150,7 +150,7 @@ const Modal = () => {
                           #{type.id.toString().padStart(2, '0')}
                         </span>
                         {isSelected ? (
-                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-500 text-white shadow-lg">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#fe6d3c] text-white">
                             <Check className="h-4 w-4" />
                           </span>
                         ) : (
@@ -176,9 +176,9 @@ const Modal = () => {
                             {type.description}
                           </p>
                         </div>
-                        <div className="mt-auto flex items-center justify-between rounded-2xl border border-slate-100 bg-white/70 px-4 py-2 text-xs font-medium text-slate-500">
+                        <div className="mt-auto flex items-center justify-between rounded-2xl border border-[#fe6d3c]/30 bg-white/80 px-4 py-2 text-xs font-medium text-slate-500">
                           <span>Tap to personalise</span>
-                          <span className="font-semibold text-sky-500">View matches</span>
+                          <span className="font-semibold text-[#fe6d3c]">View matches</span>
                         </div>
                       </div>
                     </div>
@@ -201,7 +201,7 @@ const Modal = () => {
               disabled={!selectedType}
               className={`inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all md:w-auto ${
                 selectedType
-                  ? 'bg-linear-to-r from-sky-500 to-blue-600 text-white shadow-lg hover:from-sky-600 hover:to-blue-700'
+                  ? 'bg-linear-to-r from-[#fe6d3c] to-[#fe6d3c] text-black hover:from-[#fe6d3c] hover:to-[#fe6d3c]'
                   : 'bg-slate-200 text-slate-500 cursor-not-allowed'
               }`}
             >
@@ -215,3 +215,7 @@ const Modal = () => {
 };
 
 export default Modal;
+
+
+
+

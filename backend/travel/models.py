@@ -47,6 +47,7 @@ class Location(models.Model):
 
     def __str__(self):
         return f"{self.city}, {self.state}, {self.country}".replace(" ,", "")
+    
 class Destination(models.Model):
     name = models.CharField(max_length=100, unique=True, db_index=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, related_name="destinations")

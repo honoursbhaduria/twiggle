@@ -45,30 +45,30 @@ const Header = () => {
         <header className="relative z-50 px-6 py-5 lg:px-12">
                 <nav className="flex items-center justify-between">
                   {/* Logo */}
-                  <div className="text-2xl font-bold text-gray-900 tracking-tight">
+                  <div className="text-2xl font-bold text-[#fe6d3c] tracking-tight">
                     TWIGGLE
                   </div>
         
                   {/* Desktop Navigation */}
                   <div className="hidden lg:flex items-center space-x-12">
-                    <a href="/destination" onClick={()=>setSelected('destination')}  className={` hover:text-gray-800 transition-colors duration-200 font-medium ${selected=='destination'?'text-gray-950':'text-black'}`}>
+                    <a href="/destination" onClick={()=>setSelected('destination')}  className={` transition-colors duration-200 font-medium ${selected=='destination'?'text-[#fe6d3c]':'text-slate-700 hover:text-[#fe6d3c]'}`}>
                       DESTINATION
                     </a>
-                    <a href="#" className="text-black hover:text-gray-800 transition-colors duration-200 font-medium">
+                    <a href="#" className="text-slate-700 hover:text-[#fe6d3c] transition-colors duration-200 font-medium">
                       MY TRIPS
                     </a>
-                    <a href="/travelguru" className="text-black hover:text-gray-800 transition-colors duration-200 font-medium">
+                    <a href="/travelguru" className="text-slate-700 hover:text-[#fe6d3c] transition-colors duration-200 font-medium">
                       TRAVEL GURUS
                     </a>
-                    <a href="#" className="text-black hover:text-gray-800 transition-colors duration-200 font-medium">
+                    <a href="#" className="text-slate-700 hover:text-[#fe6d3c] transition-colors duration-200 font-medium">
                       CONTACT
                     </a>
                     <div>
                        <div className="flex items-center">
       {/* Collapsible search box */}
       <div
-        className={`flex items-center   bg-transparent overflow-hidden transition-all duration-300 ${
-          open ? "w-64 px-2 shadow-md rounded-full " : "w-10"
+        className={`flex items-center bg-transparent overflow-hidden transition-all duration-300 ${
+          open ? "w-64 px-2  rounded-full border border-[#fe6d3c]/40 bg-white" : "w-10"
         }`}
       >
         {/* Search input (hidden when closed) */}
@@ -92,7 +92,7 @@ const Header = () => {
             }
             setOpen(!open);
           }}
-          className="p-2 text-gray-600 font-bold hover:text-gray-900"
+          className="p-2 text-[#fe6d3c] font-bold hover:text-[#fe6d3c]"
         >
           <Search size={18} />
         </button>
@@ -101,17 +101,17 @@ const Header = () => {
                     </div>
                   </div>
         
-                  {/* Donate Button & Mobile Menu */}
+                  
                   <div className="flex items-center space-x-4">
                     <Link to={"/auth"}>
-                    <button className="bg-black text-white px-8 py-3 font-semibold hover:bg-gray-800 transition-colors duration-200 rounded-full">
+                    <button className="bg-[#fe6d3c] text-white px-8 py-3 font-semibold hover:bg-[#fe6d3c] transition-colors duration-200 rounded-full">
                       LOGIN
                     </button>
                     </Link>
                     
                     {/* Mobile Menu Button */}
                     <button 
-                      className="lg:hidden"
+                      className="lg:hidden text-[#fe6d3c]"
                       onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
                       {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -127,7 +127,7 @@ const Header = () => {
                       animate={{ opacity: 1, height: "auto", y: 0 }}
                       exit={{ opacity: 0, height: 0, y: -20 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="lg:hidden absolute top-20 left-0 right-0 bg-white/70 shadow-lg overflow-hidden"
+                      className="lg:hidden absolute top-20 left-0 right-0 bg-[#fff9f5]/95 border border-[#fe6d3c]/30 overflow-hidden"
                     >
                       <motion.div 
                         initial={{ opacity: 0 }}
@@ -182,3 +182,7 @@ const Header = () => {
 }
 
 export default Header
+
+
+
+

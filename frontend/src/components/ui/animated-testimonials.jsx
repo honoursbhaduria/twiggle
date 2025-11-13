@@ -109,7 +109,7 @@ export const AnimatedTestimonials = ({
               {gurus[active].designation}
             </p>
              <p className="text-sm flex gap-5 text-gray-500 dark:text-neutral-500">
-             <span className="flex gap-1 "> {gurus[active].rating} <Star  className="text-yellow-500 fill-yellow-500" width={20} height={20} /></span>  {gurus[active].trips}+ trips
+             <span className="flex gap-1 "> </span>  {gurus[active].trips}+ trips
             </p>
             <motion.p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
               {gurus[active].quote.split(" ").map((word, index) => (
@@ -155,3 +155,8 @@ export const AnimatedTestimonials = ({
     </div>
   );
 };
+
+
+
+
+

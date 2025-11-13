@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Bookmark,
   CalendarRange,
   Clock,
   Facebook,
@@ -91,14 +90,14 @@ const spotlightCards = [
     title: "Creator Rewards",
     description: "Earn up to 18% more by sharing premium storyboards for the upcoming festive season.",
     cta: "View incentive program",
-    gradient: "from-sky-100 via-blue-50 to-slate-50",
+    gradient: "from-[#fe6d3c]/20 via-[#fff1e7] to-white",
     icon: Sparkles,
   },
   {
     title: "Upcoming Collaborations",
     description: "Three boutique partners shortlisted your itineraries for luxury travellers.",
     cta: "Review briefs",
-    gradient: "from-rose-100 via-pink-50 to-amber-50",
+    gradient: "from-[#fe6d3c]/15 via-[#ffd4c1] to-white",
     icon: Users,
   },
 ];
@@ -132,32 +131,32 @@ const TravelGuruDashboard = () => {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-sky-50 to-indigo-50 p-8 md:p-10"
+          className="relative overflow-hidden rounded-3xl bg-linear-to-br from-white via-[#fff4ed] to-[#ffe8dc] p-8 md:p-10"
         >
-          <div className="absolute inset-x-10 -top-32 h-56 rounded-full bg-gradient-to-r from-sky-300/25 via-cyan-200/30 to-transparent blur-3xl" />
+          <div className="absolute inset-x-10 -top-32 h-56 rounded-full bg-linear-to-r from-[#fe6d3c]/25 via-[#fe6d3c]/12 to-transparent blur-3xl" />
           <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-5">
               <img
                 src={guru.avatar}
                 alt={guru.name}
-                className="h-24 w-24 rounded-2xl object-cover shadow-xl"
+                className="h-24 w-24 rounded-2xl object-cover"
               />
               <div>
-                <p className="text-xs uppercase tracking-[0.35em] text-slate-500">Travel Guru Spotlight</p>
+                <p className="text-xs uppercase tracking-[0.35em] text-[#fe6d3c]">Travel Guru Spotlight</p>
                 <h1 className="mt-2 text-3xl font-semibold sm:text-4xl font-poppins text-slate-900">{guru.name}</h1>
-                <p className="mt-1 text-sm text-sky-600">{guru.handle}</p>
+                <p className="mt-1 text-sm text-[#fe6d3c]">{guru.handle}</p>
               </div>
             </div>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.15, duration: 0.4 }}
-              className="rounded-2xl border border-white/60 bg-white px-6 py-4 shadow-lg"
+              className="rounded-2xl border border-[#fe6d3c]/20 bg-white/90 px-6 py-4"
             >
-              <p className="text-xs uppercase tracking-[0.25em] text-slate-500">This week</p>
+              <p className="text-xs uppercase tracking-[0.25em] text-[#fe6d3c]">This week</p>
               <p className="mt-2 text-lg font-semibold text-slate-900">"{guru.headline}"</p>
               <div className="mt-3 flex items-center gap-3 text-sm text-slate-600">
-                <CalendarRange className="h-4 w-4 text-sky-500" />
+                <CalendarRange className="h-4 w-4 text-[#fe6d3c]" />
                 Hosting a live session on mindful slow travel
               </div>
             </motion.div>
@@ -168,11 +167,11 @@ const TravelGuruDashboard = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.4 }}
-              className="rounded-2xl border border-slate-100 bg-white/80 p-4 shadow-md"
+              className="rounded-2xl border border-[#fe6d3c]/20 bg-white/85 p-4"
             >
               <div className="flex items-center justify-between">
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Instagram</p>
-                <Instagram className="h-6 w-6 text-pink-500" />
+                <p className="text-xs uppercase tracking-[0.25em] text-[#fe6d3c]">Instagram</p>
+                <Instagram className="h-6 w-6 text-[#fe6d3c]" />
               </div>
               <p className="mt-3 text-3xl font-semibold">{guru.reach.instagram.toLocaleString()}</p>
               <p className="text-sm text-slate-500">Community</p>
@@ -181,11 +180,11 @@ const TravelGuruDashboard = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15, duration: 0.4 }}
-              className="rounded-2xl border border-slate-100 bg-white/80 p-4 shadow-md"
+              className="rounded-2xl border border-[#fe6d3c]/20 bg-white/85 p-4"
             >
               <div className="flex items-center justify-between">
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">YouTube</p>
-                <Youtube className="h-6 w-6 text-red-500" />
+                <p className="text-xs uppercase tracking-[0.25em] text-[#fe6d3c]">YouTube</p>
+                <Youtube className="h-6 w-6 text-[#fe6d3c]" />
               </div>
               <p className="mt-3 text-3xl font-semibold">{guru.reach.youtube.toLocaleString()}</p>
               <p className="text-sm text-slate-500">Subscribers</p>
@@ -194,11 +193,11 @@ const TravelGuruDashboard = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.4 }}
-              className="rounded-2xl border border-slate-100 bg-white/80 p-4 shadow-md"
+              className="rounded-2xl border border-[#fe6d3c]/20 bg-white/85 p-4"
             >
               <div className="flex items-center justify-between">
-                <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Facebook</p>
-                <Facebook className="h-6 w-6 text-blue-600" />
+                <p className="text-xs uppercase tracking-[0.25em] text-[#fe6d3c]">Facebook</p>
+                <Facebook className="h-6 w-6 text-[#fe6d3c]" />
               </div>
               <p className="mt-3 text-3xl font-semibold">{guru.reach.facebook.toLocaleString()}</p>
               <p className="text-sm text-slate-500">Followers</p>
@@ -210,40 +209,40 @@ const TravelGuruDashboard = () => {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mt-10 grid gap-6 lg:grid-cols-12"
+          className="mt-10 "
         >
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.4 }}
-            className="rounded-3xl bg-white p-6 shadow-lg lg:col-span-7"
+            className="rounded-3xl border border-[#fe6d3c]/20 bg-white/95 p-6 lg:col-span-7"
           >
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Latest drop</p>
+                <p className="text-xs uppercase tracking-[0.24em] text-[#fe6d3c]">Latest drop</p>
                 <h2 className="mt-1 text-2xl font-semibold">{latestVideo.title}</h2>
               </div>
-              <button className="rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+              <button className="rounded-full border border-[#fe6d3c]/40 px-5 py-2 text-sm font-semibold text-[#fe6d3c] transition hover:bg-[#fe6d3c]/10">
                 View on YouTube
               </button>
             </div>
             <div className="mt-6 grid gap-6 md:grid-cols-5">
               <div className="md:col-span-3 overflow-hidden rounded-2xl">
-                <img src={latestVideo.thumbnail} alt={latestVideo.title} className="h-full w-full object-cover" />
+                <img src={latestVideo.thumbnail} alt={latestVideo.title} className="w-60 object-cover" />
               </div>
               <div className="md:col-span-2 flex flex-col gap-4">
                 <p className="text-sm text-slate-600 leading-relaxed">{latestVideo.summary}</p>
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3 text-center">
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Views</p>
+                  <div className="rounded-2xl border border-[#fe6d3c]/20 bg-[#fff4ed]/60 p-3 text-center">
+                    <p className="text-xs uppercase tracking-[0.2em] text-[#fe6d3c]">Views</p>
                     <p className="mt-2 text-lg font-semibold">{latestVideo.stats.views.toLocaleString()}</p>
                   </div>
-                  <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3 text-center">
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Likes</p>
+                  <div className="rounded-2xl border border-[#fe6d3c]/20 bg-[#fff4ed]/60 p-3 text-center">
+                    <p className="text-xs uppercase tracking-[0.2em] text-[#fe6d3c]">Likes</p>
                     <p className="mt-2 text-lg font-semibold">{latestVideo.stats.likes.toLocaleString()}</p>
                   </div>
-                  <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3 text-center">
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Comments</p>
+                  <div className="rounded-2xl border border-[#fe6d3c]/20 bg-[#fff4ed]/60 p-3 text-center">
+                    <p className="text-xs uppercase tracking-[0.2em] text-[#fe6d3c]">Comments</p>
                     <p className="mt-2 text-lg font-semibold">{latestVideo.stats.comments.toLocaleString()}</p>
                   </div>
                 </div>
@@ -251,34 +250,6 @@ const TravelGuruDashboard = () => {
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-            className="space-y-4 lg:col-span-5"
-          >
-            {spotlightCards.map((card, index) => (
-              <motion.div
-                key={card.title}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.22 + index * 0.05, duration: 0.35 }}
-                className={`relative overflow-hidden rounded-3xl border border-slate-100 bg-gradient-to-br ${card.gradient} p-5 shadow-md`}
-              >
-                <div className="relative flex flex-col gap-3">
-                  <span className="w-max rounded-full bg-white/80 px-3 py-1 text-xs uppercase tracking-wide text-slate-600">Highlighted</span>
-                  <div className="flex items-center gap-3">
-                    <card.icon className="h-7 w-7 text-slate-700" />
-                    <h3 className="text-lg font-semibold text-slate-900">{card.title}</h3>
-                  </div>
-                  <p className="text-sm text-slate-600 leading-relaxed">{card.description}</p>
-                  <button className="w-max rounded-full text-sm font-semibold text-slate-700 hover:text-slate-900">
-                    {card.cta}
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
         </motion.section>
 
         <motion.section
@@ -289,12 +260,12 @@ const TravelGuruDashboard = () => {
         >
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Signature itineraries</p>
+              <p className="text-xs uppercase tracking-[0.22em] text-[#fe6d3c]">Signature itineraries</p>
               <h2 className="mt-1 text-2xl font-semibold text-slate-900">Curated for premium explorers</h2>
             </div>
             <button 
               onClick={openModal}
-              className="rounded-xl bg-gradient-to-r from-gray-900 to-black px-6 py-2 text-sm font-semibold text-white flex gap-4 hover:from-gray-800 hover:to-gray-900 transition-all"
+              className="flex gap-3 rounded-xl bg-linear-to-r from-[#fe6d3c] to-rose-500 px-6 py-2 text-sm font-semibold text-white transition-all hover:from-[#df5b2c] hover:to-[#fe6d3c]"
             >
              <Upload className="w-4"/> Upload Itinerary
             </button>
@@ -306,35 +277,34 @@ const TravelGuruDashboard = () => {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + index * 0.05, duration: 0.4 }}
-                className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-md transition-shadow hover:shadow-xl cursor-pointer"
+                className="group relative overflow-hidden rounded-3xl border border-[#fe6d3c]/20 bg-white transition-shadow hover:shadow-lg cursor-pointer"
                 onClick={() => openItineraryDetail(item)}
               >
                 <div className="relative h-52 overflow-hidden">
                   <img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
-                  <span className="absolute left-4 top-4 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-slate-700">{item.price}</span>
+                  <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                 </div>
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-slate-900 line-clamp-2">{item.title}</h3>
                   <p className="mt-2 flex items-center gap-2 text-sm text-slate-600">
-                    <MapPin className="h-4 w-4" /> {item.destination}
+                    <MapPin className="h-4 w-4 text-[#fe6d3c]" /> {item.destination}
                   </p>
                   <p className="mt-1 flex items-center gap-2 text-xs text-slate-500">
-                    <Clock className="h-3.5 w-3.5" /> {item.duration}
+                    <Clock className="h-3.5 w-3.5 text-[#fe6d3c]" /> {item.duration}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {item.tags.map((tag) => (
-                      <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
+                      <span key={tag} className="rounded-full bg-[#fff4ed] px-3 py-1 text-xs text-[#fe6d3c]">
                         {tag}
                       </span>
                     ))}
                   </div>
                   <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
-                    <span className="flex items-center gap-2 font-semibold text-slate-700">
-                      <Heart className="h-4 w-4 text-rose-500" /> {item.likes}
+                    <span className="flex items-center gap-2 font-semibold text-[#fe6d3c]">
+                      <Heart className="h-4 w-4 text-[#fe6d3c]" /> {item.likes}
                     </span>
-                    <span className="flex items-center gap-2 font-semibold text-slate-700">
-                      <Bookmark className="h-4 w-4 text-sky-500" /> {item.saves}
+                    <span className="rounded-full bg-[#fff4ed] px-3 py-1 text-xs font-semibold text-[#fe6d3c]">
+                      Saved {item.saves}
                     </span>
                   </div>
                 </div>
@@ -352,7 +322,7 @@ const TravelGuruDashboard = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl"
+            className="relative w-full max-w-md rounded-2xl bg-white"
           >
             <button
               className="absolute right-4 top-4 text-2xl text-slate-400 hover:text-slate-600 transition-colors"
@@ -389,12 +359,12 @@ const TravelGuruDashboard = () => {
                 <input
                   type="text"
                   placeholder="https://example.com/itinerary"
-                  className="w-full px-4 py-3 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fe6d3c] focus:border-transparent transition-all"
                 />
               </div>
 
               {/* Upload Button */}
-              <button className="mt-6 w-full flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 rounded-lg transition-colors">
+              <button className="mt-6 w-full flex items-center justify-center gap-2 bg-[#fe6d3c] hover:bg-[#df5b2c] text-white font-semibold py-3 rounded-lg transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
@@ -414,10 +384,10 @@ const TravelGuruDashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="relative mx-auto max-w-3xl rounded-3xl bg-white shadow-2xl overflow-hidden"
+              className="relative mx-auto max-w-3xl rounded-3xl bg-white overflow-hidden"
             >
               <button
-                className="absolute right-4 top-4 z-10 rounded-full bg-white/90 p-2 text-slate-600 hover:bg-white hover:text-slate-900 transition-colors shadow-lg"
+                className="absolute right-4 top-4 z-10 rounded-full bg-white/90 p-2 text-slate-600 hover:bg-white hover:text-slate-900 transition-colors"
                 onClick={closeItineraryDetail}
                 aria-label="Close"
               >
@@ -429,7 +399,7 @@ const TravelGuruDashboard = () => {
               {/* Hero Image */}
               <div className="relative h-64 overflow-hidden">
                 <img src={selectedItinerary.image} alt={selectedItinerary.title} className="h-full w-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
                   <h1 className="text-3xl font-bold mb-2">{selectedItinerary.title}</h1>
                   <div className="flex flex-wrap items-center gap-4 text-sm">
@@ -441,9 +411,7 @@ const TravelGuruDashboard = () => {
                       <Clock className="h-4 w-4" />
                       {selectedItinerary.duration}
                     </span>
-                    <span className="rounded-full bg-white/20 backdrop-blur-sm px-3 py-1 font-semibold">
-                      {selectedItinerary.price}
-                    </span>
+                   
                   </div>
                 </div>
               </div>
@@ -476,7 +444,7 @@ const TravelGuruDashboard = () => {
                     {/* Day 1 */}
                     <div className="rounded border border-slate-200 p-4">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="flex items-center justify-center w-14 h-10 rounded-2xl bg-sky-500 text-white text-sm font-semibold">
+                        <span className="flex items-center justify-center w-14 h-10 rounded-2xl bg-[#fe6d3c] text-white text-sm font-semibold">
                           Day 1
                         </span>
                         <h3 className="font-semibold text-slate-900">Arrival and Acclimatization</h3>
@@ -497,7 +465,7 @@ const TravelGuruDashboard = () => {
                     {/* Day 2 */}
                     <div className="rounded-2xl border border-slate-200 p-4">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="flex items-center justify-center w-14 h-10 rounded-2xl bg-sky-500 text-white text-sm font-semibold">
+                        <span className="flex items-center justify-center w-14 h-10 rounded-2xl bg-[#fe6d3c] text-white text-sm font-semibold">
                           Day 2
                         </span>
                         <h3 className="font-semibold text-slate-900">Exploration Day</h3>
@@ -518,7 +486,7 @@ const TravelGuruDashboard = () => {
                     {/* Day 3 */}
                     <div className="rounded-2xl border border-slate-200 p-4">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="flex items-center justify-center w-14 h-10 rounded-2xl bg-sky-500 text-white text-sm font-semibold">
+                        <span className="flex items-center justify-center w-14 h-10 rounded-2xl bg-[#fe6d3c] text-white text-sm font-semibold">
                           Day 3
                         </span>
                         <h3 className="font-semibold text-slate-900">Peak Expedition</h3>
@@ -542,12 +510,11 @@ const TravelGuruDashboard = () => {
                 <div className="mt-6 flex items-center justify-between pt-6 border-t border-slate-200">
                   <div className="flex items-center gap-6 text-sm text-slate-600">
                     <span className="flex items-center gap-2">
-                      <Heart className="h-5 w-5 text-rose-500" />
+                      <Heart className="h-5 w-5 text-[#fe6d3c]" />
                       <span className="font-semibold text-slate-900">{selectedItinerary.likes.toLocaleString()}</span> likes
                     </span>
-                    <span className="flex items-center gap-2">
-                      <Bookmark className="h-5 w-5 text-sky-500" />
-                      <span className="font-semibold text-slate-900">{selectedItinerary.saves.toLocaleString()}</span> saves
+                    <span className="rounded-full bg-[#fff4ed] px-3 py-1 text-xs font-semibold text-[#fe6d3c]">
+                      {selectedItinerary.saves.toLocaleString()} saves
                     </span>
                   </div>
                   
@@ -562,3 +529,8 @@ const TravelGuruDashboard = () => {
 };
 
 export default TravelGuruDashboard
+
+
+
+
+

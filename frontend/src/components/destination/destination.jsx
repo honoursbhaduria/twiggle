@@ -11,13 +11,13 @@ const Destination = () => {
   const searchQuery = searchParams.get('search') || '';
 
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <div className='min-h-screen '>
       {/* Sidebar - Fixed positioned */}
       <SidebarDemo />
 
       {/* Main Content - With left padding to account for fixed sidebar */}
       <div className=' min-h-screen'>
-        <div className=' bg-white'>
+        <div className=' '>
           <TravelCard initialSearchQuery={searchQuery} />
         </div>
       </div>
@@ -26,3 +26,7 @@ const Destination = () => {
 }
 
 export default Destination
+
+
+
+

@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from datetime import timedelta
-
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -27,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-yz8j-=zb)%ooi5y(hk6&8f8&(jl7)9)#91vkzh-&wg2=nyv=6d')
+SECRET_KEY = 'django-insecure-yz8j-=zb)%ooi5y(hk6&8f8&(jl7)9)#91vkzh-&wg2=nyv=6d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -57,7 +56,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -95,23 +93,14 @@ CORS_ALLOW_ALL_ORIGINS = True
 #     "https://localhost:5173",
 #     "https://127.0.0.1:5173",
 # ]
-REDIS_URL = os.getenv("REDIS_URL", None)
-
-# Use Redis cache if REDIS_URL is provided, otherwise use dummy cache
-if REDIS_URL:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.redis.RedisCache",
-            "LOCATION": REDIS_URL,
-        }
+# REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
+REDIS_URL = os.getenv("REDIS_URL", "redis://default:Pu4f5ejHFuqkg0FBcPJWUaIv8zRIaNoL@redis-13692.crce179.ap-south-1-1.ec2.redns.redis-cloud.com:13692/0")
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": REDIS_URL,
     }
-else:
-
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-        }
-    }
+}
 
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
@@ -222,34 +211,21 @@ print("above line is env variable")
 #         },
 #     }
 # }
-import dj_database_url
-
-# Database configuration with environment variable support
-DATABASE_URL = os.environ.get('DATABASE_URL', None)
-
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "neondb",
+        "USER": "neondb_owner",
+        "PASSWORD": "npg_Gw2vpayNrVi1",
+        "HOST": "ep-silent-butterfly-a1u03b1z-pooler.ap-southeast-1.aws.neon.tech",
+        "PORT": "5432",
+        "OPTIONS": {
+            "sslmode": "require",
+            "client_encoding": "UTF8",
+            "channel_binding": "require",
+        },
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ.get("DB_NAME", "neondb"),
-            "USER": os.environ.get("DB_USER", "neondb_owner"),
-            "PASSWORD": os.environ.get("DB_PASSWORD", "npg_IhH2ROQ8UcEk"),
-            "HOST": os.environ.get("DB_HOST", "ep-nameless-lake-a1p5w4vi-pooler.ap-southeast-1.aws.neon.tech"),
-            "PORT": os.environ.get("DB_PORT", "5432"),
-            "OPTIONS": {
-                "sslmode": "require",
-                "client_encoding": "UTF8",
-            },
-        }
-    }
+}
 
 # ✅ disable server-side cursors (important for Neon)
 DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True  
@@ -291,9 +267,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles") 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, "static") 
 STATICFILES_DIRS = []
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # MEDIA_URL = '/media/'

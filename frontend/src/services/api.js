@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Base URL configuration
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://traveller-2-y1y5.onrender.com/';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/';
 
 // Create axios instance
 const api = axios.create({
@@ -18,10 +18,45 @@ const getRefreshToken = () => localStorage.getItem('refresh_token');
 const setTokens = (access, refresh) => {
   localStorage.setItem('access_token', access);
   if (refresh) localStorage.setItem('refresh_token', refresh);
+  // Store token timestamp for proactive refresh
+  localStorage.setItem('token_timestamp', Date.now().toString());
 };
 const clearTokens = () => {
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
+  localStorage.removeItem('token_timestamp');
+};
+
+// Proactive token refresh - refresh 2 minutes before expiry (13 min for 15 min tokens)
+let refreshTimer = null;
+const scheduleTokenRefresh = () => {
+  if (refreshTimer) clearTimeout(refreshTimer);
+
+  const tokenTimestamp = localStorage.getItem('token_timestamp');
+  if (!tokenTimestamp) return;
+
+  // Refresh after 13 minutes (780 seconds) - 2 min before 15 min expiry
+  const refreshInterval = 13 * 60 * 1000; // 13 minutes in milliseconds
+  const elapsed = Date.now() - parseInt(tokenTimestamp);
+  const timeUntilRefresh = Math.max(0, refreshInterval - elapsed);
+
+  refreshTimer = setTimeout(async () => {
+    const refreshToken = getRefreshToken();
+    if (refreshToken) {
+      try {
+        const response = await axios.post(`${BASE_URL}/api/auth/token/refresh/`, {
+          refresh: refreshToken
+        });
+        const { access, refresh: rotatedRefresh } = response.data;
+        setTokens(access, rotatedRefresh || refreshToken);
+        scheduleTokenRefresh(); // Schedule next refresh
+      } catch (error) {
+        console.error('Proactive token refresh failed:', error);
+        clearTokens();
+        window.location.href = '/auth';
+      }
+    }
+  }, timeUntilRefresh);
 };
 
 // Request interceptor to add auth token
@@ -38,21 +73,21 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       const refreshToken = getRefreshToken();
       if (refreshToken) {
         try {
           const response = await axios.post(`${BASE_URL}/api/auth/token/refresh/`, {
             refresh: refreshToken
           });
-          
+
           const { access, refresh: rotatedRefresh } = response.data;
           setTokens(access, rotatedRefresh || refreshToken);
           originalRequest.headers.Authorization = `Bearer ${access}`;
-          
+
           return api(originalRequest);
         } catch (refreshError) {
           clearTokens();
@@ -60,7 +95,7 @@ api.interceptors.response.use(
         }
       }
     }
-    
+
     return Promise.reject(error);
   }
 );
@@ -78,11 +113,13 @@ export const authAPI = {
     const response = await api.post('/api/auth/login/', credentials);
     const { access, refresh } = response.data;
     setTokens(access, refresh);
+    scheduleTokenRefresh(); // Start proactive refresh after login
     return response.data;
   },
 
   // Logout
   logout: async () => {
+    if (refreshTimer) clearTimeout(refreshTimer); // Clear refresh timer on logout
     const refreshToken = getRefreshToken();
     if (refreshToken) {
       try {
@@ -100,20 +137,27 @@ export const authAPI = {
     const response = await api.post('/api/auth/token/refresh/', {
       refresh: refreshToken
     });
-  const { access, refresh: rotatedRefresh } = response.data;
-  setTokens(access, rotatedRefresh || refreshToken);
+    const { access, refresh: rotatedRefresh } = response.data;
+    setTokens(access, rotatedRefresh || refreshToken);
     return response.data;
   },
 
   // Check if user is authenticated
-  isAuthenticated: () => !!getToken(),
+  isAuthenticated: () => {
+    const hasToken = !!getToken();
+    if (hasToken && !refreshTimer) {
+      // Resume refresh schedule if page reloads with valid token
+      scheduleTokenRefresh();
+    }
+    return hasToken;
+  },
 };
 
 // Destinations API calls
 export const destinationsAPI = {
 
   //get all destination
-  getAllDestination: async ()=>{
+  getAllDestination: async () => {
     const response = await api.get('/api/destinations/');
     return response.data;
   },
@@ -129,7 +173,7 @@ export const destinationsAPI = {
     const response = await api.get(`/api/destinations/${slug}/`);
     return response.data;
   },
-  
+
 
   // Record view
   recordView: async (slug) => {
@@ -214,3 +258,7 @@ export const customAPI = {
 
 // Export the axios instance for direct use if needed
 export default api;
+
+
+
+

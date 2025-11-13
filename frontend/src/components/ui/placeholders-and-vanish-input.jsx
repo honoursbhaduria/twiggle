@@ -176,7 +176,7 @@ export function PlaceholdersAndVanishInput({
   return (
     <form
       className={cn(
-        "md relative mx-auto bg-white/40 dark:bg-zinc-800/30  h-15 rounded-full overflow-hidden shadow-lg border border-white/20 transition duration-400",
+        "md relative mx-auto bg-white/40 dark:bg-zinc-800/30  h-15 rounded-full overflow-hidden border border-white/20 transition duration-400",
         value && "bg-white/40 dark:bg-zinc-800/40"
       )}
       onSubmit={handleSubmit}>
@@ -204,7 +204,7 @@ export function PlaceholdersAndVanishInput({
       <button
         disabled={!value}
         type="submit"
-        className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-gray-900 bg-black  dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center shadow-md">
+        className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-gray-900 bg-black  dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -265,3 +265,8 @@ export function PlaceholdersAndVanishInput({
     </form>
   );
 }
+
+
+
+
+

@@ -32,16 +32,16 @@ const Comet = () => {
                     />
                   </div>
                 </div>
-                <div className="mt-2 flex flex-shrink-0 items-center justify-between p-3 md:p-3 font-mono text-white">
-                  <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className="mt-2 flex shrink-0 items-center justify-between p-3 md:p-3 font-mono text-white">
+                  <div className="max-w-md mx-auto bg-white rounded-lg overflow-hidden">
                     {/* Header with rating */}
                     <div className="flex items-center justify-between p-3 md:p-4 pb-2 gap-1">
                       <div className="flex items-center gap-2">
                         <span className="text-sm md:text-lg font-semibold text-gray-800">5 Days Kerala Backwaters & Spices</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Star className="w-3 h-3 md:w-4 md:h-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-xs md:text-sm font-medium text-black">4.8</span>
+                      
+                   
                       </div>
                     </div>
 
@@ -61,15 +61,15 @@ const Comet = () => {
                       <h3 className="font-semibold text-gray-800 mb-2 text-xs md:text-sm">Trip Highlights</h3>
                       <ul className="space-y-1.5">
                         <li className="flex items-start gap-2 text-xs md:text-sm text-gray-700">
-                          <div className="w-2 h-2 bg-black/90 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="w-2 h-2 bg-[#fe6d3c] rounded-full mt-2 shrink-0"></div>
                           <span>Houseboat stay in backwaters</span>
                         </li>
                         <li className="flex items-start gap-2 text-xs md:text-sm text-gray-700">
-                          <div className="w-2 h-2 bg-black/90 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="w-2 h-2 bg-[#fe6d3c] rounded-full mt-2 shrink-0"></div>
                           <span>Tea plantation tours in Munnar</span>
                         </li>
                         <li className="flex items-start gap-2 text-xs md:text-sm text-gray-700">
-                          <div className="w-2 h-2 bg-black/90 rounded-full mt-2 flex-shrink-0"></div>
+                          <div className="w-2 h-2 bg-[#fe6d3c] rounded-full mt-2 shrink-0"></div>
                           <span>Traditional Kathakali performances</span>
                         </li>
                       </ul>
@@ -83,15 +83,15 @@ const Comet = () => {
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-start gap-3">
-                          <div className="bg-black/90 text-white text-xs px-2 py-1 rounded font-medium">Day 1</div>
+                          <div className="bg-[#fe6d3c] text-white text-xs px-2 py-1 rounded font-medium">Day 1</div>
                           <span className="text-xs md:text-sm text-gray-700">Kochi: Arrival + Chinese fishing nets</span>
                         </div>
                         <div className="flex items-start gap-3">
-                          <div className="bg-black/90 text-white text-xs px-2 py-1 rounded font-medium">Day 2</div>
+                          <div className="bg-[#fe6d3c] text-white text-xs px-2 py-1 rounded font-medium">Day 2</div>
                           <span className="text-xs md:text-sm text-gray-700">Alleppey: Houseboat cruise</span>
                         </div>
                         <div className="flex items-start gap-3">
-                          <div className="bg-black/90 text-white text-xs px-2 py-1 rounded font-medium">Day 3</div>
+                          <div className="bg-[#fe6d3c] text-white text-xs px-2 py-1 rounded font-medium">Day 3</div>
                           <span className="text-xs md:text-sm text-gray-700">Munnar: Tea gardens + Mattupetty Dam</span>
                         </div>
                       </div>
@@ -100,7 +100,10 @@ const Comet = () => {
 
                     {/* Action Buttons */}
                     <div className="p-3 md:p-4 flex gap-2">
-                      <button onClick={()=>navigate("/auth")} className="flex-1 bg-black/90 hover:bg-black/80 cursor-pointer text-white py-1.5 px-3 rounded-lg font-medium text-xs md:text-sm transition-colors">
+                      <button
+                        onClick={()=>navigate("/auth")}
+                        className="flex-1 bg-[#fe6d3c] hover:bg-[#fe6d3c] cursor-pointer text-white py-1.5 px-3 rounded-lg font-medium text-xs md:text-sm transition-colors"
+                      >
                         View Full Itinerary
                       </button>
                     </div>
@@ -113,3 +116,7 @@ const Comet = () => {
 }
 
 export default Comet
+
+
+
+

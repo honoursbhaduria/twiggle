@@ -16,28 +16,28 @@ import {
 
 const colorMapping = {
   attraction: {
-    bg: 'bg-gradient-to-br from-blue-50 via-white to-blue-50',
+    bg: 'bg-linear-to-br from-blue-50 via-white to-blue-50',
     text: 'text-blue-700',
     borderAccent: 'border-blue-200',
     badge: 'bg-blue-100 text-blue-700',
     icon: 'bg-blue-100 text-blue-600',
-    accentBar: 'bg-gradient-to-b from-blue-500 to-blue-700'
+    accentBar: 'bg-linear-to-b from-blue-500 to-blue-700'
   },
   restaurant: {
-    bg: 'bg-gradient-to-br from-emerald-50 via-white to-emerald-50',
+    bg: 'bg-linear-to-br from-emerald-50 via-white to-emerald-50',
     text: 'text-emerald-700',
     borderAccent: 'border-emerald-200',
     badge: 'bg-emerald-100 text-emerald-700',
     icon: 'bg-emerald-100 text-emerald-600',
-    accentBar: 'bg-gradient-to-b from-emerald-500 to-emerald-700'
+    accentBar: 'bg-linear-to-b from-emerald-500 to-emerald-700'
   },
   experience: {
-    bg: 'bg-gradient-to-br from-purple-50 via-white to-purple-50',
+    bg: 'bg-linear-to-br from-purple-50 via-white to-purple-50',
     text: 'text-purple-700',
     borderAccent: 'border-purple-200',
     badge: 'bg-purple-100 text-purple-700',
     icon: 'bg-purple-100 text-purple-600',
-    accentBar: 'bg-gradient-to-b from-purple-500 to-purple-700'
+    accentBar: 'bg-linear-to-b from-purple-500 to-purple-700'
   }
 };
 
@@ -83,9 +83,9 @@ const ItineraryComponent = ({ data }) => {
 
   if (!data?.days?.length) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100">
+  <div className="min-h-[60vh] flex items-center justify-center bg-linear-to-br from-[#fe6d3c]/8 via-white to-white">
         <div className="text-center space-y-3">
-          <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-gray-200 to-gray-100 flex items-center justify-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-[#fe6d3c]/25 to-white">
             <Calendar className="w-8 h-8 text-gray-500" />
           </div>
           <p className="text-lg font-semibold text-gray-600">No itinerary data available</p>
@@ -100,12 +100,12 @@ const ItineraryComponent = ({ data }) => {
   const totalExperiences = data?.days?.reduce((total, day) => total + (day.experiences?.length || 0), 0);
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-br from-blue-100/60 via-purple-100/40 to-transparent pointer-events-none" />
-      <div className="relative max-w-6xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
+  <div className="relative overflow-hidden rounded-[2.5rem] bg-white text-slate-900">
+      <div className="absolute inset-x-0 top-0 h-64 bg-linear-to-r from-[#fe6d3c]/30 via-orange-100/55 to-white pointer-events-none" />
+      <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header with Itinerary Info */}
 
-        <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-4">
              <div className="flex items-center justify-between">
                                <div>
@@ -118,10 +118,7 @@ const ItineraryComponent = ({ data }) => {
                                    <Calendar className="w-4 h-4" />
                                    <span>{data?.duration_days} Days</span>
                                  </div>
-                                 <div className="flex items-center space-x-1">
-                                   <Star className="w-4 h-4 text-yellow-500" />
-                                   <span>{((data?.popularity_score || 85) / 20).toFixed(1)}</span>
-                                 </div>
+                                
                                  {data?.categories && data.categories.length > 0 && (
                                    <div className="flex items-center space-x-1">
                                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
@@ -131,12 +128,12 @@ const ItineraryComponent = ({ data }) => {
                                  )}
                                </div>
                              </div>
-            <div className="inline-flex items-center space-x-3 rounded-2xl bg-white/80 backdrop-blur shadow-md px-4 py-2 text-sm font-medium text-gray-600">
+            <div className="inline-flex items-center space-x-3 rounded-2xl bg-white/80 backdrop-blur px-4 py-2 text-sm font-medium text-gray-600">
               <Sparkles className="h-4 w-4 text-purple-500" />
               <span>Curated just for you</span>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="hidden sm:flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg">
+              <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-[#fe6d3c] to-rose-500 text-white sm:flex">
                 <Calendar className="h-6 w-6" />
               </div>
               <div>
@@ -147,23 +144,23 @@ const ItineraryComponent = ({ data }) => {
               </div>
             </div>
             <div className="flex flex-wrap gap-3 text-sm">
-              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-gray-100">
+              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2">
                 <Clock className="h-4 w-4 text-blue-500" />
                 <span className="font-medium text-gray-700">{data?.duration_days} days / {data?.duration_nights} nights</span>
               </div>
-              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-gray-100">
+              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2">
                 <MapPin className="h-4 w-4 text-emerald-500" />
                 <span className="font-medium text-gray-700">{data?.highlighted_places}</span>
               </div>
-              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-gray-100">
+              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2">
                 <TrendingUp className="h-4 w-4 text-amber-500" />
                 <span className="font-semibold text-gray-800">₹{data?.total_budget?.toLocaleString('en-IN')}</span>
               </div>
             </div>
           </div>
 
-          <div className="grid w-full gap-4 rounded-3xl bg-white/80 backdrop-blur p-5 shadow-lg ring-1 ring-gray-100 sm:grid-cols-3 lg:w-auto lg:min-w-[420px]">
-            <div className="rounded-2xl bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 p-4 text-white shadow-lg">
+          <div className="grid w-full gap-4 rounded-3xl bg-white/80 p-5 backdrop-blur sm:grid-cols-3 lg:w-auto lg:min-w-[420px]">
+            <div className="rounded-2xl bg-linear-to-br from-blue-500 via-blue-600 to-blue-700 p-4 text-white">
               <div className="flex items-center justify-between">
                 <span className="text-xs uppercase tracking-wide text-blue-100">Attractions</span>
                 <MapPin className="h-4 w-4 text-blue-100" />
@@ -171,7 +168,7 @@ const ItineraryComponent = ({ data }) => {
               <p className="mt-3 text-3xl font-semibold">{totalAttractions}</p>
               <p className="mt-1 text-xs text-blue-100/80">Curated highlights to explore</p>
             </div>
-            <div className="rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-4 text-white shadow-lg">
+            <div className="rounded-2xl bg-linear-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-4 text-white">
               <div className="flex items-center justify-between">
                 <span className="text-xs uppercase tracking-wide text-emerald-100">Dining</span>
                 <Utensils className="h-4 w-4 text-emerald-100" />
@@ -179,7 +176,7 @@ const ItineraryComponent = ({ data }) => {
               <p className="mt-3 text-3xl font-semibold">{totalRestaurants}</p>
               <p className="mt-1 text-xs text-emerald-100/80">Handpicked food experiences</p>
             </div>
-            <div className="rounded-2xl bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 p-4 text-white shadow-lg">
+            <div className="rounded-2xl bg-linear-to-br from-purple-500 via-purple-600 to-purple-700 p-4 text-white">
               <div className="flex items-center justify-between">
                 <span className="text-xs uppercase tracking-wide text-purple-100">Experiences</span>
                 <Camera className="h-4 w-4 text-purple-100" />
@@ -192,12 +189,12 @@ const ItineraryComponent = ({ data }) => {
 
         {/* Day Tabs */}
         <div className="mb-10">
-          <div className="flex overflow-x-auto rounded-2xl bg-white p-2 shadow-inner shadow-gray-200/40 ring-1 ring-gray-100 backdrop-blur">
+          <div className="flex overflow-x-auto rounded-2xl bg-white p-2 backdrop-blur">
             <button
               onClick={() => setSelectedDay('overview')}
               className={`mr-2 flex items-center space-x-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 ${
                 selectedDay === 'overview'
-                  ? 'bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg shadow-gray-300/40'
+                  ? 'bg-linear-to-r from-[#fe6d3c] to-rose-500 text-white'
                   : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
@@ -210,7 +207,7 @@ const ItineraryComponent = ({ data }) => {
                 onClick={() => setSelectedDay(day.day_number)}
                 className={`mr-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 ${
                   selectedDay === day.day_number
-                    ? 'bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg shadow-purple-200/40'
+                    ? 'bg-linear-to-r from-[#fe6d3c] to-rose-500 text-white'
                     : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
                 }`}
               >
@@ -224,7 +221,7 @@ const ItineraryComponent = ({ data }) => {
         {selectedDay === 'overview' ? (
           <div className="space-y-12">
             <section className="grid gap-6 md:grid-cols-3">
-              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 transition-all duration-300 hover:-translate-y-1">
                 <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-blue-100 opacity-40" />
                 <div className="relative">
                   <div className="flex items-center justify-between">
@@ -238,7 +235,7 @@ const ItineraryComponent = ({ data }) => {
                 </div>
               </div>
 
-              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 transition-all duration-300 hover:-translate-y-1">
                 <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-emerald-100 opacity-40" />
                 <div className="relative">
                   <div className="flex items-center justify-between">
@@ -254,7 +251,7 @@ const ItineraryComponent = ({ data }) => {
                 </div>
               </div>
 
-              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 transition-all duration-300 hover:-translate-y-1">
                 <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-purple-100 opacity-40" />
                 <div className="relative">
                   <div className="flex items-center justify-between">
@@ -269,7 +266,7 @@ const ItineraryComponent = ({ data }) => {
               </div>
             </section>
 
-            <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
+            <section className="rounded-3xl bg-white p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-semibold text-gray-900">Daily Highlights</h2>
@@ -283,9 +280,9 @@ const ItineraryComponent = ({ data }) => {
 
               <div className="mt-6 space-y-6">
                 {data?.days?.map((day) => (
-                  <div key={day.day_number} className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-gradient-to-br from-gray-50 via-white to-gray-50 p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:flex-row lg:items-center lg:justify-between">
+                  <div key={day.day_number} className="flex flex-col gap-4 rounded-2xl bg-linear-to-br from-white via-[#fe6d3c]/6 to-white p-5 transition-all duration-300 hover:-translate-y-1 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex items-center space-x-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-gray-900 to-gray-700 text-lg font-semibold text-white shadow-md">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-[#fe6d3c] to-rose-500 text-lg font-semibold text-white">
                         {day.day_number}
                       </div>
                       <div>
@@ -307,7 +304,7 @@ const ItineraryComponent = ({ data }) => {
                         <span>{day.experiences?.length || 0} experiences</span>
                       </div>
                     </div>
-                    <div className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm ring-1 ring-gray-100">
+                    <div className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-gray-800">
                       Budget ₹{(day.budget?.total_cost || 0).toLocaleString('en-IN')}
                     </div>
                   </div>
@@ -315,15 +312,15 @@ const ItineraryComponent = ({ data }) => {
               </div>
             </section>
 
-            <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 text-white shadow-xl">
+            <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 text-white">
               <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10" />
-              <div className="absolute bottom-0 right-0 h-32 w-32 rounded-full bg-purple-500/20" />
+              <div className="absolute bottom-0 right-0 h-32 w-32 rounded-full bg-white/15" />
               <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <h3 className="text-2xl font-semibold">Need to shuffle plans?</h3>
                   <p className="mt-2 text-sm text-gray-300">Drag and drop activities within each day or tap an item to edit the details. Your changes are saved instantly.</p>
                 </div>
-                <button className="inline-flex items-center space-x-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-gray-900 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+                <button className="inline-flex items-center space-x-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#fe6d3c] transition hover:-translate-y-0.5">
                   <GripVertical className="h-4 w-4" />
                   <span>Manage Activities</span>
                 </button>
@@ -332,10 +329,10 @@ const ItineraryComponent = ({ data }) => {
           </div>
         ) : (
           <div className="space-y-10">
-            <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100">
-              <div className="flex flex-col gap-4 border-b border-gray-100 pb-6 sm:flex-row sm:items-center sm:justify-between">
+            <section className="rounded-3xl bg-white p-6">
+              <div className="flex flex-col gap-4 pb-6 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-gray-900 to-gray-700 text-lg font-semibold text-white shadow-md">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-[#fe6d3c] to-rose-500 text-lg font-semibold text-white">
                     {selectedDay}
                   </div>
                   <div>
@@ -344,22 +341,22 @@ const ItineraryComponent = ({ data }) => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-600 ring-1 ring-amber-200">
+                  <div className="rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-600">
                     Total ₹{(currentDay?.budget?.total_cost || 0).toLocaleString('en-IN')}
                   </div>
                 </div>
               </div>
 
               <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                <div className="flex items-center justify-between rounded-2xl bg-blue-50 px-4 py-3 text-sm text-blue-700 ring-1 ring-blue-200">
+                <div className="flex items-center justify-between rounded-2xl bg-blue-50 px-4 py-3 text-sm text-blue-700">
                   <span className="font-medium">Attractions</span>
                   <span>₹{(currentDay?.budget?.attractions_cost || 0).toLocaleString('en-IN')}</span>
                 </div>
-                <div className="flex items-center justify-between rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 ring-1 ring-emerald-200">
+                <div className="flex items-center justify-between rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                   <span className="font-medium">Restaurants</span>
                   <span>₹{(currentDay?.budget?.restaurants_cost || 0).toLocaleString('en-IN')}</span>
                 </div>
-                <div className="flex items-center justify-between rounded-2xl bg-purple-50 px-4 py-3 text-sm text-purple-700 ring-1 ring-purple-200">
+                <div className="flex items-center justify-between rounded-2xl bg-purple-50 px-4 py-3 text-sm text-purple-700">
                   <span className="font-medium">Experiences</span>
                   <span>₹{(currentDay?.budget?.experiences_cost || 0).toLocaleString('en-IN')}</span>
                 </div>
@@ -372,14 +369,14 @@ const ItineraryComponent = ({ data }) => {
                   <h3 className="text-xl font-semibold text-gray-900">Activities</h3>
                   <p className="text-sm text-gray-500">Drag an activity to reorder, or tap the menu for more options.</p>
                 </div>
-                <button className="inline-flex items-center space-x-2 rounded-xl bg-gradient-to-r from-gray-900 to-gray-700 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+                <button className="inline-flex items-center space-x-2 rounded-xl bg-linear-to-r from-[#fe6d3c] to-rose-500 px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5">
                   <Plus className="h-4 w-4" />
                   <span>Add Activity</span>
                 </button>
               </div>
 
               {allActivities.length === 0 ? (
-                <div className="flex flex-col items-center justify-center space-y-3 rounded-3xl border-2 border-dashed border-gray-200 bg-white py-16 text-center">
+                <div className="flex flex-col items-center justify-center space-y-3 rounded-3xl bg-white py-16 text-center">
                   <div className="rounded-full bg-gray-100 p-4">
                     <Calendar className="h-7 w-7 text-gray-400" />
                   </div>
@@ -399,7 +396,7 @@ const ItineraryComponent = ({ data }) => {
                         onDragStart={(e) => handleDragStart(e, activity)}
                         onDrop={(e) => handleDrop(e, index)}
                         onDragOver={handleDragOver}
-                        className={`group relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl`}
+                        className={`group relative overflow-hidden rounded-3xl bg-white p-5 transition-all duration-300 hover:-translate-y-1`}
                       >
                         <div className={`absolute left-0 top-0 h-full w-1.5`} />
                         <div className="flex items-start justify-between gap-4">
@@ -408,38 +405,38 @@ const ItineraryComponent = ({ data }) => {
                               <div className="rounded-xl bg-gray-100 p-2 text-gray-400 transition group-hover:text-gray-600">
                                 <GripVertical className="h-4 w-4" />
                               </div>
-                              <div className={`rounded-2xl p-3 shadow-inner ${colors.icon}`}>
+                              <div className={`rounded-2xl p-3 ${colors.icon}`}>
                                 <Icon className="h-5 w-5" />
                               </div>
                             </div>
                             <div className="flex-1">
                               <div className="flex flex-wrap items-center gap-3">
                                 <h4 className="text-lg font-semibold text-gray-900">{activity.name}</h4>
-                                <span className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ring-1 ${colors.badge}`}>
+                                <span className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${colors.badge}`}>
                                   {activity.type}
                                 </span>
                               </div>
                               <p className="mt-2 text-sm leading-relaxed text-gray-600">{activity.description}</p>
                               <div className="mt-4 flex flex-wrap items-center gap-3 text-xs">
                                 {activity.rating && (
-                                  <div className="flex items-center space-x-1 rounded-full bg-yellow-50 px-3 py-1 font-semibold text-yellow-700 ring-1 ring-yellow-200">
+                                  <div className="flex items-center space-x-1 rounded-full bg-yellow-50 px-3 py-1 font-semibold text-yellow-700">
                                     <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
                                     <span>{activity.rating}</span>
                                   </div>
                                 )}
                                 {activity.estimated_cost && (
-                                  <div className="rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700 ring-1 ring-emerald-200">
+                                  <div className="rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700">
                                     ₹{activity.estimated_cost}
                                   </div>
                                 )}
                                 {activity.duration && (
-                                  <div className="flex items-center space-x-1 rounded-full bg-blue-50 px-3 py-1 font-medium text-blue-700 ring-1 ring-blue-200">
+                                  <div className="flex items-center space-x-1 rounded-full bg-blue-50 px-3 py-1 font-medium text-blue-700">
                                     <Clock className="h-3.5 w-3.5" />
                                     <span>{activity.duration}</span>
                                   </div>
                                 )}
                                 {activity.location && (
-                                  <div className="flex items-center space-x-1 rounded-full bg-purple-50 px-3 py-1 font-medium text-purple-700 ring-1 ring-purple-200">
+                                  <div className="flex items-center space-x-1 rounded-full bg-purple-50 px-3 py-1 font-medium text-purple-700">
                                     <MapPin className="h-3.5 w-3.5" />
                                     <span>{activity.location}</span>
                                   </div>
@@ -471,8 +468,8 @@ const ItineraryComponent = ({ data }) => {
         {/* Activity Modal */}
         {showActivityModal && selectedActivity && (
           <div className="fixed z-500 inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl">
-              <div className="bg-gradient-to-r from-gray-900 to-gray-700 px-6 py-5 text-white">
+            <div className="w-full max-w-2xl overflow-hidden rounded-3xl bg-white">
+              <div className="bg-linear-to-r from-[#fe6d3c] via-rose-500 to-[#c94d22] px-6 py-5 text-white">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-gray-300">Activity Detail</p>
@@ -492,7 +489,7 @@ const ItineraryComponent = ({ data }) => {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   {selectedActivity.rating && (
-                    <div className="rounded-2xl border border-yellow-100 bg-yellow-50 px-4 py-3">
+                    <div className="rounded-2xl bg-yellow-50 px-4 py-3">
                       <span className="text-xs font-semibold uppercase tracking-wide text-yellow-700">Rating</span>
                       <div className="mt-2 flex items-center space-x-2 text-lg font-semibold text-gray-900">
                         <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
@@ -502,14 +499,14 @@ const ItineraryComponent = ({ data }) => {
                   )}
 
                   {selectedActivity.estimated_cost && (
-                    <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3">
+                    <div className="rounded-2xl bg-emerald-50 px-4 py-3">
                       <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Cost</span>
                       <p className="mt-2 text-lg font-semibold text-gray-900">₹{selectedActivity.estimated_cost}</p>
                     </div>
                   )}
 
                   {selectedActivity.duration && (
-                    <div className="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3">
+                    <div className="rounded-2xl bg-blue-50 px-4 py-3">
                       <span className="text-xs font-semibold uppercase tracking-wide text-blue-700">Duration</span>
                       <p className="mt-2 flex items-center space-x-2 text-sm font-medium text-gray-800">
                         <Clock className="h-4 w-4 text-blue-600" />
@@ -519,7 +516,7 @@ const ItineraryComponent = ({ data }) => {
                   )}
 
                   {selectedActivity.location && (
-                    <div className="rounded-2xl border border-purple-100 bg-purple-50 px-4 py-3">
+                    <div className="rounded-2xl bg-purple-50 px-4 py-3">
                       <span className="text-xs font-semibold uppercase tracking-wide text-purple-700">Location</span>
                       <p className="mt-2 flex items-center space-x-2 text-sm font-medium text-gray-800">
                         <MapPin className="h-4 w-4 text-purple-600" />
@@ -530,7 +527,7 @@ const ItineraryComponent = ({ data }) => {
                 </div>
 
                 {selectedActivity.highlights && selectedActivity.highlights.length > 0 && (
-                  <div className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-4">
+                  <div className="rounded-2xl bg-gray-50 px-4 py-4">
                     <div className="mb-3 flex items-center space-x-2">
                       <Sparkles className="h-5 w-5 text-purple-500" />
                       <span className="text-sm font-semibold text-gray-800">Highlights</span>
@@ -549,11 +546,11 @@ const ItineraryComponent = ({ data }) => {
                 <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                   <button
                     onClick={() => setShowActivityModal(false)}
-                    className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100"
+                    className="rounded-xl bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100"
                   >
                     Close
                   </button>
-                  <button className="rounded-xl bg-gradient-to-r from-gray-900 to-gray-700 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+                  <button className="rounded-xl bg-linear-to-r from-[#fe6d3c] to-rose-500 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5">
                     Edit Activity
                   </button>
                 </div>
@@ -567,3 +564,7 @@ const ItineraryComponent = ({ data }) => {
 };
 
 export default ItineraryComponent;
+
+
+
+

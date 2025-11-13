@@ -21,3 +21,7 @@ export default function AnimatedSection({ children }) {
     </motion.div>
   );
 }
+
+
+
+

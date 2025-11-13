@@ -43,7 +43,7 @@ const TravelGurus = () => {
        
       {/* Header Section */}
       <div className="relative items-center my-auto items  max-w-7xl mx-auto text-center ">
-        <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-lg mb-6 border border-gray-100">
+        <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full mb-6 border border-gray-100">
           <div className="w-2 h-2 bg-black rounded-full animate-pulse"></div>
           <span className="text-sm font-medium text-gray-600">Featured Creators</span>
         </div>
@@ -84,3 +84,7 @@ const TravelGurus = () => {
 };
 
 export default TravelGurus;
+
+
+
+

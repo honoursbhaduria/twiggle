@@ -40,12 +40,20 @@ const LoginForm = () => {
                 password : values.password
             })
             toast.success('Login successfully')
-           
+            
+            // Check if there's an intended destination stored
+            const intendedDestination = localStorage.getItem('intendedDestination')
+            if (intendedDestination) {
+                localStorage.removeItem('intendedDestination')
+                navigate(intendedDestination)
+            } else {
+                navigate('/dashboard')
+            }
         } catch (error) {
             console.log(error)
+            toast.error('Login failed')
         } finally {
             setIsLoading(false)
-             navigate('/dashboard')
         }
     }
 
@@ -57,11 +65,15 @@ const LoginForm = () => {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="text-gray-500">
+                            <FormLabel className="text-[#fe6d3c] font-medium">
                                 Email
                             </FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your email" {...field} />
+                                <Input
+                                  placeholder="Enter your email"
+                                  className="border-[#fe6d3c]/40 focus-visible:border-[#fe6d3c] focus-visible:ring-[#fe6d3c]/40"
+                                  {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -72,17 +84,26 @@ const LoginForm = () => {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="text-gray-500">
+                            <FormLabel className="text-[#fe6d3c] font-medium">
                                 Password
                             </FormLabel>
                             <FormControl>
-                                <Input type="password" placeholder="Enter your Password" {...field} />
+                                <Input
+                                  type="password"
+                                  placeholder="Enter your Password"
+                                  className="border-[#fe6d3c]/40 focus-visible:border-[#fe6d3c] focus-visible:ring-[#fe6d3c]/40"
+                                  {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full dark:bg-gray-400" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  className="w-full bg-[#fe6d3c] text-white font-semibold hover:bg-[#fe6d3c]"
+                  disabled={isLoading}
+                >
                     {isLoading ? 'Signing in..' : 'Sign In'}
                 </Button>
             </form>
@@ -91,3 +112,7 @@ const LoginForm = () => {
 }
 
 export default LoginForm
+
+
+
+

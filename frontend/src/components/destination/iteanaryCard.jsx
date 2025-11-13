@@ -104,7 +104,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white w-full">
+    <div className="min-h-screen w-full">
       {/* Header */}
       
      <div><SidebarDemo/></div>
@@ -112,15 +112,15 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
       <div className="max-w-7xl mx-auto px-4 py-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-blue-500">Itineraries - {slug}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#fe6d3c]">Itineraries - {slug}</p>
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">Curated journeys tailored to {data?.title || 'your travel goals'}</h1>
-            <p className="text-slate-500 mt-3 max-w-2xl">
+            <p className="text-slate-600 mt-3 max-w-2xl">
               Scroll through the day-by-day breakdowns, signature experiences, and logistics we’ve already planned so you can focus on the memories.
             </p>
           
           </div>
-          <div className="hidden md:flex items-center gap-2 text-sm text-slate-500 bg-white border border-slate-200 rounded-full px-4 py-2 shadow-sm">
-            <span className="inline-flex h-2 w-2 rounded-full bg-green-400" />
+          <div className="hidden md:flex items-center gap-2 text-sm text-slate-600 bg-white border border-[#fe6d3c]/30 rounded-full px-4 py-2">
+            <span className="inline-flex h-2 w-2 rounded-full bg-[#fe6d3c]" />
             {filteredDestinations.length} itinerary{filteredDestinations.length === 1 ? '' : 'ies'} available
           </div>
         </div>
@@ -136,7 +136,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
               placeholder="Search itineraries, experiences, or keywords"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur border border-slate-200 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition-all shadow-sm"
+              className="w-full pl-12 pr-4 py-4 bg-white/80 backdrop-blur border border-[#fe6d3c]/25 rounded-2xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-[#fe6d3c]/30 focus:border-[#fe6d3c] transition-all "
             />
           </div>
           {searchQuery && (
@@ -176,14 +176,14 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
                 onClick={() => setActiveTab(tab)}
                 className={`px-4 py-2 rounded-full border text-sm transition-all duration-200 whitespace-nowrap  ${
                   activeTab === tab
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/20'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:text-slate-900'
+                    ? 'bg-[#fe6d3c] text-white border-[#fe6d3c]'
+                    : 'bg-white text-slate-600 border-[#fe6d3c]/30 hover:border-[#fe6d3c]/60 hover:text-slate-900'
                 }`}
               >
                 {tab}
                 {tabCount > 0 && (
                   <span className={`ml-2 text-xs ${
-                    activeTab === tab ? 'text-slate-300' : 'text-slate-400'
+                    activeTab === tab ? 'text-black/70' : 'text-slate-400'
                   }`}>
                     ({tabCount})
                   </span>
@@ -206,7 +206,12 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
                 </p>
               )}
             </div>
-            <Button onClick={()=>navigate("/iteanary/create")} className={"bg-[#479FDC] uppercase hover:bg-[#479FD4] "}>Create your Itineraries</Button>
+            <Button
+              onClick={()=>navigate("/iteanary/create")}
+              className="bg-[#fe6d3c] text-white font-normal tracking-widest uppercase hover:bg-[#fe6d3c]"
+            >
+              Create your Itineraries
+            </Button>
           </div>
 
           {loading && (
@@ -224,10 +229,17 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
           {!loading && !error && data && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredDestinations.length > 0 ? (
-                filteredDestinations.map((destination) => (
-                  <Link to={isAuthenticated? `/destination/iteanary/${destination.slug}`:"/auth"} key={destination.id} className="block h-full">
-                    <article className="group flex flex-col h-full rounded-3xl border border-slate-100 bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl overflow-hidden">
-                      <div className="relative aspect-[4/3] bg-slate-200">
+                filteredDestinations.map((destination) => {
+                  const handleCardClick = (e) => {
+                    if (!isAuthenticated) {
+                      localStorage.setItem('intendedDestination', `/destination/iteanary/${destination.slug}`)
+                    }
+                  }
+                  
+                  return (
+                    <Link to={isAuthenticated? `/destination/iteanary/${destination.slug}`:"/auth"} onClick={handleCardClick} key={destination.id} className="block h-full">
+                      <article className="group flex flex-col h-full rounded-3xl border border-[#fe6d3c]/20 bg-white transition-transform duration-300 hover:-translate-y-1  overflow-hidden">
+                      <div className="relative aspect-4/3 bg-slate-200">
                         {destination.thumbnail ? (
                           <img
                             src={destination.thumbnail}
@@ -235,11 +247,11 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-slate-200 via-slate-100 to-white flex items-center justify-center text-slate-400 text-sm font-medium">
+                          <div className="w-full h-full bg-linear-to-br from-slate-200 via-slate-100 to-white flex items-center justify-center text-slate-400 text-sm font-medium">
                             Image coming soon
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-900/10 to-transparent opacity-75 group-hover:opacity-85 transition-opacity" />
+                        <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 via-slate-900/10 to-transparent opacity-75 group-hover:opacity-85 transition-opacity" />
 
                         <button
                           onClick={(e) => {
@@ -273,33 +285,34 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
 
                         <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-500">
                           {(destination.duration_days || destination.duration_nights) && (
-                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-50 border border-slate-200">
+                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#fe6d3c]/20 border border-[#fe6d3c]/40 text-slate-700">
                               <Clock className="w-3 h-3" />
                               {destination.duration_days || 0}D{destination.duration_nights ? `/${destination.duration_nights}N` : ''}
                             </span>
                           )}
                           {destination.total_budget && (
-                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600">
+                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#fe6d3c]/15 border border-[#fe6d3c]/40 text-[#fe6d3c]">
                               <Wallet className="w-3 h-3" />
                               ₹{destination.total_budget.toLocaleString('en-IN')}
                             </span>
                           )}
                           {destination.tags?.slice(0, 2).map((tag, idx) => (
-                            <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-600">
+                            <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#fe6d3c]/15 border border-[#fe6d3c]/30 text-[#fe6d3c]">
                               <Tag className="w-3 h-3" />
                               {tag?.name || tag}
                             </span>
                           ))}
                         </div>
 
-                        <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-100 text-sm font-semibold">
-                          <span className="text-blue-500 group-hover:text-blue-600 transition-colors">View itinerary</span>
+                        <div className="mt-auto flex items-center justify-between pt-4 border-t border-[#fe6d3c]/25 text-sm font-semibold">
+                          <span className="text-[#fe6d3c] group-hover:text-[#fe6d3c] transition-colors">View itinerary</span>
                           <span className="text-slate-400 text-xs">#{destination.slug}</span>
                         </div>
                       </div>
                     </article>
                   </Link>
-                ))
+                  )
+                })
               ) : (
                 <div className="col-span-full text-center py-12">
                   <div className="max-w-md mx-auto">
@@ -322,7 +335,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
                     {activeTab !== 'All' && (
                       <button
                         onClick={() => setActiveTab('All')}
-                        className="mt-4 px-4 py-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                        className="mt-4 px-4 py-2 text-sm font-semibold text-black bg-[#fe6d3c] hover:bg-[#fe6d3c] transition-colors rounded-full"
                       >
                         View all itineraries
                       </button>
@@ -337,3 +350,7 @@ export default function ItearnaryCard({ initialSearchQuery = '' }) {
     </div>
   );
 }
+
+
+
+

@@ -55,7 +55,10 @@ const Maps = ({ data }) => {
   const defaultCenter = [15.2993, 74.124];
 
   const markers = useMemo(() => {
-    if (!data?.days?.length) return [];
+    if (!data?.days?.length) {
+      console.log('Map Debug: No days data', { data, hasDays: !!data?.days });
+      return [];
+    }
 
     const points = [];
 
@@ -111,6 +114,7 @@ const Maps = ({ data }) => {
       });
     });
 
+    console.log('Map Debug: Final markers count:', points.length, { points, data });
     return points;
   }, [data]);
 
@@ -132,7 +136,7 @@ const Maps = ({ data }) => {
   }, [markers]);
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
      
 
       <div className=" h-80">
@@ -186,7 +190,7 @@ const Maps = ({ data }) => {
           </MapContainer>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center bg-gray-50">
-            <div className="p-4 rounded-full bg-white shadow-sm mb-3">
+            <div className="p-4 rounded-full bg-white mb-3">
               <MapPin className="w-8 h-8 text-gray-400" />
             </div>
             <p className="text-sm font-semibold text-gray-700">Nothing to map just yet</p>
@@ -199,3 +203,7 @@ const Maps = ({ data }) => {
 };
 
 export default Maps;
+
+
+
+

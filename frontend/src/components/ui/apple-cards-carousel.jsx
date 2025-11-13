@@ -174,7 +174,7 @@ export const Carousel = ({
           ref={carouselRef}
           onScroll={checkScrollability}>
           <div
-            className={cn("absolute right-0 z-[1000] h-auto w-[5%] overflow-hidden bg-gradient-to-l")}></div>
+            className={cn("absolute right-0 z-1000 h-auto w-[5%] overflow-hidden bg-linear-to-l")}></div>
 
           <div
             className={cn(
@@ -207,16 +207,16 @@ export const Carousel = ({
         </div>
         <div className="mr-10 flex justify-end gap-2">
           <button
-            className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 disabled:opacity-50"
+            className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-[#fe6d3c] text-white hover:bg-[#fe6d3c] transition-colors disabled:opacity-50"
             onClick={scrollLeft}
             disabled={!canScrollLeft}>
-            <IconArrowNarrowLeft className="h-6 w-6 text-gray-500" />
+            <IconArrowNarrowLeft className="h-6 w-6 text-black" />
           </button>
           <button
-            className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 disabled:opacity-50"
+            className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-[#fe6d3c] text-white hover:bg-[#fe6d3c] transition-colors disabled:opacity-50"
             onClick={scrollRight}
             disabled={!canScrollRight}>
-            <IconArrowNarrowRight className="h-6 w-6 text-gray-500" />
+            <IconArrowNarrowRight className="h-6 w-6 text-black" />
           </button>
         </div>
       </div>
@@ -277,11 +277,11 @@ export const Card = ({
               exit={{ opacity: 0 }}
               ref={containerRef}
               layoutId={layout ? `card-${card.title}` : undefined}
-              className="relative z-[60] mx-auto my-10 h-fit max-w-5xl rounded-3xl bg-white p-4 font-sans md:p-10 dark:bg-neutral-900">
+              className="relative z-60 mx-auto my-10 h-fit max-w-5xl rounded-3xl bg-white p-4 font-sans md:p-10 dark:bg-neutral-900">
               <button
-                className="sticky top-4 right-0 ml-auto flex h-8 w-8 items-center justify-center rounded-full bg-black dark:bg-white"
+                className="sticky top-4 right-0 ml-auto flex h-8 w-8 items-center justify-center rounded-full bg-[#fe6d3c] text-white hover:bg-[#fe6d3c] transition-colors"
                 onClick={handleClose}>
-                <IconX className="h-6 w-6 text-neutral-100 dark:text-neutral-900" />
+                <IconX className="h-6 w-6 text-black" />
               </button>
               <motion.p
                 layoutId={layout ? `category-${card.title}` : undefined}
@@ -299,7 +299,7 @@ export const Card = ({
                 <ul className="space-y-2 mb-6">
                   {card.highlights.map((highlight, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="w-2 h-2 bg-black rounded-full mt-2"></span>
+                      <span className="w-2 h-2 bg-[#fe6d3c] rounded-full mt-2"></span>
                       <span className="text-gray-700">{highlight}</span>
                     </li>
                   ))}
@@ -311,7 +311,7 @@ export const Card = ({
                 <div className="space-y-3">
                   {card.days.map((dayItem, idx) => (
                     <div key={idx} className="flex items-start gap-3">
-                      <span className="bg-black text-white px-3 py-1 rounded text-sm font-medium whitespace-nowrap">
+                      <span className="bg-[#fe6d3c] text-white px-3 py-1 rounded text-sm font-medium whitespace-nowrap">
                         Day {dayItem.day}
                       </span>
                       <span className="text-gray-700 pt-1">{dayItem.title}</span>
@@ -321,7 +321,7 @@ export const Card = ({
                     <p className="text-gray-500 text-center pt-2">+{card.days.length - 3} more days...</p>
                   )}
                 </div>
-                <button className="w-full mt-8 bg-black text-white py-4 rounded-xl font-semibold hover:bg-gray-800 transition-colors">
+                <button className="w-full mt-8 bg-[#fe6d3c] text-white py-4 rounded-xl font-semibold hover:bg-[#fe6d3c] transition-colors">
                   View Full Itinerary
                 </button>
               </div>
@@ -332,10 +332,10 @@ export const Card = ({
       <motion.button
         layoutId={layout ? `card-${card.title}` : undefined}
         onClick={handleOpen}
-        className="relative z-10 flex h-[500px] w-[340px] md:h-[600px] md:w-[420px] flex-col justify-end overflow-hidden rounded-3xl bg-white shadow-lg transition-shadow border border-gray-100">
+        className="relative z-10 flex h-[500px] w-[340px] md:h-[600px] md:w-[420px] flex-col justify-end overflow-hidden rounded-3xl bg-white transition-shadow border border-gray-100">
         {/* Image Section */}
         <div className="absolute inset-x-0 top-0 h-[240px] md:h-[280px] p-3">
-          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-md border border-gray-200">
+          <div className="relative w-full h-full rounded-2xl overflow-hidden border border-gray-200">
             <BlurImage
               src={card.image}
               alt={card.title}
@@ -356,10 +356,7 @@ export const Card = ({
                 <MapPin className="w-4 h-4" />
                 <span className="text-sm">{card.location}</span>
               </div>
-              <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span className="text-sm font-semibold text-gray-900">{card.rating}</span>
-              </div>
+            
             </div>
           </div>
 
@@ -369,7 +366,7 @@ export const Card = ({
             <ul className="space-y-1.5">
               {card.highlights.slice(0, 3).map((highlight, idx) => (
                 <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
-                  <span className="w-1.5 h-1.5 bg-gray-900 rounded-full mt-1.5 flex-shrink-0"></span>
+                  <span className="w-1.5 h-1.5 bg-[#fe6d3c] rounded-full mt-1.5 shrink-0"></span>
                   <span className="line-clamp-1">{highlight}</span>
                 </li>
               ))}
@@ -385,7 +382,7 @@ export const Card = ({
             <div className="space-y-2">
               {card.days.slice(0, 3).map((dayItem, idx) => (
                 <div key={idx} className="flex items-start gap-2">
-                  <span className="bg-black text-white px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap">
+                  <span className="bg-[#fe6d3c] text-white px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap">
                     Day {dayItem.day}
                   </span>
                   <span className="text-xs text-gray-600 line-clamp-1 pt-0.5">{dayItem.title}</span>
@@ -398,7 +395,7 @@ export const Card = ({
           </div>
 
           {/* View Button */}
-          <button className="w-full mt-4 bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition-colors text-sm">
+          <button className="w-full mt-4 bg-[#fe6d3c] text-white py-3 rounded-xl font-semibold hover:bg-[#fe6d3c] transition-colors text-sm">
             View Full Itinerary
           </button>
         </div>
@@ -434,3 +431,8 @@ export const BlurImage = ({
       {...rest} />
   );
 };
+
+
+
+
+

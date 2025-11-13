@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar, Sparkles, TrendingUp } from "lucide-react";
+import { Calendar, MapPin, Sparkles, TrendingUp, X } from "lucide-react";
 import Modal from "./modal";
+import SidebarDemo from "./sidebar";
 
 // NOTE: This component is intentionally feature-rich and mirrors the JSON structure you provided.
 // It's JavaScript (no TypeScript) and uses shadcn/ui + Tailwind utility classes.
@@ -61,6 +63,7 @@ function slugify(text) {
 }
 
 export default function ItineraryForm() {
+  const navigate = useNavigate();
   const [form, setForm] = useState(() => cloneEmptyItinerary());
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [activeDayIndex, setActiveDayIndex] = useState(0);
@@ -472,7 +475,6 @@ export default function ItineraryForm() {
     highlighted_places:
       "Milsim Goa PaintBall, Colva Beach, Memorial For Goan Victims of 1918 Spanish Flu, Mapusa Town Viewpoint, Peacock Hill",
   };
-
   // Initialize form with Goa trip title/slug
   useEffect(() => {
     setForm((prev) => ({
@@ -506,19 +508,19 @@ export default function ItineraryForm() {
       title: "Total stops",
       value: `${totalDaysPlanned} day${totalDaysPlanned === 1 ? "" : "s"}`,
       description: "Days mapped in this itinerary",
-      accent: "bg-gradient-to-r from-gray-900 to-gray-700 text-white",
+  accent: "bg-linear-to-r from-orange-500 to-red-500 text-white",
     },
     {
       title: "Average spend / day",
       value: formatCurrency(Math.round(averageDailySpend)),
       description: "Balanced mix of activities and downtime",
-      accent: "bg-gradient-to-r from-gray-900 to-gray-700 text-white",
+  accent: "bg-linear-to-r from-orange-500 to-red-500 text-white",
     },
     {
       title: "Total experiences",
       value: totalAttractions + totalRestaurants + totalExperiences,
       description: "Attractions, dining, and signature moments",
-      accent: "bg-gradient-to-r from-gray-900 to-gray-700 text-white",
+  accent: "bg-linear-to-r from-orange-500 to-red-500 text-white",
     },
   ];
 
@@ -527,19 +529,19 @@ export default function ItineraryForm() {
       label: "Attractions",
       value: totalAttractions,
       helper: "Curated highlights to explore",
-      className: "bg-gradient-to-br from-indigo-100 to-indigo-50 border border-indigo-100 text-indigo-700",
+  className: "bg-linear-to-br from-orange-100 to-orange-50 border border-orange-200 text-orange-700",
     },
     {
       label: "Dining",
       value: totalRestaurants,
       helper: "Handpicked food experiences",
-      className: "bg-gradient-to-br from-emerald-100 to-emerald-50 border border-emerald-100 text-emerald-700",
+  className: "bg-linear-to-br from-amber-100 to-amber-50 border border-amber-200 text-amber-700",
     },
     {
       label: "Experiences",
       value: totalExperiences,
       helper: "Memorable moments planned",
-      className: "bg-gradient-to-br from-fuchsia-100 to-fuchsia-50 border border-fuchsia-100 text-fuchsia-700",
+  className: "bg-linear-to-br from-rose-100 to-rose-50 border border-rose-200 text-rose-700",
     },
   ];
 
@@ -547,9 +549,9 @@ export default function ItineraryForm() {
   const activeRestaurantCount = activeDay?.restaurants?.length || 0;
   const activeExperienceCount = activeDay?.experiences?.length || 0;
   const activeDayBadges = [
-    { label: "Attractions", value: activeAttractionCount, className: "bg-indigo-50 border border-indigo-100 text-indigo-700" },
-    { label: "Restaurants", value: activeRestaurantCount, className: "bg-emerald-50 border border-emerald-100 text-emerald-700" },
-    { label: "Experiences", value: activeExperienceCount, className: "bg-fuchsia-50 border border-fuchsia-100 text-fuchsia-700" },
+    { label: "Attractions", value: activeAttractionCount, className: "bg-orange-50 border border-orange-200 text-orange-700" },
+    { label: "Restaurants", value: activeRestaurantCount, className: "bg-amber-50 border border-amber-200 text-amber-700" },
+    { label: "Experiences", value: activeExperienceCount, className: "bg-rose-50 border border-rose-200 text-rose-700" },
   ];
 
   return (
@@ -564,19 +566,22 @@ export default function ItineraryForm() {
         }}
         onCancel={() => setShowPlanModal(false)}
         onApply={applyModalSelection}
+        onNavigateBack={() => navigate('/destination/')}
       />
+
+      <SidebarDemo/>
       
-      <div className="bg-gradient-to-r from-blue-100 to-blue-50 py-8 px-4 sm:px-6 lg:px-8 flex justify-center">
-        <div className=" max-w-6xl w-full shadow-xl  bg-white rounded-[32px] overflow-hidden">
-          <div className="px-6 sm:px-10 bg-gradient-to-r from-gray-900 to-gray-700 space-y-10 py-4">
+      <div className="bg-linear-to-br from-orange-50 via-amber-50 to-rose-50 py-8 px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div className=" max-w-6xl w-full  bg-white rounded-4xl overflow-hidden shadow-2xl">
+          <div className="px-6 sm:px-10 bg-[#fe6d3c] space-y-10 py-4">
             <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-10">
               <div className="flex-1 space-y-6">
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold uppercase tracking-[0.3em]">
+                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/20 text-white text-xs font-semibold uppercase tracking-[0.3em]">
                   Planner mode
                 </span>
                 <div className="space-y-4">
-                  <CardTitle className="text-3xl sm:text-4xl font-semibold text-gray-300">Craft a signature escape</CardTitle>
-                  <p className="text-base text-gray-400 max-w-2xl">
+                  <CardTitle className="text-3xl sm:text-4xl font-semibold text-white">Craft a signature escape</CardTitle>
+                  <p className="text-base text-white/90 max-w-2xl">
                     Build an unforgettable itinerary from scratch. Capture the vibe, balance the budget, and keep every stop organised before you share it with travellers.
                   </p>
                 </div>
@@ -588,17 +593,10 @@ export default function ItineraryForm() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                
-              {/* {plannerSummaryCards.map((card) => (
-                <div key={card.title} className={`rounded-3xl relative px-5 py-6 border shadow-sm ${card.accent}`}>
-                  <p className="text-xs uppercase tracking-[0.25em] text-current/70">{card.title}</p>
-                   
-                  <p className="mt-4 text-2xl font-semibold text-current">{card.value}</p>
-                  <p className="mt-2 text-sm text-current/70">{card.description}</p>
-                </div>
-              ))} */}
+             
 
                 {highlightTiles.map((tile) => (
-                  <div key={tile.label} className={`rounded-3xl px-5 py-6 shadow-sm ${tile.className}`}>
+                  <div key={tile.label} className={`rounded-3xl px-5 py-6 ${tile.className}`}>
                     <p className="text-xs uppercase tracking-[0.3em] opacity-70">{tile.label}</p>
                     
                     <p className="text-3xl font-semibold mt-4">{tile.value}</p>
@@ -607,102 +605,33 @@ export default function ItineraryForm() {
                 ))}
             </div>
           </div>
-          <div className="px-6 sm:px-10 pt-8 pb-4 space-y-6 bg-gray-100 ">
+          <div className="px-6 sm:px-10 pt-8 pb-4 space-y-6 bg-linear-to-br from-orange-50/50 via-amber-50/50 to-rose-50/50">
+            {/* Info banner */}
+            <div className="rounded-2xl bg-linear-to-r from-orange-100 to-amber-100 border border-orange-200 p-4 flex items-start gap-3">
+              <div className="shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-semibold text-orange-900 text-sm">Plan via Modal</h4>
+                <p className="text-xs text-orange-800 mt-1">
+                  Click "Add day" to open the planning modal where you can select attractions, restaurants, and experiences. All fields below are read-only and automatically populated from your selections.
+                </p>
+              </div>
+            </div>
+            
             <form onSubmit={handleSubmit} className="space-y-6">
-              <section className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8 space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-                  <div>
-                    <h2 className="text-xl font-semibold text-slate-900">Itinerary overview</h2>
-                    <p className="text-sm text-slate-500 mt-1">Set the essentials that define this journey for travellers.</p>
-                  </div>
-                  <span className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-500">Step 01</span>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="md:col-span-2 space-y-2">
-                    <Label htmlFor="title" className="text-sm font-medium text-slate-700">Title</Label>
-                    <Input
-                      id="title"
-                      value={""}
-                      onChange={(e) => handleTopChange("title", e.target.value)}
-                      placeholder="Trip title"
-                      className={fieldInputClasses}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="slug" className="text-sm font-medium text-slate-700">Slug</Label>
-                    <Input id="slug" value={form.slug} onChange={(e) => handleTopChange("slug", e.target.value)} className={fieldInputClasses} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="shortDesc" className="text-sm font-medium text-slate-700">Short description</Label>
-                    <Textarea
-                      id="shortDesc"
-                      value={form.short_description}
-                      onChange={(e) => handleTopChange("short_description", e.target.value)}
-                      rows={4}
-                      className={`${fieldTextareaClasses} min-h-[150px]`}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">Thumbnail</Label>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 p-4">
-                      <label className="relative inline-flex items-center justify-center px-5 py-2 rounded-full bg-white text-slate-700 text-sm font-semibold shadow-sm cursor-pointer hover:bg-slate-100">
-                        <span>Upload image</span>
-                        <input type="file" accept="image/*" onChange={handleThumbnail} className="absolute inset-0 opacity-0 cursor-pointer" />
-                      </label>
-                      {thumbnailPreview ? (
-                        <img
-                          src={typeof form.thumbnail === "string" ? form.thumbnail : thumbnailPreview}
-                          alt="preview"
-                          className="w-32 h-24 object-cover rounded-2xl shadow"
-                        />
-                      ) : (
-                        <div className="w-full sm:w-40 h-24 rounded-2xl border border-slate-200 bg-white/60 flex items-center justify-center text-sm text-slate-400">
-                          No image selected
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </section>
+              
 
-              <section className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8 space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div>
-                    <h2 className="text-xl font-semibold text-slate-900">Budget & logistics</h2>
-                    <p className="text-sm text-slate-500 mt-1">Keep totals in check to deliver the right mix of comfort and adventure.</p>
-                  </div>
-                  <span className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-500">Step 02</span>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">Total budget (₹)</Label>
-                    <Input type="number" value={form.total_budget} onChange={(e) => handleTopChange("total_budget", Number(e.target.value))} className={fieldInputClasses} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">Duration (days)</Label>
-                    <Input type="number" value={form.duration_days} onChange={(e) => handleTopChange("duration_days", Number(e.target.value))} className={fieldInputClasses} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">Duration (nights)</Label>
-                    <Input type="number" value={form.duration_nights} onChange={(e) => handleTopChange("duration_nights", Number(e.target.value))} className={fieldInputClasses} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">Popularity</Label>
-                    <Input type="number" value={form.popularity_score} onChange={(e) => handleTopChange("popularity_score", Number(e.target.value))} className={fieldInputClasses} />
-                  </div>
-                </div>
-              </section>
+            
 
-              <section className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8 space-y-6">
+              <section className="rounded-3xl border border-orange-100 bg-white p-6 sm:p-8 space-y-6 shadow-sm">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                   <div>
                     <h2 className="text-xl font-semibold text-slate-900">Day-by-day blueprint</h2>
                     <p className="text-sm text-slate-500 mt-1">Organise every stop, meal, and experience with clarity.</p>
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    <Button type="button" onClick={addDay} className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2 rounded-full shadow">
+                    <Button type="button" onClick={addDay} className="bg-[#fe6d3c] hover:bg-[#e55a2a] text-white px-5 py-2 rounded-full shadow">
                       + Add day
                     </Button>
                    
@@ -721,7 +650,7 @@ export default function ItineraryForm() {
                             onClick={() => setActiveDayIndex(idx)}
                             className={`px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                               isActive
-                                ? "bg-gradient-to-r from-gray-900 to-gray-700 text-white "
+                                ? "bg-[#fe6d3c] text-white shadow-md"
                                 : "bg-white text-slate-600 hover:text-slate-900"
                             }`}
                           >
@@ -733,7 +662,19 @@ export default function ItineraryForm() {
                   </div>
 
                   {activeDay ? (
-                    <div className="rounded-3xl border border-slate-200 bg-white shadow-inner p-6 sm:p-8 space-y-6">
+                    <div className="rounded-3xl border border-orange-100 bg-linear-to-br from-white to-orange-50/20 p-6 sm:p-8 space-y-6 shadow-sm relative">
+                      {/* Remove Day Button - Top Right Border */}
+                      {form.days.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeDay(activeDayIndex)}
+                          className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-[#fe6d3c] hover:bg-[#e55a2a] text-white flex items-center justify-center shadow-lg transition-all duration-200 z-10"
+                          title="Remove this day"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      )}
+                      
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                           <h3 className="text-lg font-semibold text-slate-900">{`Day ${activeDay.day_number}: ${activeDay.title || "Untitled"}`}</h3>
@@ -750,102 +691,73 @@ export default function ItineraryForm() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="md:col-span-2 space-y-2">
-                          <Label className="text-sm font-medium text-slate-700">Day title</Label>
-                          <Input value={activeDay.title} onChange={(e) => updateDay(activeDayIndex, { ...activeDay, title: e.target.value })} className={fieldInputClasses} />
-                        </div>
-                        <div className="space-y-2">
-                          <Label className="text-sm font-medium text-slate-700">Locations (comma separated)</Label>
-                          <Input value={activeDay.locations} onChange={(e) => updateDay(activeDayIndex, { ...activeDay, locations: e.target.value })} className={fieldInputClasses} />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium text-slate-700">Overview for the day</Label>
-                        <Textarea value={activeDay.description} onChange={(e) => updateDay(activeDayIndex, { ...activeDay, description: e.target.value })} rows={3} className={fieldTextareaClasses} />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="space-y-2">
-                          <Label className="text-sm font-medium text-slate-700">Total cost (₹)</Label>
-                          <Input
-                            type="number"
-                            value={activeDay.budget?.total_cost || 0}
-                            onChange={(e) => updateDay(activeDayIndex, { ...activeDay, budget: { ...activeDay.budget, total_cost: Number(e.target.value) } })}
-                            className={fieldInputClasses}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label className="text-sm font-medium text-slate-700">Estimated cost (₹)</Label>
-                          <Input
-                            type="number"
-                            value={activeDay.budget?.estimated_cost || 0}
-                            onChange={(e) => updateDay(activeDayIndex, { ...activeDay, budget: { ...activeDay.budget, estimated_cost: Number(e.target.value) } })}
-                            className={fieldInputClasses}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label className="text-sm font-medium text-slate-700">Attractions cost (₹)</Label>
-                          <Input
-                            type="number"
-                            value={activeDay.budget?.attractions_cost || 0}
-                            onChange={(e) => updateDay(activeDayIndex, { ...activeDay, budget: { ...activeDay.budget, attractions_cost: Number(e.target.value) } })}
-                            className={fieldInputClasses}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label className="text-sm font-medium text-slate-700">Restaurants cost (₹)</Label>
-                          <Input
-                            type="number"
-                            value={activeDay.budget?.restaurants_cost || 0}
-                            onChange={(e) => updateDay(activeDayIndex, { ...activeDay, budget: { ...activeDay.budget, restaurants_cost: Number(e.target.value) } })}
-                            className={fieldInputClasses}
-                          />
-                        </div>
-                      </div>
+                     
 
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <h4 className="text-base font-semibold text-slate-900">Attractions</h4>
-                          <Button type="button" variant="ghost" onClick={() => addNested(activeDayIndex, "attractions")} className="text-indigo-600 hover:text-indigo-800">
-                            + Add attraction
-                          </Button>
+                          <p className="text-sm text-orange-600 font-medium">Managed via modal</p>
                         </div>
                         <div className="space-y-3">
                           {(activeDay.attractions || []).map((a, aIdx) => (
-                            <div key={aIdx} className="p-4 rounded-2xl border border-indigo-100 bg-indigo-50 grid grid-cols-1 md:grid-cols-6 gap-3">
-                              <div className="md:col-span-2 space-y-2">
-                                <Label className="text-xs font-semibold text-slate-600">Name</Label>
-                                <Input value={a.name} onChange={(e) => updateNested(activeDayIndex, "attractions", aIdx, "name", e.target.value)} className={fieldInputClasses} />
+                            <div
+                              key={aIdx}
+                              className="group relative rounded-2xl border border-orange-200/70 bg-white shadow-sm transition-all duration-200 hover:border-orange-300 hover:shadow-lg"
+                            >
+                             
+
+                              {/* Remove Attraction Button */}
+                              <button
+                                type="button"
+                                onClick={() => removeNested(activeDayIndex, "attractions", aIdx)}
+                                className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-[#fe6d3c] hover:bg-[#e55a2a] text-white flex items-center justify-center shadow-md transition-all duration-200 z-10"
+                                title="Remove attraction"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+
+                              <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between">
+                                <div className="flex items-start gap-4">
+                                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-600">
+                                    <MapPin className="h-5 w-5" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <p className="text-base font-semibold leading-tight text-slate-900">
+                                        {a.name || "Unnamed attraction"}
+                                      </p>
+                                      <span className="rounded-full bg-orange-500/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-orange-600">
+                                        #{aIdx + 1}
+                                      </span>
+                                    </div>
+                                    <p className="max-w-xl text-sm text-slate-600">
+                                      {a.address || "Address coming soon"}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex flex-col items-end gap-2 text-right">
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-600">
+                                    {formatCurrency(a.estimated_cost)}
+                                  </span>
+                                  <span className="text-[11px] uppercase tracking-[0.28em] text-orange-400">Via modal</span>
+                                </div>
                               </div>
-                              <div className="md:col-span-2 space-y-2">
-                                <Label className="text-xs font-semibold text-slate-600">Address</Label>
-                                <Input value={a.address} onChange={(e) => updateNested(activeDayIndex, "attractions", aIdx, "address", e.target.value)} className={fieldInputClasses} />
-                              </div>
-                              <div className="space-y-2">
-                                <Label className="text-xs font-semibold text-slate-600">Cost</Label>
-                                <Input
-                                  type="number"
-                                  value={a.estimated_cost}
-                                  onChange={(e) => updateNested(activeDayIndex, "attractions", aIdx, "estimated_cost", Number(e.target.value))}
-                                  className={fieldInputClasses}
-                                />
-                              </div>
-                              <div className="flex items-end justify-end">
-                                <Button type="button" variant="ghost" onClick={() => removeNested(activeDayIndex, "attractions", aIdx)} className="text-slate-500 hover:text-red-500">
-                                  Remove
-                                </Button>
-                              </div>
-                              <div className="md:col-span-6 space-y-2">
-                                <Label className="text-xs font-semibold text-slate-600">Description</Label>
-                                <Textarea value={a.description} onChange={(e) => updateNested(activeDayIndex, "attractions", aIdx, "description", e.target.value)} rows={2} className={fieldTextareaClasses} />
-                              </div>
+
+                              {a.description ? (
+                                <div className="border-t border-orange-100 bg-orange-50/50 px-5 py-4 text-sm leading-relaxed text-orange-900/80">
+                                  {a.description}
+                                </div>
+                              ) : (
+                                <div className="border-t border-orange-100 px-5 py-3 text-sm italic text-slate-400">
+                                  No description provided yet.
+                                </div>
+                              )}
                             </div>
                           ))}
                           {activeDay.attractions?.length === 0 && (
-                            <div className="rounded-2xl border border-dashed border-indigo-200 bg-indigo-50/60 p-6 text-center text-sm text-indigo-600">
-                              No attractions yet — add your first stop above.
+                            <div className="rounded-2xl border border-dashed border-orange-200 bg-orange-50/60 p-6 text-center text-sm text-orange-600">
+                              No attractions selected — add them from the modal above.
                             </div>
                           )}
                         </div>
@@ -854,44 +766,64 @@ export default function ItineraryForm() {
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <h4 className="text-base font-semibold text-slate-900">Restaurants</h4>
-                          <Button type="button" variant="ghost" onClick={() => addNested(activeDayIndex, "restaurants")} className="text-emerald-600 hover:text-emerald-800">
-                            + Add restaurant
-                          </Button>
+                          <p className="text-sm text-amber-600 font-medium">Managed via modal</p>
                         </div>
                         <div className="space-y-3">
                           {(activeDay.restaurants || []).map((r, rIdx) => (
-                            <div key={rIdx} className="p-4 rounded-2xl border border-emerald-100 bg-emerald-50 grid grid-cols-1 md:grid-cols-6 gap-3">
+                            <div key={rIdx} className="p-4 rounded-2xl border border-amber-200 bg-amber-50 grid grid-cols-1 md:grid-cols-6 gap-3 relative">
+                              {/* Remove Restaurant Button */}
+                              <button
+                                type="button"
+                                onClick={() => removeNested(activeDayIndex, "restaurants", rIdx)}
+                                className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#fe6d3c] hover:bg-[#e55a2a] text-white flex items-center justify-center shadow-md transition-all duration-200 z-10"
+                                title="Remove restaurant"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                              
                               <div className="md:col-span-2 space-y-2">
                                 <Label className="text-xs font-semibold text-slate-600">Name</Label>
-                                <Input value={r.name} onChange={(e) => updateNested(activeDayIndex, "restaurants", rIdx, "name", e.target.value)} className={fieldInputClasses} />
+                                <Input 
+                                  value={r.name} 
+                                  readOnly
+                                  disabled
+                                  className="bg-white/50 border-amber-100 text-slate-500 cursor-not-allowed" 
+                                />
                               </div>
                               <div className="md:col-span-2 space-y-2">
                                 <Label className="text-xs font-semibold text-slate-600">Cuisine</Label>
-                                <Input value={r.cuisine} onChange={(e) => updateNested(activeDayIndex, "restaurants", rIdx, "cuisine", e.target.value)} className={fieldInputClasses} />
+                                <Input 
+                                  value={r.cuisine} 
+                                  readOnly
+                                  disabled
+                                  className="bg-white/50 border-amber-100 text-slate-500 cursor-not-allowed" 
+                                />
                               </div>
                               <div className="space-y-2">
                                 <Label className="text-xs font-semibold text-slate-600">Cost</Label>
                                 <Input
                                   type="number"
                                   value={r.estimated_cost}
-                                  onChange={(e) => updateNested(activeDayIndex, "restaurants", rIdx, "estimated_cost", Number(e.target.value))}
-                                  className={fieldInputClasses}
+                                  readOnly
+                                  disabled
+                                  className="bg-white/50 border-amber-100 text-slate-500 cursor-not-allowed"
                                 />
-                              </div>
-                              <div className="flex items-end justify-end">
-                                <Button type="button" variant="ghost" onClick={() => removeNested(activeDayIndex, "restaurants", rIdx)} className="text-slate-500 hover:text-red-500">
-                                  Remove
-                                </Button>
                               </div>
                               <div className="md:col-span-6 space-y-2">
                                 <Label className="text-xs font-semibold text-slate-600">Description</Label>
-                                <Textarea value={r.description} onChange={(e) => updateNested(activeDayIndex, "restaurants", rIdx, "description", e.target.value)} rows={2} className={fieldTextareaClasses} />
+                                <Textarea 
+                                  value={r.description} 
+                                  readOnly
+                                  disabled
+                                  rows={2} 
+                                  className="bg-white/50 border-amber-100 text-slate-500 cursor-not-allowed" 
+                                />
                               </div>
                             </div>
                           ))}
                           {activeDay.restaurants?.length === 0 && (
-                            <div className="rounded-2xl border border-dashed border-emerald-200 bg-emerald-50/60 p-6 text-center text-sm text-emerald-600">
-                              Add dining recommendations to complete the experience.
+                            <div className="rounded-2xl border border-dashed border-amber-200 bg-amber-50/60 p-6 text-center text-sm text-amber-600">
+                              No dining recommendations selected — add them from the modal above.
                             </div>
                           )}
                         </div>
@@ -900,49 +832,58 @@ export default function ItineraryForm() {
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <h4 className="text-base font-semibold text-slate-900">Experiences</h4>
-                          <Button type="button" variant="ghost" onClick={() => addNested(activeDayIndex, "experiences")} className="text-fuchsia-600 hover:text-fuchsia-800">
-                            + Add experience
-                          </Button>
+                          <p className="text-sm text-rose-600 font-medium">Managed via modal</p>
                         </div>
                         <div className="space-y-3">
                           {(activeDay.experiences || []).map((x, xIdx) => (
-                            <div key={xIdx} className="p-4 rounded-2xl border border-fuchsia-100 bg-fuchsia-50 grid grid-cols-1 md:grid-cols-6 gap-3">
+                            <div key={xIdx} className="p-4 rounded-2xl border border-rose-200 bg-rose-50 grid grid-cols-1 md:grid-cols-6 gap-3 relative">
+                              {/* Remove Experience Button */}
+                              <button
+                                type="button"
+                                onClick={() => removeNested(activeDayIndex, "experiences", xIdx)}
+                                className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#fe6d3c] hover:bg-[#e55a2a] text-white flex items-center justify-center shadow-md transition-all duration-200 z-10"
+                                title="Remove experience"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                              
                               <div className="md:col-span-3 space-y-2">
                                 <Label className="text-xs font-semibold text-slate-600">Title</Label>
-                                <Input value={x.name || x.title || ""} onChange={(e) => updateNested(activeDayIndex, "experiences", xIdx, "name", e.target.value)} className={fieldInputClasses} />
+                                <Input 
+                                  value={x.name || x.title || ""} 
+                                  readOnly
+                                  disabled
+                                  className="bg-white/50 border-rose-100 text-slate-500 cursor-not-allowed" 
+                                />
                               </div>
                               <div className="space-y-2">
                                 <Label className="text-xs font-semibold text-slate-600">Cost</Label>
                                 <Input
                                   type="number"
                                   value={x.estimated_cost || 0}
-                                  onChange={(e) => updateNested(activeDayIndex, "experiences", xIdx, "estimated_cost", Number(e.target.value))}
-                                  className={fieldInputClasses}
+                                  readOnly
+                                  disabled
+                                  className="bg-white/50 border-rose-100 text-slate-500 cursor-not-allowed"
                                 />
-                              </div>
-                              <div className="flex items-end justify-end">
-                                <Button type="button" variant="ghost" onClick={() => removeNested(activeDayIndex, "experiences", xIdx)} className="text-slate-500 hover:text-red-500">
-                                  Remove
-                                </Button>
                               </div>
                               <div className="md:col-span-6 space-y-2">
                                 <Label className="text-xs font-semibold text-slate-600">Description</Label>
-                                <Textarea value={x.description || ""} onChange={(e) => updateNested(activeDayIndex, "experiences", xIdx, "description", e.target.value)} rows={2} className={fieldTextareaClasses} />
+                                <Textarea 
+                                  value={x.description || ""} 
+                                  readOnly
+                                  disabled
+                                  rows={2} 
+                                  className="bg-white/50 border-rose-100 text-slate-500 cursor-not-allowed" 
+                                />
                               </div>
                             </div>
                           ))}
                           {activeDay.experiences?.length === 0 && (
-                            <div className="rounded-2xl border border-dashed border-fuchsia-200 bg-fuchsia-50/60 p-6 text-center text-sm text-fuchsia-600">
-                              Layer in workshops, tours, or signature moments to elevate the day.
+                            <div className="rounded-2xl border border-dashed border-rose-200 bg-rose-50/60 p-6 text-center text-sm text-rose-600">
+                              No experiences selected — add workshops, tours, or signature moments from the modal above.
                             </div>
                           )}
                         </div>
-                      </div>
-
-                      <div className="flex justify-end">
-                        <Button type="button bg-gradient-to-r from-red-500 to-red-400" variant="" onClick={() => removeDay(activeDayIndex)} className="rounded-full px-6 bg-red-100 hover:bg-red-200 text-red-500 font-light">
-                          Remove this day
-                        </Button>
                       </div>
                     </div>
                   ) : (
@@ -953,19 +894,16 @@ export default function ItineraryForm() {
                 </div>
               </section>
 
-              <div className="rounded-3xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div className="rounded-3xl border border-orange-100 bg-white p-6 sm:p-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between shadow-sm">
                 <label className="flex items-start gap-4">
-                  <Checkbox checked={false} onCheckedChange={() => {}} className="mt-1" />
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900">Public itinerary</p>
-                    <p className="text-xs text-slate-500">Toggle to make this itinerary visible on the site.</p>
-                  </div>
+              
+                 
                 </label>
                 <div className="flex flex-wrap gap-3 justify-end">
                   <Button type="button" variant="ghost" onClick={loadEmptyItinerary} className="text-slate-500 hover:text-slate-700">
                     Reset
                   </Button>
-                  <Button type="submit" className="bg-gradient-to-r from-gray-900 to-gray-700  text-white px-6 py-2 rounded-full shadow-lg">
+                  <Button type="submit" className="bg-[#fe6d3c] hover:bg-[#e55a2a] text-white px-6 py-2 rounded-full shadow-lg">
                     Save itinerary
                   </Button>
                 </div>
@@ -977,3 +915,8 @@ export default function ItineraryForm() {
     </>
   );
 }
+
+
+
+
+

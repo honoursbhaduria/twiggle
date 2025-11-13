@@ -115,7 +115,7 @@ const data = [
 function LandingPage() {
 
   return (
-    <div className="bg-cover bg-gradient-to-br from-white via-sky-50 to-blue-50 relative bg-center min-h-screen overflow-hidden">
+    <div className="bg-cover  relative bg-center min-h-screen overflow-hidden">
       <Modal/>
     
     <div className="min-h-screen  bg-cover bg-center overflow-hidden rounded-none md:rounded-b-2xl">
@@ -128,10 +128,15 @@ function LandingPage() {
       {/* 3rd comp */}
 
         <div className="w-full py-10 md:py-16 px-4 md:px-8">
-          <div className="text-2xl md:text-4xl lg:text-6xl font-bold font-sans text-center mb-4 md:mb-8 tracking-noraml ">
-            Trending Now
+          <div className="flex flex-col items-center gap-3 mb-8 md:mb-10">
+            <span className="inline-flex items-center justify-center rounded-full bg-[#fe6d3c]/30 px-4 py-1 text-xs font-semibold tracking-[0.35em] text-[#fe6d3c] uppercase">
+              spotlight
+            </span>
+            <div className="text-2xl md:text-4xl lg:text-6xl font-bold font-sans text-center tracking-tight text-[#2d1b10]">
+              Trending Now
+            </div>
           </div>
-          <h1 className="text-sm md:text-lg  lg:text-xl text-center text-[#3c3c3c] mb-8 md:mb-12 max-w-3xl mx-auto font-inter tracking-widest">
+          <h1 className="text-sm md:text-lg  lg:text-xl text-center text-slate-600 mb-8 md:mb-12 max-w-3xl mx-auto font-inter tracking-widest">
             Discover what's capturing hearts across India. From serene beaches to majestic mountains.
           </h1>
 
@@ -143,10 +148,15 @@ function LandingPage() {
    
 
     <div className="w-full py-10 md:py-16 px-4 md:px-8">
-        <div className="text-2xl md:text-4xl lg:text-6xl font-bold font-sans text-center mb-4 md:mb-8">
-          Travel Categories
+        <div className="flex flex-col items-center gap-3 mb-8 md:mb-10">
+          <span className="inline-flex items-center justify-center rounded-full bg-[#fe6d3c]/30 px-4 py-1 text-xs font-semibold tracking-[0.35em] text-[#fe6d3c] uppercase">
+            explore
+          </span>
+          <div className="text-2xl md:text-4xl lg:text-6xl font-bold font-sans text-center text-[#2d1b10]">
+            Travel Categories
+          </div>
         </div>
-        <h1 className="text-sm md:text-lg lg:text-xl text-center text-[#3c3c3c] mb-8 md:mb-12 max-w-3xl mx-auto tracking-widest">
+        <h1 className="text-sm md:text-lg lg:text-xl text-center text-slate-600 mb-8 md:mb-12 max-w-3xl mx-auto tracking-widest">
           Find the perfect itinerary type that matches your travel style and interests
         </h1>
 
@@ -156,7 +166,7 @@ function LandingPage() {
       key={index}
       className="rounded-2xl w-full max-w-sm mx-auto shadow hover:shadow-xl transition-shadow duration-300"
     >
-      <div className="relative w-full h-[340px] md:h-[380px] rounded-2xl overflow-hidden shadow-lg flex flex-col justify-end">
+      <div className="relative w-full h-[340px] md:h-[380px] rounded-2xl overflow-hidden flex flex-col justify-end">
         {/* Background image (replace with a real image if available) */}
         <img
           src={item.src}
@@ -181,8 +191,7 @@ function LandingPage() {
     <p className="text-[#fffdf7] font-light text-center mt-1 tracking-widest ">{item.description}</p>
 
     <button
-      className="bg-gray-100/80 text-black font-normal rounded-full px-6 py-2 shadow-lg mb-2 text-[1.05rem] md:text-[1.1rem] hover:bg-gray-200 transition-all mt-4"
-      style={{ boxShadow: '0 2px 12px 0 rgba(0,0,0,0.10)' }}
+      className="bg-[#fe6d3c]/60 text-white font-normal rounded-full px-6 py-2  mb-2 text-[0.8rem] md:text-[0.9rem] hover:bg-[#fe6d3c]/70 transition-all mt-4 tracking-widest"
     >
       View Experiences
     </button>
@@ -204,10 +213,10 @@ function LandingPage() {
        <div className="grid grid-cols-1 md:grid-cols-3 gap-25">
           <div className="flex items-center justify-center md:items-center mx-auto ml-10">
             <div className="max-w-md text-center lg:text-left">
-               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-6xl  text-gray-900 font-poppins font-bold  tracking-tight mb-4 md:mb-6">
+               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-6xl  text-[#2d1b10] font-poppins font-bold  tracking-tight mb-4 md:mb-6">
                   Handcrafted journeys
                 </h1>
-              <p className="text-sm md:text-base lg:text-lg xl:text-lg text-[#3c3c3c] tracking-widest leading-relaxed">
+              <p className="text-sm md:text-base lg:text-lg xl:text-lg text-slate-600 tracking-widest leading-relaxed">
                 Premium itineraries designed by our travel experts. Each journey is
                 carefully curated for the perfect blend of adventure, culture, and
                 luxury.
@@ -229,17 +238,17 @@ function LandingPage() {
 
            {/* left column */}
           <div className="flex items-center justify-center col-span-3 order-2 lg:order-1 p-10">
-            <video autoPlay loop muted playsInline className="w-full max-w-md md:max-w-lg lg:max-w-full rounded-2xl shadow-xl">
+            <video autoPlay loop muted playsInline className="w-full max-w-md md:max-w-lg lg:max-w-full rounded-2xl">
               <source src="/video.mp4" type="video/mp4"/>
             </video>
           </div>
           {/* right column */}
           <div className="flex items-center justify-center order-1 lg:order-2 col-span-2">
             <div className="max-w-md text-center lg:text-left">
-               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-6xl  font-poppins font-bold text-gray-900 leading-tight tracking-tight mb-4 md:mb-6">
+               <h1 className="text-2xl md:text-4xl lg:text-6xl xl:text-6xl  font-poppins font-bold text-[#2d1b10] leading-tight tracking-tight mb-4 md:mb-6">
                     How it Works?
                 </h1>
-                 <p className="text-sm md:text-base lg:text-lg xl:text-xl tracking-widest text-[#3c3c3c] leading-relaxed">
+                 <p className="text-sm md:text-base lg:text-lg xl:text-xl tracking-widest text-slate-600 leading-relaxed">
                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vitae perferendis fugiat esse, blanditiis voluptate ipsam.
               </p>
             </div>
@@ -276,4 +285,9 @@ function LandingPage() {
 }
 
 export default LandingPage
+
+
+
+
+
 
