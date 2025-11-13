@@ -25,6 +25,7 @@ import { motion } from "motion/react";
 import SidebarDemo from "../destination/sidebar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { useNavigate } from "react-router-dom";
 
 const quickMetrics = [
   {
@@ -171,6 +172,8 @@ export default function Dashboard() {
     ? Math.round((completedTasks / taskChecklist.length) * 100)
     : 0;
 
+    const navigate=useNavigate()
+
   return (
     <div className="relative min-h-screen bg-slate-50 text-slate-900">
       <SidebarDemo />
@@ -193,7 +196,7 @@ export default function Dashboard() {
               <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                 <div>
                   <p className="text-sm uppercase tracking-[0.28em] text-slate-500">Traveler dashboard</p>
-                  <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">Hey Tejash, itinerary mode is on</h1>
+                  <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">Hey Tejash,</h1>
                   <p className="mt-3 max-w-xl text-sm text-slate-600 md:text-base">
                     Your Tokyo + Kyoto route is 75% ready. Finalise the day 3 experiences and send the guest pass when you are happy with the draft.
                   </p>
@@ -216,9 +219,9 @@ export default function Dashboard() {
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                <Button className="rounded-full bg-[#fe6d3c] text-white font-semibold hover:bg-[#df5b2c]">Publish itinerary update</Button>
-                <Button variant="outline" className="rounded-full border-[#fe6d3c]/40 bg-white text-[#fe6d3c] hover:bg-[#fe6d3c]/10">
-                  Duplicate for new trip
+                <Button onClick={()=>navigate("/iteanary/create")} className="rounded-full bg-[#fe6d3c] text-white font-semibold hover:bg-[#df5b2c]">Create your itinary</Button>
+                <Button onClick={()=>navigate("/destination")} variant="outline" className="rounded-full border-[#fe6d3c]/40 bg-white text-[#fe6d3c] hover:bg-[#fe6d3c]/10">
+                  Explore destination
                 </Button>
               </div>
 
