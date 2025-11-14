@@ -1,565 +1,343 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
-  Clock,
-  MapPin,
-  Utensils,
-  Camera,
-  Star,
-  Trash2,
-  Plus,
-  GripVertical,
-  Menu,
+  ArrowRight,
   Calendar,
-  TrendingUp,
-  Sparkles
+  CheckCircle,
+  Clock,
+  Globe2,
+  MapPin,
+  Sparkles,
+  Users
 } from 'lucide-react';
 
-const colorMapping = {
-  attraction: {
-    bg: 'bg-linear-to-br from-blue-50 via-white to-blue-50',
-    text: 'text-blue-700',
-    borderAccent: 'border-blue-200',
-    badge: 'bg-blue-100 text-blue-700',
-    icon: 'bg-blue-100 text-blue-600',
-    accentBar: 'bg-linear-to-b from-blue-500 to-blue-700'
-  },
-  restaurant: {
-    bg: 'bg-linear-to-br from-emerald-50 via-white to-emerald-50',
-    text: 'text-emerald-700',
-    borderAccent: 'border-emerald-200',
-    badge: 'bg-emerald-100 text-emerald-700',
-    icon: 'bg-emerald-100 text-emerald-600',
-    accentBar: 'bg-linear-to-b from-emerald-500 to-emerald-700'
-  },
-  experience: {
-    bg: 'bg-linear-to-br from-purple-50 via-white to-purple-50',
-    text: 'text-purple-700',
-    borderAccent: 'border-purple-200',
-    badge: 'bg-purple-100 text-purple-700',
-    icon: 'bg-purple-100 text-purple-600',
-    accentBar: 'bg-linear-to-b from-purple-500 to-purple-700'
+const formatCurrency = (value) => {
+  const amount = Number(value || 0);
+  if (!amount) {
+    return '₹0';
   }
+  return `₹${Math.round(amount).toLocaleString('en-IN')}`;
+};
+
+const buildList = (value, fallback) => {
+  if (Array.isArray(value) && value.length > 0) {
+    return value;
+  }
+  if (typeof value === 'string' && value.trim().length > 0) {
+    return value
+      .split('\n')
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+  return fallback;
 };
 
 const ItineraryComponent = ({ data }) => {
-  const [selectedDay, setSelectedDay] = useState('overview');
-  const [draggedItem, setDraggedItem] = useState(null);
-  const [showActivityModal, setShowActivityModal] = useState(false);
-  const [selectedActivity, setSelectedActivity] = useState(null);
+  const days = data?.days || [];
 
-  // Get the current day data from the direct data structure
-  const currentDay = selectedDay === 'overview' ? null : data?.days?.find(day => day.day_number === selectedDay);
-  const allActivities = selectedDay === 'overview' ? [] : [
-    ...(currentDay?.attractions || []).map(item => ({ ...item, type: 'attraction' })),
-    ...(currentDay?.restaurants || []).map(item => ({ ...item, type: 'restaurant' })),
-    ...(currentDay?.experiences || []).map(item => ({ ...item, type: 'experience' }))
-  ];
+  const metaStats = useMemo(
+    () => [
+      {
+        label: 'Duration',
+        value: data?.duration_days ? `${data.duration_days} days` : `${Math.max(days.length, 1)} days`,
+        icon: Calendar
+      },
+      {
+        label: 'Group size',
+        value: data?.group_size || 'Up to 10 people',
+        icon: Users
+      },
+      {
+        label: 'Ages',
+        value: data?.age_group || '18 – 65 yrs',
+        icon: Sparkles
+      },
+      {
+        label: 'Languages',
+        value: data?.languages?.join(', ') || 'English, Local guide',
+        icon: Globe2
+      }
+    ],
+    [data, days.length]
+  );
 
-  const handleDragStart = (e, activity) => {
-    setDraggedItem(activity);
-    e.dataTransfer.effectAllowed = 'move';
-  };
+  const [modalDay, setModalDay] = useState(null);
 
-  const handleDrop = (e, targetIndex) => {
-    e.preventDefault();
-    if (!draggedItem) return;
+  const overviewText =
+    data?.overview ||
+    data?.description ||
+    'Designed for explorers who want the comfort of a guided experience with plenty of time to roam freely. Each day balances headline attractions with thoughtful local gems.';
 
-    const currentIndex = allActivities.findIndex(item => item.id === draggedItem.id);
-    if (currentIndex === -1 || currentIndex === targetIndex) return;
+  const highlights = buildList(data?.highlights, [
+    'Speedboat transfer to the headline attractions with scenic island views.',
+    'Visit signature lookouts with time for relaxed exploration and photo stops.',
+    'Snorkel-ready waters with equipment provided and on-hand guidance.',
+    "Lunch curated by locals featuring the region's standout dishes.",
+    'Small group vibe with a dedicated host to keep the day flowing smoothly.'
+  ]);
 
-    // Here you would typically update the order in your state/backend
-    console.log(`Moving ${draggedItem.name} from position ${currentIndex} to ${targetIndex}`);
-  };
+  const inclusions = buildList(data?.inclusions, [
+    'Expert local guide and concierge',
+    'Hotel pickup and drop-off (selected locations)',
+    'Breakfast and curated lunch',
+    'Entry passes for scheduled attractions',
+    'Bottled water and light refreshments'
+  ]);
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const openActivityModal = (activity) => {
-    setSelectedActivity(activity);
-    setShowActivityModal(true);
-  };
-
-  if (!data?.days?.length) {
-    return (
-  <div className="min-h-[60vh] flex items-center justify-center bg-linear-to-br from-[#fe6d3c]/8 via-white to-white">
-        <div className="text-center space-y-3">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-[#fe6d3c]/25 to-white">
-            <Calendar className="w-8 h-8 text-gray-500" />
-          </div>
-          <p className="text-lg font-semibold text-gray-600">No itinerary data available</p>
-          <p className="text-sm text-gray-400">Generate a plan to see your day-by-day schedule here</p>
-        </div>
-      </div>
-    );
-  }
-
-  const totalAttractions = data?.days?.reduce((total, day) => total + (day.attractions?.length || 0), 0);
-  const totalRestaurants = data?.days?.reduce((total, day) => total + (day.restaurants?.length || 0), 0);
-  const totalExperiences = data?.days?.reduce((total, day) => total + (day.experiences?.length || 0), 0);
+  const totals = useMemo(
+    () =>
+      days.reduce(
+        (acc, day) => ({
+          attractions: acc.attractions + (day.attractions?.length || 0),
+          experiences: acc.experiences + (day.experiences?.length || 0),
+          restaurants: acc.restaurants + (day.restaurants?.length || 0)
+        }),
+        { attractions: 0, experiences: 0, restaurants: 0 }
+      ),
+    [days]
+  );
 
   return (
-  <div className="relative overflow-hidden rounded-[2.5rem] bg-white text-slate-900">
-      <div className="absolute inset-x-0 top-0 h-64 bg-linear-to-r from-[#fe6d3c]/30 via-orange-100/55 to-white pointer-events-none" />
-      <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-        {/* Header with Itinerary Info */}
-
-          <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div className="space-y-4">
-             <div className="flex items-center justify-between">
-                               <div>
-                                 <h2 className="text-3xl font-black text-black leading-none tracking-tight mb-1">Daily Itinerary</h2>
-                                 <p className="text-gray-600 mt-1">Detailed day-by-day activities and experiences</p>
-                               </div>
-                               {/* Trip Stats */}
-                               <div className="flex items-center space-x-6 text-sm text-gray-600">
-                                 <div className="flex items-center space-x-1">
-                                   <Calendar className="w-4 h-4" />
-                                   <span>{data?.duration_days} Days</span>
-                                 </div>
-                                
-                                 {data?.categories && data.categories.length > 0 && (
-                                   <div className="flex items-center space-x-1">
-                                     <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                                       {data.categories[0].name}
-                                     </span>
-                                   </div>
-                                 )}
-                               </div>
-                             </div>
-            <div className="inline-flex items-center space-x-3 rounded-2xl bg-white/80 backdrop-blur px-4 py-2 text-sm font-medium text-gray-600">
-              <Sparkles className="h-4 w-4 text-purple-500" />
-              <span>Curated just for you</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-[#fe6d3c] to-rose-500 text-white sm:flex">
-                <Calendar className="h-6 w-6" />
+    <section className="py-12">
+      <div className="mx-auto max-w-5xl space-y-12">
+        <div className="grid gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
+          {metaStats.map(({ label, value, icon: Icon }) => (
+            <div
+              key={label}
+              className="flex items-start gap-3 border-slate-200 sm:border-r last:sm:border-r-0 sm:pr-4"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#fe6d3c]/12 text-[#fe6d3c]">
+                <Icon className="h-5 w-5" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-[2.75rem]">
-                  {data?.title || 'Your Travel Itinerary'}
-                </h1>
-                <p className="mt-2 text-sm text-gray-500">Track activities, dining, and experiences across every day of your journey.</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{label}</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">{value}</p>
               </div>
             </div>
-            <div className="flex flex-wrap gap-3 text-sm">
-              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2">
-                <Clock className="h-4 w-4 text-blue-500" />
-                <span className="font-medium text-gray-700">{data?.duration_days} days / {data?.duration_nights} nights</span>
-              </div>
-              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2">
-                <MapPin className="h-4 w-4 text-emerald-500" />
-                <span className="font-medium text-gray-700">{data?.highlighted_places}</span>
-              </div>
-              <div className="flex items-center space-x-2 rounded-full bg-white px-4 py-2">
-                <TrendingUp className="h-4 w-4 text-amber-500" />
-                <span className="font-semibold text-gray-800">₹{data?.total_budget?.toLocaleString('en-IN')}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid w-full gap-4 rounded-3xl bg-white/80 p-5 backdrop-blur sm:grid-cols-3 lg:w-auto lg:min-w-[420px]">
-            <div className="rounded-2xl bg-linear-to-br from-blue-500 via-blue-600 to-blue-700 p-4 text-white">
-              <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-wide text-blue-100">Attractions</span>
-                <MapPin className="h-4 w-4 text-blue-100" />
-              </div>
-              <p className="mt-3 text-3xl font-semibold">{totalAttractions}</p>
-              <p className="mt-1 text-xs text-blue-100/80">Curated highlights to explore</p>
-            </div>
-            <div className="rounded-2xl bg-linear-to-br from-emerald-500 via-emerald-600 to-emerald-700 p-4 text-white">
-              <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-wide text-emerald-100">Dining</span>
-                <Utensils className="h-4 w-4 text-emerald-100" />
-              </div>
-              <p className="mt-3 text-3xl font-semibold">{totalRestaurants}</p>
-              <p className="mt-1 text-xs text-emerald-100/80">Handpicked food experiences</p>
-            </div>
-            <div className="rounded-2xl bg-linear-to-br from-purple-500 via-purple-600 to-purple-700 p-4 text-white">
-              <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-wide text-purple-100">Experiences</span>
-                <Camera className="h-4 w-4 text-purple-100" />
-              </div>
-              <p className="mt-3 text-3xl font-semibold">{totalExperiences}</p>
-              <p className="mt-1 text-xs text-purple-100/80">Memorable moments planned</p>
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* Day Tabs */}
-        <div className="mb-10">
-          <div className="flex overflow-x-auto rounded-2xl bg-white p-2 backdrop-blur">
-            <button
-              onClick={() => setSelectedDay('overview')}
-              className={`mr-2 flex items-center space-x-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 ${
-                selectedDay === 'overview'
-                  ? 'bg-linear-to-r from-[#fe6d3c] to-rose-500 text-white'
-                  : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-              }`}
-            >
-              <Sparkles className="h-4 w-4" />
-              <span>Overview</span>
-            </button>
-            {data?.days?.map((day) => (
-              <button
-                key={day.day_number}
-                onClick={() => setSelectedDay(day.day_number)}
-                className={`mr-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 ${
-                  selectedDay === day.day_number
-                    ? 'bg-linear-to-r from-[#fe6d3c] to-rose-500 text-white'
-                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-                }`}
-              >
-                Day {day.day_number}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Content */}
-        {selectedDay === 'overview' ? (
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-12">
-            <section className="grid gap-6 md:grid-cols-3">
-              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-blue-100 opacity-40" />
-                <div className="relative">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-blue-500">Total Stops</span>
-                    <div className="rounded-xl bg-blue-50 p-2">
-                      <Calendar className="h-5 w-5 text-blue-600" />
-                    </div>
-                  </div>
-                  <p className="mt-6 text-4xl font-semibold text-gray-900">{data?.days?.length || 0}</p>
-                  <p className="mt-1 text-sm text-gray-500">Days packed with curated experiences</p>
-                </div>
-              </div>
+            <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+              <h2 className="text-2xl font-semibold text-slate-900">Tour Overview</h2>
+              <p className="mt-4 text-base leading-relaxed text-slate-600">{overviewText}</p>
 
-              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-emerald-100 opacity-40" />
-                <div className="relative">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-emerald-500">Average Spend / Day</span>
-                    <div className="rounded-xl bg-emerald-50 p-2">
-                      <TrendingUp className="h-5 w-5 text-emerald-600" />
-                    </div>
-                  </div>
-                  <p className="mt-6 text-4xl font-semibold text-gray-900">
-                    ₹{Math.round((data?.total_budget || 0) / (data?.days?.length || 1)).toLocaleString('en-IN')}
-                  </p>
-                  <p className="mt-1 text-sm text-gray-500">Balanced mix of activities and downtime</p>
-                </div>
-              </div>
+              <section className="mt-8">
+                <h3 className="text-lg font-semibold text-slate-900">Tour Highlights</h3>
+                <ul className="mt-4 space-y-3 text-sm text-slate-600">
+                  {highlights.map((item, index) => (
+                    <li key={`highlight-${index}`} className="flex items-start gap-3">
+                      <CheckCircle className="mt-0.5 h-4 w-4 text-[#fe6d3c]" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
 
-              <div className="group relative overflow-hidden rounded-3xl bg-white p-6 transition-all duration-300 hover:-translate-y-1">
-                <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-purple-100 opacity-40" />
-                <div className="relative">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-purple-500">Total Experiences</span>
-                    <div className="rounded-xl bg-purple-50 p-2">
-                      <Sparkles className="h-5 w-5 text-purple-600" />
+              <section className="mt-8">
+                <h3 className="text-lg font-semibold text-slate-900">What's included</h3>
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  {inclusions.map((item, index) => (
+                    <div
+                      key={`include-${index}`}
+                      className="flex items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600"
+                    >
+                      <div className="h-2.5 w-2.5 rounded-full bg-[#fe6d3c]" />
+                      <span>{item}</span>
                     </div>
-                  </div>
-                  <p className="mt-6 text-4xl font-semibold text-gray-900">{totalAttractions + totalRestaurants + totalExperiences}</p>
-                  <p className="mt-1 text-sm text-gray-500">Attractions, dining, and signature moments</p>
+                  ))}
                 </div>
-              </div>
-            </section>
+              </section>
+            </article>
 
-            <section className="rounded-3xl bg-white p-6">
+            <article className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
               <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Daily Highlights</h2>
-                  <p className="mt-1 text-sm text-gray-500">A quick look at what to expect each day</p>
-                </div>
-                <div className="hidden items-center space-x-2 rounded-full bg-gray-50 px-4 py-2 text-xs font-medium text-gray-500 sm:flex">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>Drag to reorder plans anytime</span>
-                </div>
+                <h2 className="text-2xl font-semibold text-slate-900">Itinerary</h2>
+                <span className="text-sm font-medium text-slate-400">{days.length} day plan</span>
               </div>
+              <ol className="mt-6 space-y-6">
+                {days.map((day, index) => {
+                  const stopsCount =
+                    (day.attractions?.length || 0) +
+                    (day.restaurants?.length || 0) +
+                    (day.experiences?.length || 0);
 
-              <div className="mt-6 space-y-6">
-                {data?.days?.map((day) => (
-                  <div key={day.day_number} className="flex flex-col gap-4 rounded-2xl bg-linear-to-br from-white via-[#fe6d3c]/6 to-white p-5 transition-all duration-300 hover:-translate-y-1 lg:flex-row lg:items-center lg:justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-[#fe6d3c] to-rose-500 text-lg font-semibold text-white">
-                        {day.day_number}
+                  return (
+                    <li key={day.day_number || index} className="relative flex gap-4">
+                      <div className="flex flex-col items-center">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#fe6d3c] text-sm font-semibold text-white">
+                          {day.day_number || index + 1}
+                        </div>
+                        {index !== days.length - 1 ? (
+                          <span className="mt-1 h-full w-0.5 bg-[#fe6d3c]/30" />
+                        ) : null}
                       </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Day {day.day_number}</h3>
-                        <p className="text-sm text-gray-500">{day.theme || 'Balanced mix of activities'}</p>
-                      </div>
-                    </div>
-                    <div className="grid gap-4 text-sm sm:grid-cols-3">
-                      <div className="flex items-center space-x-2 rounded-xl bg-blue-50 px-4 py-2 text-blue-700">
-                        <MapPin className="h-4 w-4" />
-                        <span>{day.attractions?.length || 0} attractions</span>
-                      </div>
-                      <div className="flex items-center space-x-2 rounded-xl bg-emerald-50 px-4 py-2 text-emerald-700">
-                        <Utensils className="h-4 w-4" />
-                        <span>{day.restaurants?.length || 0} dining spots</span>
-                      </div>
-                      <div className="flex items-center space-x-2 rounded-xl bg-purple-50 px-4 py-2 text-purple-700">
-                        <Camera className="h-4 w-4" />
-                        <span>{day.experiences?.length || 0} experiences</span>
-                      </div>
-                    </div>
-                    <div className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-gray-800">
-                      Budget ₹{(day.budget?.total_cost || 0).toLocaleString('en-IN')}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8 text-white">
-              <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10" />
-              <div className="absolute bottom-0 right-0 h-32 w-32 rounded-full bg-white/15" />
-              <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-                <div>
-                  <h3 className="text-2xl font-semibold">Need to shuffle plans?</h3>
-                  <p className="mt-2 text-sm text-gray-300">Drag and drop activities within each day or tap an item to edit the details. Your changes are saved instantly.</p>
-                </div>
-                <button className="inline-flex items-center space-x-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#fe6d3c] transition hover:-translate-y-0.5">
-                  <GripVertical className="h-4 w-4" />
-                  <span>Manage Activities</span>
-                </button>
-              </div>
-            </section>
-          </div>
-        ) : (
-          <div className="space-y-10">
-            <section className="rounded-3xl bg-white p-6">
-              <div className="flex flex-col gap-4 pb-6 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-r from-[#fe6d3c] to-rose-500 text-lg font-semibold text-white">
-                    {selectedDay}
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-semibold text-gray-900">Day {selectedDay}</h2>
-                    <p className="text-sm text-gray-500">Fine-tune the schedule by reordering or editing activities.</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-600">
-                    Total ₹{(currentDay?.budget?.total_cost || 0).toLocaleString('en-IN')}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                <div className="flex items-center justify-between rounded-2xl bg-blue-50 px-4 py-3 text-sm text-blue-700">
-                  <span className="font-medium">Attractions</span>
-                  <span>₹{(currentDay?.budget?.attractions_cost || 0).toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                  <span className="font-medium">Restaurants</span>
-                  <span>₹{(currentDay?.budget?.restaurants_cost || 0).toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl bg-purple-50 px-4 py-3 text-sm text-purple-700">
-                  <span className="font-medium">Experiences</span>
-                  <span>₹{(currentDay?.budget?.experiences_cost || 0).toLocaleString('en-IN')}</span>
-                </div>
-              </div>
-            </section>
-
-            <section className="space-y-4">
-              <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Activities</h3>
-                  <p className="text-sm text-gray-500">Drag an activity to reorder, or tap the menu for more options.</p>
-                </div>
-                <button className="inline-flex items-center space-x-2 rounded-xl bg-linear-to-r from-[#fe6d3c] to-rose-500 px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5">
-                  <Plus className="h-4 w-4" />
-                  <span>Add Activity</span>
-                </button>
-              </div>
-
-              {allActivities.length === 0 ? (
-                <div className="flex flex-col items-center justify-center space-y-3 rounded-3xl bg-white py-16 text-center">
-                  <div className="rounded-full bg-gray-100 p-4">
-                    <Calendar className="h-7 w-7 text-gray-400" />
-                  </div>
-                  <p className="text-base font-semibold text-gray-600">No activities planned yet</p>
-                  <p className="text-sm text-gray-400">Use the button above to curate your perfect day.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {allActivities.map((activity, index) => {
-                    const colors = colorMapping[activity.type] || colorMapping.attraction;
-                    const Icon = activity.type === 'restaurant' ? Utensils : activity.type === 'experience' ? Camera : MapPin;
-
-                    return (
-                      <div
-                        key={`${activity.type}-${activity.id || index}`}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, activity)}
-                        onDrop={(e) => handleDrop(e, index)}
-                        onDragOver={handleDragOver}
-                        className={`group relative overflow-hidden rounded-3xl bg-white p-5 transition-all duration-300 hover:-translate-y-1`}
-                      >
-                        <div className={`absolute left-0 top-0 h-full w-1.5`} />
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex flex-1 items-start gap-4">
-                            <div className="flex flex-col items-center gap-3">
-                              <div className="rounded-xl bg-gray-100 p-2 text-gray-400 transition group-hover:text-gray-600">
-                                <GripVertical className="h-4 w-4" />
-                              </div>
-                              <div className={`rounded-2xl p-3 ${colors.icon}`}>
-                                <Icon className="h-5 w-5" />
-                              </div>
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex flex-wrap items-center gap-3">
-                                <h4 className="text-lg font-semibold text-gray-900">{activity.name}</h4>
-                                <span className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${colors.badge}`}>
-                                  {activity.type}
-                                </span>
-                              </div>
-                              <p className="mt-2 text-sm leading-relaxed text-gray-600">{activity.description}</p>
-                              <div className="mt-4 flex flex-wrap items-center gap-3 text-xs">
-                                {activity.rating && (
-                                  <div className="flex items-center space-x-1 rounded-full bg-yellow-50 px-3 py-1 font-semibold text-yellow-700">
-                                    <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                                    <span>{activity.rating}</span>
-                                  </div>
-                                )}
-                                {activity.estimated_cost && (
-                                  <div className="rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700">
-                                    ₹{activity.estimated_cost}
-                                  </div>
-                                )}
-                                {activity.duration && (
-                                  <div className="flex items-center space-x-1 rounded-full bg-blue-50 px-3 py-1 font-medium text-blue-700">
-                                    <Clock className="h-3.5 w-3.5" />
-                                    <span>{activity.duration}</span>
-                                  </div>
-                                )}
-                                {activity.location && (
-                                  <div className="flex items-center space-x-1 rounded-full bg-purple-50 px-3 py-1 font-medium text-purple-700">
-                                    <MapPin className="h-3.5 w-3.5" />
-                                    <span>{activity.location}</span>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
+                      <div className="flex-1 rounded-2xl bg-slate-50 px-5 py-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-semibold text-[#fe6d3c]/80">Day {day.day_number || index + 1}</p>
+                            <h3 className="text-lg font-semibold text-slate-900">{day.theme || 'Immersive sightseeing'}</h3>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => openActivityModal(activity)}
-                              className="rounded-xl p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
-                            >
-                              <Menu className="h-4 w-4" />
-                            </button>
-                            <button className="rounded-xl p-2 text-gray-300 transition hover:bg-red-50 hover:text-red-500">
-                              <Trash2 className="h-4 w-4" />
-                            </button>
+                          <div className="flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-500">
+                            <Clock className="h-3.5 w-3.5 text-[#fe6d3c]" />
+                            {stopsCount} planned stops
                           </div>
                         </div>
+                        {day.description ? (
+                          <p className="mt-2 text-sm text-slate-600">{day.description}</p>
+                        ) : null}
+                        <div className="mt-4 grid gap-3 text-sm text-slate-600 sm:grid-cols-2">
+                          {day.attractions && day.attractions.length > 0 ? (
+                            <div>
+                              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Attractions</p>
+                              <ul className="mt-2 space-y-1">
+                                {day.attractions.slice(0, 3).map((item, idx) => (
+                                  <li key={`attr-${idx}`}>• {item.name}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ) : null}
+                          {day.restaurants && day.restaurants.length > 0 ? (
+                            <div>
+                              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Dining</p>
+                              <ul className="mt-2 space-y-1">
+                                {day.restaurants.slice(0, 2).map((item, idx) => (
+                                  <li key={`rest-${idx}`}>• {item.name}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ) : null}
+                          {day.experiences && day.experiences.length > 0 ? (
+                            <div>
+                              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Experiences</p>
+                              <ul className="mt-2 space-y-1">
+                                {day.experiences.slice(0, 2).map((item, idx) => (
+                                  <li key={`exp-${idx}`}>• {item.name}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ) : null}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setModalDay(day)}
+                          className="mt-4 inline-flex items-center gap-2 rounded-full border border-[#fe6d3c]/20 bg-white px-4 py-2 text-xs font-semibold text-[#fe6d3c] transition hover:border-[#fe6d3c] hover:bg-[#fe6d3c]/10"
+                        >
+                          Open day detail
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </button>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </section>
+                    </li>
+                  );
+                })}
+              </ol>
+            </article>
           </div>
-        )}
 
-        {/* Activity Modal */}
-        {showActivityModal && selectedActivity && (
-          <div className="fixed z-500 inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="w-full max-w-2xl overflow-hidden rounded-3xl bg-white">
-              <div className="bg-linear-to-r from-[#fe6d3c] via-rose-500 to-[#c94d22] px-6 py-5 text-white">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-gray-300">Activity Detail</p>
-                    <h2 className="mt-2 text-2xl font-semibold">{selectedActivity.name}</h2>
-                  </div>
-                  <button
-                    onClick={() => setShowActivityModal(false)}
-                    className="rounded-xl bg-white/10 p-2 transition hover:bg-white/20"
-                  >
-                    ✕
-                  </button>
+          <aside className="flex flex-col gap-6">
+            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-lg">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Trip snapshot</p>
+              <div className="mt-5 space-y-4 text-sm text-slate-600">
+                <div className="flex items-center justify-between">
+                  <span>Total budget</span>
+                  <span className="font-semibold text-slate-900">{formatCurrency(data?.total_budget)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Planned attractions</span>
+                  <span className="font-semibold text-slate-900">{totals.attractions}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Experiences lined up</span>
+                  <span className="font-semibold text-slate-900">{totals.experiences}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Dining spots</span>
+                  <span className="font-semibold text-slate-900">{totals.restaurants}</span>
+                </div>
+              </div>
+              <div className="mt-6 rounded-2xl bg-slate-50 px-4 py-3 text-xs text-slate-500">
+                Curate or swap experiences anytime. We keep day summaries synced with your detailed plans.
+              </div>
+            </div>
+
+         
+          </aside>
+        </div>
+      </div>
+
+      {modalDay ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-3xl overflow-hidden rounded-3xl bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Day detail</p>
+                <h2 className="text-2xl font-semibold text-slate-900">
+                  Day {modalDay.day_number}: {modalDay.title || modalDay.theme || 'Curated Experiences'}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setModalDay(null)}
+                className="rounded-full border border-slate-200 px-3 py-1 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+              >
+                Close
+              </button>
+            </div>
+            <div className="space-y-6 px-6 py-6 text-sm text-slate-600">
+              {modalDay.description ? (
+                <p className="leading-relaxed text-slate-600">{modalDay.description}</p>
+              ) : null}
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="rounded-2xl bg-slate-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Attractions</p>
+                  {modalDay.attractions && modalDay.attractions.length > 0 ? (
+                    <ul className="mt-3 space-y-2 text-slate-600">
+                      {modalDay.attractions.map((item) => (
+                        <li key={`md-attr-${item.id || item.name}`}>• {item.name}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="mt-3 text-xs text-slate-400">No attractions planned.</p>
+                  )}
+                </div>
+                <div className="rounded-2xl bg-slate-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Experiences</p>
+                  {modalDay.experiences && modalDay.experiences.length > 0 ? (
+                    <ul className="mt-3 space-y-2 text-slate-600">
+                      {modalDay.experiences.map((item) => (
+                        <li key={`md-exp-${item.id || item.name}`}>• {item.name}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="mt-3 text-xs text-slate-400">No experiences planned.</p>
+                  )}
+                </div>
+                <div className="rounded-2xl bg-slate-50 p-4 md:col-span-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Dining</p>
+                  {modalDay.restaurants && modalDay.restaurants.length > 0 ? (
+                    <ul className="mt-3 space-y-2 text-slate-600">
+                      {modalDay.restaurants.map((item) => (
+                        <li key={`md-rest-${item.id || item.name}`}>• {item.name}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="mt-3 text-xs text-slate-400">No dining stops scheduled.</p>
+                  )}
                 </div>
               </div>
 
-              <div className="space-y-6 px-6 py-6">
-                <p className="text-sm leading-relaxed text-gray-600">{selectedActivity.description}</p>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {selectedActivity.rating && (
-                    <div className="rounded-2xl bg-yellow-50 px-4 py-3">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-yellow-700">Rating</span>
-                      <div className="mt-2 flex items-center space-x-2 text-lg font-semibold text-gray-900">
-                        <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                        <span>{selectedActivity.rating}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedActivity.estimated_cost && (
-                    <div className="rounded-2xl bg-emerald-50 px-4 py-3">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Cost</span>
-                      <p className="mt-2 text-lg font-semibold text-gray-900">₹{selectedActivity.estimated_cost}</p>
-                    </div>
-                  )}
-
-                  {selectedActivity.duration && (
-                    <div className="rounded-2xl bg-blue-50 px-4 py-3">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-blue-700">Duration</span>
-                      <p className="mt-2 flex items-center space-x-2 text-sm font-medium text-gray-800">
-                        <Clock className="h-4 w-4 text-blue-600" />
-                        <span>{selectedActivity.duration}</span>
-                      </p>
-                    </div>
-                  )}
-
-                  {selectedActivity.location && (
-                    <div className="rounded-2xl bg-purple-50 px-4 py-3">
-                      <span className="text-xs font-semibold uppercase tracking-wide text-purple-700">Location</span>
-                      <p className="mt-2 flex items-center space-x-2 text-sm font-medium text-gray-800">
-                        <MapPin className="h-4 w-4 text-purple-600" />
-                        <span>{selectedActivity.location}</span>
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {selectedActivity.highlights && selectedActivity.highlights.length > 0 && (
-                  <div className="rounded-2xl bg-gray-50 px-4 py-4">
-                    <div className="mb-3 flex items-center space-x-2">
-                      <Sparkles className="h-5 w-5 text-purple-500" />
-                      <span className="text-sm font-semibold text-gray-800">Highlights</span>
-                    </div>
-                    <ul className="space-y-2 text-sm text-gray-600">
-                      {selectedActivity.highlights.map((highlight, index) => (
-                        <li key={index} className="flex items-start space-x-2">
-                          <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-purple-500" />
-                          <span>{highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                  <button
-                    onClick={() => setShowActivityModal(false)}
-                    className="rounded-xl bg-gray-50 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100"
-                  >
-                    Close
-                  </button>
-                  <button className="rounded-xl bg-linear-to-r from-[#fe6d3c] to-rose-500 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5">
-                    Edit Activity
-                  </button>
-                </div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Notes</p>
+                <p className="mt-2 text-xs text-slate-500">
+                  Add reminders, packing prompts, or meeting points for this day from the planner dashboard.
+                </p>
               </div>
             </div>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      ) : null}
+    </section>
   );
 };
 

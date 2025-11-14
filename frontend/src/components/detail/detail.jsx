@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Heart, MapPin, DollarSign } from 'lucide-react';
+import { ArrowLeft, Calendar, Heart, MapPin } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Maps from './map';
 import ItineraryComponent from './Itinerary';
@@ -57,7 +57,7 @@ const Detail = () => {
                 backgroundImage: `url(${data?.thumbnail ? `http://localhost:8000${data?.thumbnail}` : 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1920&h=1080&fit=crop'})`
               }}
             >
-              <div className="absolute inset-0 bg-linear-to-br from-black/80 via-[#fe6d3c]/25 to-black/75" />
+             
             </div>
 
             {/* Navigation Bar */}
@@ -74,17 +74,23 @@ const Detail = () => {
                   <button
                     onClick={handleSave}
                     className={`flex h-12 w-12 items-center justify-center rounded-full transition-all ${
-                      savedTrip ? 'bg-white text-[#fe6d3c]' : 'bg-[#fe6d3c] text-white hover:bg-[#df5b2c]'
+                      savedTrip ? 'bg-white/20 text-red-500' : 'bg-white/20 text-white hover:bg-white/30'
                     }`}
                   >
                     <Heart className={`h-6 w-6 ${savedTrip ? 'fill-current' : ''}`} />
                   </button>
-                 
                   <button
                     onClick={() => navigate(`/destination/iteanary/edit/${slug}`)}
-                    className="flex h-12 w-29 items-center justify-center rounded-full bg-white/20 px-5 font-medium text-white transition-all hover:bg-white/30"
+                    className="flex h-12 items-center justify-center rounded-full bg-white/20 px-6 text-sm font-semibold text-white transition-all hover:bg-white/30"
                   >
                     Customize
+                  </button>
+                  <button
+                    onClick={() => navigate(`/destination/iteanary/book/${slug}`)}
+                    className="flex h-12 items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-[#fe6d3c] transition-all hover:bg-[#fe6d3c] hover:text-white"
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Book Trip
                   </button>
                 </div>
               ) : (
@@ -129,13 +135,7 @@ const Detail = () => {
                   <span className="tracking-wide text-white/80">{data?.highlighted_places || 'Goa'}</span>
                 </div>
 
-                {/* Total Budget */}
-                {data?.total_budget && (
-                  <div className="mt-6 flex items-center justify-center space-x-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
-                    <DollarSign className="h-6 w-6" />
-                    <span className="text-2xl font-bold">₹{data.total_budget.toLocaleString('en-IN')}</span>
-                  </div>
-                )}
+               
               </div>
             </div>
           </div>

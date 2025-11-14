@@ -15,6 +15,7 @@ import TravelGuruProfile from './components/travel-guru/travelGuruProfile.jsx'
 import TravelGuruPage from './components/travel-guru/travelguru.jsx'
 import LandingPage from './components/landingpage/landingPage.jsx'
 import TravelGuruDashboard from './components/travel-guru/travelguruDashboard.jsx'
+import ItineraryChatbot from './components/chatbot/ItineraryChatbot.jsx'
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
@@ -34,7 +35,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <>
+      <RouterProvider router={router} />
+      <ItineraryChatbot />
+    </>
   </StrictMode>,
 )
 
