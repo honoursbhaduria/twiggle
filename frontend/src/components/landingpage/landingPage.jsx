@@ -191,7 +191,7 @@ function LandingPage() {
     <p className="text-[#fffdf7] font-light text-center mt-1 tracking-widest ">{item.description}</p>
 
     <button
-      className="bg-[#fe6d3c]/60 text-white font-normal rounded-full px-6 py-2  mb-2 text-[0.8rem] md:text-[0.9rem] hover:bg-[#fe6d3c]/70 transition-all mt-4 tracking-widest"
+      className="bg-gray-200/30 text-white font-normal rounded-full px-6 py-2  mb-2 text-[0.8rem] md:text-[0.9rem] hover:bg-gray-200/40 transition-all mt-4 tracking-widest"
     >
       View Experiences
     </button>

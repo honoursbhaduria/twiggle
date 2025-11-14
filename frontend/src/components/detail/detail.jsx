@@ -64,7 +64,7 @@ const Detail = () => {
             <div className="relative z-10 mx-5 flex items-center justify-between p-3">
               <button
                 onClick={() => navigate('/destination')}
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-[#fe6d3c] text-white transition-all hover:bg-[#df5b2c]"
+                className="flex h-12 w-15 items-center justify-center rounded-full bg-white/20 px-5 font-medium text-white transition-all hover:bg-white/30"
               >
                 <ArrowLeft className="h-6 w-6" />
               </button>
@@ -79,9 +79,7 @@ const Detail = () => {
                   >
                     <Heart className={`h-6 w-6 ${savedTrip ? 'fill-current' : ''}`} />
                   </button>
-                  <button className="flex items-center justify-center rounded-full bg-[#fe6d3c] px-6 py-3 font-medium text-white transition-all hover:bg-[#df5b2c]">
-                    <span>Save</span>
-                  </button>
+                 
                   <button
                     onClick={() => navigate(`/destination/iteanary/edit/${slug}`)}
                     className="flex h-12 w-29 items-center justify-center rounded-full bg-white/20 px-5 font-medium text-white transition-all hover:bg-white/30"
@@ -92,7 +90,7 @@ const Detail = () => {
               ) : (
                 <button
                   onClick={() => navigate('/auth')}
-                  className="flex h-12 w-20 items-center justify-center rounded-full bg-[#fe6d3c] font-medium text-white transition-all hover:bg-[#df5b2c]"
+                  className="flex h-12 w-29 items-center justify-center rounded-full bg-white/20 px-5 font-medium text-white transition-all hover:bg-white/30"
                 >
                   Login
                 </button>
