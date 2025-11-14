@@ -1,4 +1,5 @@
-import React from "react";
+// Dashboard.jsx
+import React, { useState } from "react";
 import {
   Brain,
   CalendarCheck,
@@ -20,6 +21,8 @@ import {
   Ticket,
   Users,
   Wallet,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { motion } from "motion/react";
 import SidebarDemo from "../destination/sidebar";
@@ -27,369 +30,399 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * India-focused travel dashboard
+ * - Cleaned layout (removed personal greeting)
+ * - Relevant India data (cities, trains, budgets, experiences)
+ * - Same color theme (#fe6d3c)
+ */
+
 const quickMetrics = [
   {
     title: "Active itineraries",
-    value: "4",
-    delta: "2 wrap this week",
+    value: "3",
+    delta: "2 updated this week",
     icon: CalendarRange,
   },
   {
-    title: "Cities locked",
-    value: "9",
-    delta: "3 fresh for 2026",
+    title: "Cities in India",
+    value: "12",
+    delta: "New: Varanasi added",
     icon: MapPin,
   },
   {
-    title: "Travel crew",
-    value: "5 explorers",
-    delta: "Sam shared notes",
+    title: "Group members",
+    value: "4",
+    delta: "2 confirmed",
     icon: Users,
   },
   {
     title: "Wallet synced",
-    value: "$3.4k",
-    delta: "Budget in range",
+    value: "₹42,800",
+    delta: "Within budget",
     icon: Wallet,
   },
 ];
 
 const journeyTimeline = [
-  { month: "Jan", percent: 45 },
-  { month: "Mar", percent: 60 },
-  { month: "May", percent: 75 },
+  { month: "Jan", percent: 30 },
+  { month: "Mar", percent: 55 },
+  { month: "May", percent: 70 },
   { month: "Jul", percent: 90 },
-  { month: "Sep", percent: 55 },
+  { month: "Sep", percent: 60 },
   { month: "Nov", percent: 80 },
 ];
 
 const taskChecklist = [
-  { title: "Lock final flights", detail: "Hold expires in 2 days", done: true },
-  { title: "Confirm Kyoto experiences", detail: "Awaiting vendor reply", done: false },
-  { title: "Sync travel wallet", detail: "Add dining buffer for day 3", done: false },
-  { title: "Share packing list", detail: "Send to crew", done: true },
+  { title: "Confirm train tickets", detail: "IRCTC PNR pending", done: false },
+  { title: "Book homestay in Varanasi", detail: "Host verification pending", done: false },
+  { title: "Upload ID copies", detail: "Needed for train bookings", done: true },
+  { title: "Finalize local guide", detail: "Rs. 1,200/day quoted", done: false },
 ];
 
 const experienceHighlights = [
   {
-    title: "Street food crawl",
-    note: "8 tastings • curated by local host",
+    title: "Street food trail",
+    note: "Delhi • Old Ravi • Paranthe Wali Gali",
     icon: Sparkles,
   },
   {
-    title: "Sunrise hike",
-    note: "Mt. Takao trail with guide",
-    icon: Flame,
+    title: "Heritage walk",
+    note: "Jaipur old city & bazaars",
+    icon: Compass,
   },
   {
-    title: "Rail pass ready",
-    note: "Unlimited JR lines for 7 days",
-    icon: Ticket,
+    title: "Ghat sunrise",
+    note: "Varanasi boat + puja plan",
+    icon: Flame,
   },
 ];
 
 const aiStarterPrompts = [
-  "Spin up a 3-day foodie chase in Osaka with relaxed mornings",
-  "Design a Kyoto culture crawl that ends with a tea ceremony",
-  "Suggest a chill arrival day with jet-lag friendly pacing",
+  "Plan a 4-day Rajasthan loop on a ₹20k budget",
+  "Cheap train + homestay combo for Varanasi trip",
+  "Weekend getaway from Delhi with food focus",
 ];
 
 const insightCards = [
   {
-    title: "Moments planned",
-    value: "18 experiences",
-    delta: "+6 vs last month",
+    title: "Experiences planned",
+    value: "12 items",
+    delta: "+3 vs last month",
     icon: Compass,
   },
   {
-    title: "Flight segments",
-    value: "6 booked",
-    delta: "2 layovers optimised",
+    title: "Train segments",
+    value: "4 booked",
+    delta: "AC sleeper & chair car mix",
     icon: Plane,
   },
   {
-    title: "Local guides",
-    value: "4 confirmed",
-    delta: "All briefs sent",
+    title: "Local hosts",
+    value: "3 connected",
+    delta: "IDs verified",
     icon: Globe2,
   },
 ];
 
 const quickActions = [
-  { label: "Download day cards", icon: ClipboardList },
+  { label: "Download trip pack", icon: ClipboardList },
   { label: "Share guest pass", icon: Ticket },
   { label: "Add travel notes", icon: Sparkles },
 ];
 
 const toolkitBlocks = [
   {
-    title: "Ready-made day templates",
-    description: "Street food sampler • Studio Ghibli detour • Osaka nightlife hop",
+    title: "Day templates",
+    description: "Market crawl • Temple morning • Evening ghat",
     icon: NotebookPen,
   },
   {
     title: "Logistics checklist",
-    description: "Rail passes • pocket Wi-Fi • luggage transfer tokens",
+    description: "Train PNR • ID upload • Luggage drop",
     icon: CalendarCheck,
   },
   {
     title: "Story prompts",
-    description: "Capture alley portraits, note coffee spots for the blog, map Geo tags",
+    description: "Capture bazaar portraits, food notes, Geo tags",
     icon: ScrollText,
   },
 ];
 
 const fieldNotes = [
-  "Upload Kyoto tasting menu PDF for day 3 dinner",
-  "Confirm luggage transfer to Osaka hotel",
-  "Add late checkout request for final morning",
+  "Upload Aadhaar copy for train booking",
+  "Confirm cab from station to homestay",
+  "Ask host for local SIM top-up options",
+];
+
+const recentBookings = [
+  {
+    type: "Train tickets",
+    title: "Varanasi Express",
+    details: "Coach S3 • Seat 45A",
+    date: "Dec 2, 2025",
+    icon: Plane,
+    color: "bg-blue-100 text-blue-600"
+  },
+  {
+    type: "Hotel bookings",
+    title: "Dashaswamedh Guest House",
+    details: "Deluxe Room • River View",
+    date: "Dec 2-7, 2025",
+    icon: MapPin,
+    color: "bg-green-100 text-green-600"
+  },
+  {
+    type: "Cab bookings",
+    title: "Station to Hotel",
+    details: "Sedan • Scheduled at 6:00 AM",
+    date: "Dec 2, 2025",
+    icon: Ticket,
+    color: "bg-yellow-100 text-yellow-600"
+  },
+  {
+    type: "Guides booked",
+    title: "Local Heritage Guide",
+    details: "5-hour Ghat Tour",
+    date: "Dec 3, 2025",
+    icon: Users,
+    color: "bg-purple-100 text-purple-600"
+  }
 ];
 
 const likedItineraries = [
   {
-    title: "Kyoto culture immersion",
+    title: "Golden Triangle (Delhi–Agra–Jaipur)",
     duration: "5 day loop",
-    updated: "Touched 2 days ago",
-    focus: "Tea ceremony • Gion lights • Nishiki bites",
+    updated: "Saved 3 days ago",
+    focus: "Taj • Amber Fort • Local food",
   },
   {
-    title: "Osaka foodie chase",
-    duration: "3 day sprint",
+    title: "Varanasi break",
+    duration: "2 day retreat",
     updated: "Saved last week",
-    focus: "Kuromon market • Izakaya crawl",
+    focus: "Ghat sunrise • Boat ride • Street eats",
   },
   {
-    title: "Tokyo studio break",
-    duration: "4 day edit",
+    title: "Goa coastal unwind",
+    duration: "4 day chill",
     updated: "Refreshed this morning",
-    focus: "TeamLab • Shibuya nights • Coffee alleys",
+    focus: "Beaches • Cafes • Night market",
   },
 ];
 
 export default function Dashboard() {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date(2025, 11, 2)); // Dec 2, 2025
+  
   const completedTasks = taskChecklist.filter((item) => item.done).length;
-  const completionPercent = taskChecklist.length
-    ? Math.round((completedTasks / taskChecklist.length) * 100)
-    : 0;
+  const completionPercent = Math.round(
+    (completedTasks / taskChecklist.length) * 100
+  );
 
-    const navigate=useNavigate()
+  const navigate = useNavigate();
+
+  // Calendar logic
+  const getDaysInMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const handlePrevMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+  };
+
+  const handleDateClick = (day) => {
+    setSelectedDate(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day));
+  };
+
+  const monthName = currentMonth.toLocaleString("default", { month: "long", year: "numeric" });
+  const daysInMonth = getDaysInMonth(currentMonth);
+  const firstDay = getFirstDayOfMonth(currentMonth);
+  const calendarDays = [];
+
+  for (let i = 0; i < firstDay; i++) {
+    calendarDays.push(null);
+  }
+  for (let i = 1; i <= daysInMonth; i++) {
+    calendarDays.push(i);
+  }
 
   return (
     <div className="relative min-h-screen bg-slate-50 text-slate-900">
       <SidebarDemo />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="grid grid-cols-1 gap-4 lg:grid-cols-12"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.05 }}
-            className="relative overflow-hidden rounded-3xl bg-white p-5 md:p-6 lg:col-span-8 shadow-sm border border-slate-200"
-          >
-            <div className="absolute right-8 top-8 hidden h-24 w-24 rounded-3xl bg-[#fe6d3c]/20 blur-2xl md:block" />
-            <div className="relative flex flex-col gap-5">
-              <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        {/* =========================================================
+            TOP SECTION — HERO + CALENDAR
+        ========================================================= */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+
+          {/* LEFT SIDE — HERO + INFO */}
+          <div className="lg:col-span-8 bg-white rounded-3xl border shadow-sm overflow-hidden">
+
+            {/* HERO */}
+            <div 
+              className="relative h-64 bg-cover bg-center px-6 flex flex-col justify-between items-start overflow-hidden"
+              style={{
+                backgroundImage: `url('https://media.istockphoto.com/id/1357609436/photo/ancient-varanasi-city-architecture-at-sunset.webp?a=1&b=1&s=612x612&w=0&k=20&c=Ww4wWi9Wzsp8TMXwcv5FZfxQmBQeP5Vz2oHHeWWGi0Y=')`,
+              }}
+            >
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/40"></div>
+
+              {/* Hero Text */}
+              <div className="relative z-10 pt-4">
+                <p className="text-sm text-white/90 font-semibold">Nearest trip</p>
+                <h1 className="text-5xl font-bold mt-2 text-white">Varanasi</h1>
+                <p className="text-base text-white/95 mt-3">Spiritual journey • Ghat visits • Local food</p>
+              </div>
+            </div>
+
+            {/* SAVED ITINERARIES */}
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-sm uppercase tracking-[0.28em] text-slate-500">Traveler dashboard</p>
-                  <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">Hey Tejash,</h1>
-                  <p className="mt-3 max-w-xl text-sm text-slate-600 md:text-base">
-                    Your Tokyo + Kyoto route is 75% ready. Finalise the day 3 experiences and send the guest pass when you are happy with the draft.
-                  </p>
-                </div>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.92 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2, duration: 0.4 }}
-                  className="rounded-2xl border border-[#fe6d3c]/30 bg-[#fe6d3c]/10 px-4 py-3"
-                >
-                  <p className="text-xs uppercase tracking-[0.22em] text-[#fe6d3c]">Next segment</p>
-                  <h2 className="mt-1 text-lg font-semibold text-slate-900">Tokyo → Kyoto express</h2>
-                  <div className="mt-2 flex items-center gap-2 text-sm text-slate-700">
-                    <CalendarRange className="h-4 w-4" /> 24 Nov • Depart 08:12 AM
-                  </div>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-slate-600">
-                    <Clock className="h-3.5 w-3.5" /> Seats 4A • Bento service confirmed
-                  </div>
-                </motion.div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                <Button onClick={()=>navigate("/iteanary/create")} className="rounded-full bg-[#fe6d3c] text-white font-semibold hover:bg-[#df5b2c]">Create your itinary</Button>
-                <Button onClick={()=>navigate("/destination")} variant="outline" className="rounded-full border-[#fe6d3c]/40 bg-white text-[#fe6d3c] hover:bg-[#fe6d3c]/10">
-                  Explore destination
-                </Button>
-              </div>
-
-              <div className="mt-6">
-                <div className="flex items-center justify-between gap-2">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Liked itineraries</p>
-                    <p className="text-sm text-slate-600">Saved journeys you revisit often</p>
-                  </div>
-                  <Button variant="ghost" className="px-3 py-1.5 text-sm font-medium text-[#fe6d3c] hover:bg-[#fe6d3c]/10">
-                    View all
-                  </Button>
-                </div>
-                <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                  {likedItineraries.map((itinerary) => (
-                    <div key={itinerary.title} className="group relative overflow-hidden rounded-2xl bg-[#fe6d3c]/5 p-4 transition-transform duration-200 hover:-translate-y-1">
-                      <div className="absolute right-3 top-3 rounded-full bg-white/70 p-1">
-                        <Heart className="h-4 w-4 text-[#fe6d3c]" />
-                      </div>
-                      <div className="pr-6">
-                        <h3 className="text-sm font-semibold text-slate-900">{itinerary.title}</h3>
-                        <p className="mt-1 text-xs text-slate-500">{itinerary.duration}</p>
-                      </div>
-                      <div className="mt-3 space-y-1 text-xs text-slate-600">
-                        <p className="font-medium text-slate-700">{itinerary.focus}</p>
-                        <p className="text-slate-500">{itinerary.updated}</p>
-                      </div>
-                    </div>
-                  ))}
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500 font-semibold">Your itineraries</p>
+                  <h3 className="text-lg font-bold text-slate-900 mt-1">Explore India Trips</h3>
                 </div>
               </div>
 
-              <div className="mt-6 rounded-3xl border border-slate-200 bg-white/95 p-5 shadow-sm">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Insight stream</p>
-                    <h3 className="text-lg font-semibold text-slate-900">How this itinerary is shaping up</h3>
-                  </div>
-                  <Button variant="outline" className="rounded-full border-[#fe6d3c]/40 bg-white px-3 py-1.5 text-sm text-[#fe6d3c] hover:bg-[#fe6d3c]/10">
-                    Export summary
-                  </Button>
-                </div>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {insightCards.map((card) => (
-                    <div key={card.title} className="rounded-2xl border border-slate-200 p-3">
-                      <card.icon className="h-5 w-5 text-[#fe6d3c]" />
-                      <p className="mt-2 text-xs uppercase tracking-[0.18em] text-slate-500">{card.title}</p>
-                      <p className="mt-1.5 text-base font-semibold text-slate-900">{card.value}</p>
-                      <p className="mt-0.5 text-xs text-slate-500">{card.delta}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 rounded-2xl border border-dashed border-[#fe6d3c]/30 bg-[#fe6d3c]/10 p-3">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Reminder</p>
-                  <div className="mt-1.5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <span className="text-sm text-slate-600">Add sushi studio feedback before sharing the final copy.</span>
-                    <Button className="rounded-full bg-[#fe6d3c] px-4 py-1.5 text-sm text-white hover:bg-[#df5b2c]">Add note</Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="lg:col-span-4 flex flex-col gap-4"
-          >
-            <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm flex flex-col">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Brain className="h-6 w-6 text-[#fe6d3c]" />
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Trip Muse Live</p>
-                    <h3 className="text-base font-semibold text-slate-900">Create an itinerary with AI</h3>
-                  </div>
-                </div>
-                <Button className="rounded-full bg-[#fe6d3c] px-3 py-1.5 text-sm text-white hover:bg-[#df5b2c]">Start fresh</Button>
-              </div>
-
-              <div className="mt-3 rounded-2xl border border-dashed border-[#fe6d3c]/40 bg-[#fe6d3c]/10 p-3 text-xs text-slate-600">
-                <p className="font-semibold text-slate-800">Trip Muse builds day cards and budgets from your brief.</p>
-                <p className="mt-1 leading-relaxed">Describe the vibe, pace, and non-negotiables. We will assemble logistics you can drop straight into the planner.</p>
-              </div>
-
-              <div className="mt-3 flex-1 rounded-2xl border border-slate-200 bg-slate-50/80 px-3 py-4 text-center text-sm text-slate-500">
-                <div className="flex h-full flex-col items-center justify-center gap-2">
-                  <MessageCircle className="h-5 w-5 text-[#fe6d3c]" />
-                  <p className="max-w-xs leading-relaxed">Tell Trip Muse what you want to experience and we will draft a fresh itinerary in seconds.</p>
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Try a prompt</p>
-                <div className="mt-1.5 flex flex-wrap gap-1.5">
-                  {aiStarterPrompts.map((prompt) => (
-                    <button
-                      key={prompt}
-                      type="button"
-                      className="rounded-full border border-slate-200 px-2.5 py-1 text-xs text-slate-600 transition-colors hover:border-[#fe6d3c]/60 hover:text-[#fe6d3c]"
+              <div className="grid gap-3 md:grid-cols-2">
+                {likedItineraries.map((it) => {
+                  // Map titles to background images
+                  const imageMap = {
+                    "Golden Triangle (Delhi–Agra–Jaipur)": "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&q=80",
+                    "Varanasi break": "https://media.istockphoto.com/id/1752927355/photo/colourful-scene-showing-boats-on-the-sacred-ganges-river-at-dashashwamedh-ghat-in-varanasi.webp?a=1&b=1&s=612x612&w=0&k=20&c=ToXa4gyKDSoGXIEsydLxVKdKGQdJLf2guAjUIA21Eeg=",
+                    "Goa coastal unwind": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80"
+                  };
+                  
+                  return (
+                    <div 
+                      key={it.title} 
+                      className="group relative overflow-hidden rounded-3xl h-48 bg-cover bg-center transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer"
+                      style={{
+                        backgroundImage: `url('${imageMap[it.title] || "https://images.unsplash.com/photo-1552520206-7eae00fb6801?w=600&q=80"}')`,
+                      }}
                     >
-                      {prompt}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                      {/* Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
 
-              <div className="mt-4 flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm">
-                <Input
-                  placeholder="Describe the trip you want to build…"
-                  className="border-0 bg-transparent px-0 text-sm focus-visible:ring-0"
-                />
-                <Button size="icon" className="h-9 w-9 rounded-full bg-[#fe6d3c] text-white hover:bg-[#df5b2c]">
-                  <Send className="h-4 w-4" />
-                </Button>
+                      {/* Content */}
+                      <div className="absolute inset-0 p-4 flex flex-col justify-between">
+                        {/* Heart Icon */}
+                        <div className="flex justify-end">
+                          <button className="p-2 bg-white/20 backdrop-blur-md rounded-full hover:bg-white/40 transition">
+                            <Heart className="h-5 w-5 text-white fill-white" />
+                          </button>
+                        </div>
+
+                        {/* Text Content */}
+                        <div>
+                          <h4 className="text-lg font-bold text-white leading-tight">{it.title}</h4>
+                          <p className="text-sm text-white/90 mt-2">{it.duration}</p>
+                          <p className="text-sm text-[#fea561] font-semibold mt-2">✨ {it.focus}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
+          </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Trip snapshot</p>
-              <h2 className="mt-1.5 text-xl font-semibold text-slate-900">Tokyo street food quest</h2>
-              <div className="mt-3 flex flex-col gap-2 text-sm text-slate-600">
-                <span className="inline-flex w-max items-center gap-2 rounded-full bg-[#fe6d3c]/10 px-2.5 py-1 text-[#fe6d3c]">
-                  <Plane className="h-4 w-4" /> BA 117 • Seat 4K
-                </span>
-                <div className="flex items-center gap-2">
-                  <CalendarRange className="h-4 w-4 text-[#fe6d3c]" /> 21 - 27 Nov, 2025
+          {/* RIGHT SIDE — CALENDAR */}
+          <div className="lg:col-span-4 bg-white rounded-3xl border shadow-sm p-5">
+
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-slate-900">Trip Calendar</h2>
+              <Button className="rounded-full bg-[#fe6d3c] text-white px-4 h-8 hover:bg-[#e86a28] font-semibold">
+                Add event
+              </Button>
+            </div>
+
+            {/* Month Navigation */}
+            <div className="flex justify-between items-center mb-4">
+              <button onClick={handlePrevMonth} className="p-1 hover:bg-slate-100 rounded-lg transition">
+                <ChevronLeft className="h-5 w-5 text-slate-600" />
+              </button>
+              <h3 className="text-base font-semibold text-slate-900">{monthName}</h3>
+              <button onClick={handleNextMonth} className="p-1 hover:bg-slate-100 rounded-lg transition">
+                <ChevronRight className="h-5 w-5 text-slate-600" />
+              </button>
+            </div>
+
+            {/* Weekday Headers */}
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+                <div key={day} className="text-center text-xs font-semibold text-slate-500 py-2">
+                  {day}
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-[#fe6d3c]" /> Shibuya • Tsukiji • Gion
-                </div>
-              </div>
-              <div className="mt-4 rounded-2xl border border-dashed border-[#fe6d3c]/40 bg-[#fe6d3c]/5 p-3">
-                <p className="text-xs uppercase tracking-[0.15em] text-slate-500">Crew status</p>
-                <div className="mt-1.5 flex items-center justify-between">
-                  <p className="text-sm text-slate-600">Check-in reminders auto-sent</p>
-                  <CheckCircle2 className="h-5 w-5 text-[#fe6d3c]" />
-                </div>
-                <div className="mt-3 flex items-center justify-between">
-                  <span className="text-xs text-slate-500">Travel wallet balance</span>
-                  <span className="text-sm font-semibold text-slate-900">$1.9k remaining</span>
-                </div>
-              </div>
-              <div className="mt-4 space-y-2">
-                {quickActions.map((action) => (
+              ))}
+            </div>
+
+            {/* Calendar Grid */}
+            <div className="grid grid-cols-7 gap-1">
+              {calendarDays.map((day, index) => {
+                if (day === null) {
+                  return <div key={`empty-${index}`} className="h-8"></div>;
+                }
+
+                const isSelected =
+                  selectedDate.getDate() === day &&
+                  selectedDate.getMonth() === currentMonth.getMonth() &&
+                  selectedDate.getFullYear() === currentMonth.getFullYear();
+
+                const isTrip =
+                  currentMonth.getMonth() === 11 && // December
+                  currentMonth.getFullYear() === 2025 &&
+                  day >= 2 &&
+                  day <= 7;
+
+                return (
                   <button
-                    key={action.label}
-                    type="button"
-                    className="flex w-full items-center justify-between rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-700 transition-colors hover:border-[#fe6d3c]/60 hover:text-[#fe6d3c]"
+                    key={day}
+                    onClick={() => handleDateClick(day)}
+                    className={`h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${
+                      isSelected
+                        ? "bg-[#fe6d3c] text-white shadow-md"
+                        : isTrip
+                        ? "bg-[#fe6d3c]/20 text-[#fe6d3c] border border-[#fe6d3c]/40 hover:bg-[#fe6d3c]/30"
+                        : "text-slate-700 hover:bg-slate-100"
+                    }`}
                   >
-                    <span className="flex items-center gap-2">
-                      <action.icon className="h-4 w-4" /> {action.label}
-                    </span>
-                    <span className="text-xs uppercase tracking-wide">Go</span>
+                    {day}
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          </motion.div>
-        </motion.div>
 
-       
+            {/* Selected Date Info */}
+            <div className="mt-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <p className="text-xs text-slate-500 font-semibold">Selected Date</p>
+              <p className="text-sm font-semibold text-slate-900 mt-1">
+                {selectedDate.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+              </p>
+              {selectedDate >= new Date(2025, 11, 2) && selectedDate <= new Date(2025, 11, 7) && (
+                <p className="text-xs text-[#fe6d3c] mt-1 font-semibold">✓ During Varanasi trip</p>
+              )}
+            </div>
+          </div>
+        </div>
 
+        {/* Lower block: Progress + Toolkit */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.18 }}
+          transition={{ duration: 0.55, delay: 0.18 }}
           className="mt-5 grid gap-4 lg:grid-cols-12"
         >
           <motion.div
@@ -434,7 +467,8 @@ export default function Dashboard() {
                 <div className="mt-2 space-y-2">
                   {taskChecklist.map((task) => (
                     <div key={task.title} className="flex items-start gap-2">
-                      <span className={`mt-0.5 h-5 w-5 rounded-full border ${task.done ? "border-[#fe6d3c] bg-[#fe6d3c]" : "border-slate-300"}`}
+                      <span
+                        className={`mt-0.5 h-5 w-5 rounded-full border ${task.done ? "border-[#fe6d3c] bg-[#fe6d3c]" : "border-slate-300"}`}
                         aria-hidden="true"
                       >
                         {task.done && <CheckCircle2 className="h-5 w-5 text-white" />}
@@ -471,40 +505,29 @@ export default function Dashboard() {
           >
             <div className="rounded-2xl border border-dashed border-[#fe6d3c]/30 bg-[#fe6d3c]/10 p-4">
               <div className="flex items-center gap-2">
-                <NotebookPen className="h-5 w-5 text-[#fe6d3c]" />
+                <Ticket className="h-5 w-5 text-[#fe6d3c]" />
                 <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Trip builder toolkit</p>
-                  <h4 className="text-base font-semibold text-slate-900">Assets ready to drop in</h4>
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Recent bookings</p>
+                  <h4 className="text-base font-semibold text-slate-900">Your travel confirmations</h4>
                 </div>
               </div>
               <div className="mt-3 space-y-2">
-                {toolkitBlocks.map((block) => (
-                  <div key={block.title} className="rounded-2xl border border-slate-200 bg-white/80 px-3 py-2">
-                    <div className="flex items-center gap-2 text-sm font-medium text-slate-800">
-                      <block.icon className="h-4 w-4 text-[#fe6d3c]" /> {block.title}
+                {recentBookings.map((booking) => (
+                  <div key={booking.type} className="rounded-2xl border border-slate-200 bg-white/80 px-3 py-3">
+                    <div className="flex items-start gap-3">
+                      <div className={`p-2 rounded-lg ${booking.color}`}>
+                        <booking.icon className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs uppercase tracking-[0.15em] text-slate-500 font-semibold">{booking.type}</p>
+                        <p className="text-sm font-semibold text-slate-900 mt-0.5">{booking.title}</p>
+                        <p className="text-xs text-slate-600 mt-1">{booking.details}</p>
+                        <p className="text-xs text-[#fe6d3c] font-semibold mt-1">📅 {booking.date}</p>
+                      </div>
                     </div>
-                    <p className="mt-0.5 text-xs text-slate-600">{block.description}</p>
                   </div>
                 ))}
               </div>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 bg-white/80 p-4">
-              <div className="flex items-center gap-2">
-                <ScrollText className="h-5 w-5 text-[#fe6d3c]" />
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Field notes</p>
-                  <h4 className="text-base font-semibold text-slate-900">Personal reminders</h4>
-                </div>
-              </div>
-              <ul className="mt-3 space-y-1.5 text-sm text-slate-600">
-                {fieldNotes.map((note) => (
-                  <li key={note} className="flex items-start gap-2">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-[#fe6d3c]" aria-hidden="true" />
-                    <span>{note}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
           </motion.div>
         </motion.div>
@@ -512,8 +535,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-
-
-
-
